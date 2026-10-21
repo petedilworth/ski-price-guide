@@ -1,0 +1,908 @@
+<!doctype html>
+<html lang="en-CA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ski Gear Guide</title>
+<meta name="description" content="M's U12 race gear: sizes, rules, and what counts as a good price at a ski swap or show.">
+<meta name="theme-color" content="#b3122e">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon.svg">
+<style>
+:root {
+  --bg: #f6f4f1;
+  --surface: #ffffff;
+  --surface-2: #efebe6;
+  --text: #1d1b19;
+  --muted: #5f5a54;
+  --line: #ddd7cf;
+  --brand: #b3122e;
+  --brand-ink: #ffffff;
+  --good: #136f3a;
+  --good-bg: #e2f3e8;
+  --ok: #7a5a00;
+  --ok-bg: #fbf0cf;
+  --warn: #9a4a00;
+  --warn-bg: #fde4cc;
+  --bad: #a3141f;
+  --bad-bg: #fbdcdd;
+  --focus: #1b5fd1;
+  --radius: 14px;
+  --shadow: 0 1px 2px rgba(0,0,0,.06), 0 2px 8px rgba(0,0,0,.05);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #141312;
+    --surface: #1e1c1a;
+    --surface-2: #282522;
+    --text: #f1ede8;
+    --muted: #b1aaa2;
+    --line: #3a3632;
+    --brand: #ff5a6e;
+    --brand-ink: #1a0005;
+    --good: #6ed69a;
+    --good-bg: #133222;
+    --ok: #f0cc63;
+    --ok-bg: #3a3011;
+    --warn: #ffab6b;
+    --warn-bg: #3d2513;
+    --bad: #ff8a8f;
+    --bad-bg: #401a1c;
+    --focus: #7fb0ff;
+    --shadow: none;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #141312;
+  --surface: #1e1c1a;
+  --surface-2: #282522;
+  --text: #f1ede8;
+  --muted: #b1aaa2;
+  --line: #3a3632;
+  --brand: #ff5a6e;
+  --brand-ink: #1a0005;
+  --good: #6ed69a;
+  --good-bg: #133222;
+  --ok: #f0cc63;
+  --ok-bg: #3a3011;
+  --warn: #ffab6b;
+  --warn-bg: #3d2513;
+  --bad: #ff8a8f;
+  --bad-bg: #401a1c;
+  --focus: #7fb0ff;
+  --shadow: none;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { font-size: 16px; -webkit-text-size-adjust: 100%; }
+html.big { font-size: 19px; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 1rem/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  padding-bottom: calc(76px + env(safe-area-inset-bottom));
+}
+a { color: var(--brand); }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+
+header.top {
+  position: sticky; top: 0; z-index: 5;
+  background: var(--brand); color: var(--brand-ink);
+  padding: calc(10px + env(safe-area-inset-top)) 16px 10px;
+  display: flex; align-items: center; gap: 10px;
+}
+header.top h1 { font-size: 1.05rem; margin: 0; flex: 1; letter-spacing: .01em; }
+header.top button {
+  background: transparent; color: inherit; border: 1.5px solid currentColor;
+  border-radius: 999px; padding: 4px 10px; font: inherit; font-size: .85rem; cursor: pointer;
+}
+
+main { max-width: 760px; margin: 0 auto; padding: 16px; }
+section.page { display: none; }
+section.page.active { display: block; }
+h2 { font-size: 1.35rem; margin: 4px 0 12px; }
+h3 { font-size: 1.05rem; margin: 18px 0 8px; }
+p { margin: 0 0 10px; }
+.muted { color: var(--muted); }
+.small { font-size: .875rem; }
+
+.card {
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 14px 16px; margin: 0 0 12px; box-shadow: var(--shadow);
+}
+.card.alert { border-left: 5px solid var(--brand); }
+.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px; }
+.fact { background: var(--surface-2); border-radius: 10px; padding: 8px 10px; }
+.fact b { display: block; font-size: 1.1rem; }
+.fact span { font-size: .8rem; color: var(--muted); }
+
+ol.rules, ul.plain { padding-left: 1.2rem; margin: 0; }
+ol.rules li, ul.plain li { margin: 0 0 6px; }
+
+.tag { display: inline-block; font-size: .75rem; font-weight: 600; padding: 2px 8px; border-radius: 999px; white-space: nowrap; }
+.tag.must { background: var(--bad-bg); color: var(--bad); }
+.tag.should { background: var(--ok-bg); color: var(--ok); }
+.tag.skip { background: var(--surface-2); color: var(--muted); }
+.tag.have { background: var(--good-bg); color: var(--good); }
+.tag.new { background: var(--warn-bg); color: var(--warn); }
+
+label { display: block; font-weight: 600; margin: 10px 0 4px; }
+select, input[type="number"], input[type="text"] {
+  width: 100%; font: inherit; padding: 10px 12px; border-radius: 10px;
+  border: 1.5px solid var(--line); background: var(--surface); color: var(--text);
+}
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+@media (max-width: 420px) { .row { grid-template-columns: 1fr; } }
+button.btn {
+  font: inherit; font-weight: 600; border: 0; border-radius: 10px; padding: 10px 14px;
+  background: var(--brand); color: var(--brand-ink); cursor: pointer;
+}
+button.btn.ghost { background: var(--surface-2); color: var(--text); }
+.btns { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+
+.verdict {
+  margin-top: 14px; border-radius: var(--radius); padding: 14px 16px; border: 2px solid transparent;
+}
+.verdict .big { font-size: 1.6rem; font-weight: 800; line-height: 1.1; }
+.verdict.good { background: var(--good-bg); color: var(--good); border-color: var(--good); }
+.verdict.ok { background: var(--ok-bg); color: var(--ok); border-color: var(--ok); }
+.verdict.warn { background: var(--warn-bg); color: var(--warn); border-color: var(--warn); }
+.verdict.bad { background: var(--bad-bg); color: var(--bad); border-color: var(--bad); }
+.verdict.none { background: var(--surface-2); color: var(--muted); }
+.verdict p { color: var(--text); margin: 6px 0 0; }
+
+.bar { position: relative; height: 14px; border-radius: 7px; margin: 12px 0 4px; overflow: hidden; display: flex; }
+.bar i { display: block; height: 100%; }
+.bar i.g { background: var(--good); } .bar i.o { background: var(--ok); } .bar i.w { background: var(--warn); } .bar i.b { background: var(--bad); }
+.bar .pin { position: absolute; top: -3px; width: 4px; height: 20px; background: var(--text); border-radius: 2px; }
+.barlabels { font-size: .8rem; color: var(--text); }
+
+.tablewrap { overflow-x: auto; -webkit-overflow-scrolling: touch; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: .9rem; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { background: var(--surface-2); font-weight: 700; white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+td.num, th.num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+td.g { color: var(--good); font-weight: 700; } td.b { color: var(--bad); font-weight: 700; }
+
+.check { display: flex; gap: 10px; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.check:last-child { border-bottom: 0; }
+.check input { width: 22px; height: 22px; margin: 2px 0 0; flex: none; accent-color: var(--good); }
+.check label { margin: 0; font-weight: 400; }
+.check label b { font-weight: 700; }
+
+.item { display: grid; grid-template-columns: 1fr auto; gap: 4px 10px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+.item:last-child { border-bottom: 0; }
+.item .name { font-weight: 700; }
+.item > .tag { align-self: start; justify-self: end; }
+.item .note { grid-column: 1 / -1; font-size: .875rem; color: var(--muted); }
+.item .ctl { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 120px; gap: 8px; }
+.item .ctl select, .item .ctl input { padding: 8px 10px; }
+.total { display: flex; justify-content: space-between; font-weight: 800; font-size: 1.15rem; padding-top: 10px; }
+
+nav.tabs {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 6;
+  background: var(--surface); border-top: 1px solid var(--line);
+  display: grid; grid-template-columns: repeat(6, 1fr);
+  padding: 4px 4px calc(4px + env(safe-area-inset-bottom));
+}
+nav.tabs a {
+  display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 6px 2px;
+  color: var(--muted); text-decoration: none; font-size: .7rem; font-weight: 600; border-radius: 10px;
+}
+nav.tabs a svg { width: 22px; height: 22px; }
+nav.tabs a[aria-current="page"] { color: var(--brand); background: var(--surface-2); }
+
+.copybox { background: var(--surface-2); border-radius: 10px; padding: 10px 12px; font-size: .95rem; white-space: pre-wrap; }
+details { margin: 0 0 10px; }
+summary { cursor: pointer; font-weight: 700; }
+
+#print { display: none; }
+@media print {
+  @page { margin: 12mm; }
+  body { background: #fff; color: #000; padding: 0; font-size: 10.5pt; }
+  header.top, nav.tabs, main { display: none !important; }
+  #print { display: block; }
+  #print h1 { font-size: 15pt; margin: 0 0 4pt; }
+  #print h2 { font-size: 12pt; margin: 10pt 0 4pt; }
+  #print table { font-size: 9pt; }
+  #print th, #print td { padding: 3pt 5pt; border: 1px solid #999; }
+  #print th { background: #eee; }
+  #print .cols { columns: 2; column-gap: 14pt; }
+  #print .box { border: 1px solid #000; padding: 6pt 8pt; margin: 0 0 6pt; break-inside: avoid; }
+  #print .pb { break-before: page; }
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <h1>M's Ski Gear Guide</h1>
+  <button type="button" id="bigBtn" aria-pressed="false">A+</button>
+  <button type="button" id="printBtn">Print</button>
+</header>
+
+<main>
+
+<!-- START -->
+<section class="page" id="start" aria-labelledby="h-start">
+  <h2 id="h-start">At the swap: start here</h2>
+
+  <div class="card alert">
+    <ol class="rules">
+      <li><b>Bring M's boots</b> (or M). The binding must be set to her boot.</li>
+      <li><b>Never buy a used helmet</b> or used mouth guard.</li>
+      <li><b>Skis: slalom ("SL") race skis only.</b> Check the length in the <a href="#ski">Ski check</a> tab.</li>
+      <li><b>Ask the binding tech</b> if the binding is still "indemnified" (shops will still service it). No = walk away.</li>
+      <li><b>Check the price</b> in the <a href="#price">Price check</a> tab before you pay.</li>
+      <li><b>Over $200? Text Pete a photo first</b> – the side of the ski and the binding.</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0">M</h3>
+    <div class="facts">
+      <div class="fact"><b>81 lbs</b><span>Weight (37 kg)</span></div>
+      <div class="fact"><b>U12, year 1</b><span>Counts as 10 all season</span></div>
+      <div class="fact"><b>First race year</b><span>Shorter end of range is fine</span></div>
+      <div class="fact"><b>Has boots</b><span>Dalbello DRS 75</span></div>
+      <div class="fact"><b>Has poles</b><span>Cheap regular, no guards</span></div>
+      <div class="fact"><b>Height</b><span id="heightTxt">To come</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0">What to buy (cheapest plan)</h3>
+    <div id="buyList"></div>
+    <p class="small muted" style="margin-top:10px">Cheapest plan with used skis: <b>about $625</b>. Everything new: <b>about $1,275</b>. Prices in CAD before tax.</p>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0">Ski lengths for M</h3>
+    <p class="small muted">Slalom (SL) race ski. Left number = chart size. Right number = chart + 5 cm (the club's advice for one pair).</p>
+    <div class="tablewrap"><table id="lenTable"></table></div>
+  </div>
+</section>
+
+<!-- PRICE -->
+<section class="page" id="price" aria-labelledby="h-price">
+  <h2 id="h-price">Price check</h2>
+  <div class="card">
+    <label for="pItem">Item</label>
+    <select id="pItem"></select>
+    <div class="row">
+      <div>
+        <label for="pCond">Condition</label>
+        <select id="pCond"></select>
+      </div>
+      <div>
+        <label for="pPrice">Asking price ($)</label>
+        <input id="pPrice" type="number" inputmode="decimal" min="0" step="1" placeholder="e.g. 250">
+      </div>
+    </div>
+    <div id="pOut" class="verdict none" aria-live="polite"><div class="big">Enter a price</div></div>
+  </div>
+
+  <h3>Full price table (CAD)</h3>
+  <p class="small muted">Good = buy. Fair = OK. High = haggle. Above the last number = walk away.</p>
+  <div class="tablewrap"><table id="priceTable"></table></div>
+  <p class="small muted" style="margin-top:8px">Used prices are thin (mostly US listings) and some are estimates. Show prices: AOA athletes get 20% off protection at Skiis &amp; Biikes.</p>
+</section>
+
+<!-- SKI CHECK -->
+<section class="page" id="ski" aria-labelledby="h-ski">
+  <h2 id="h-ski">Ski check</h2>
+  <div class="card">
+    <div class="row">
+      <div>
+        <label for="sBrand">Brand</label>
+        <select id="sBrand"></select>
+      </div>
+      <div>
+        <label for="sType">Type printed on ski</label>
+        <select id="sType">
+          <option value="sl">SL / slalom race</option>
+          <option value="combi">Multi-event / combi race</option>
+          <option value="gs">GS / giant slalom race</option>
+          <option value="rec">Not a race ski</option>
+        </select>
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <label for="sLen">Length (cm)</label>
+        <input id="sLen" type="number" inputmode="numeric" min="80" max="200" placeholder="e.g. 138">
+      </div>
+      <div>
+        <label for="sYear">Model year / age</label>
+        <select id="sYear">
+          <option value="0">2027 (new this season)</option>
+          <option value="1">2026 (1 season)</option>
+          <option value="2">2025 (2 seasons)</option>
+          <option value="3">2024 (3 seasons)</option>
+          <option value="4">2023 or older</option>
+          <option value="9">Seller doesn't know</option>
+        </select>
+      </div>
+    </div>
+    <p class="small muted" style="margin-top:8px">Length is printed on the side or tail of the ski (e.g. "138" or "131-138"). Radius looks like "R 10.4".</p>
+    <div id="sOut" class="verdict none" aria-live="polite"><div class="big">Enter a length</div></div>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0">Inspection checklist</h3>
+    <div id="checklist"></div>
+    <div id="cOut" class="verdict none" aria-live="polite"><div class="big">0 of 8 checked</div></div>
+    <div class="btns"><button type="button" class="btn ghost" id="cReset">Clear checklist</button></div>
+  </div>
+
+  <details class="card">
+    <summary>How to read a binding</summary>
+    <ul class="plain small" style="margin-top:8px">
+      <li>Model name is on the heel piece (e.g. "Colt 7", "Icon 10", "SPX 10", "Evo 9", "Race 10").</li>
+      <li>The small window with numbers is the release setting (DIN). The number after the model name is roughly the top setting.</li>
+      <li>A tech sets it for M's weight, height, age and boot. Do not set it yourself.</li>
+      <li>Atomic Colt 7 fits boots with a sole length up to 266 mm only. Check her boot.</li>
+    </ul>
+  </details>
+</section>
+
+<!-- LIST -->
+<section class="page" id="list" aria-labelledby="h-list">
+  <h2 id="h-list">Shopping list</h2>
+  <p class="small muted">Saved on this phone only. Each person's phone keeps its own list.</p>
+  <div class="card">
+    <div id="shopList"></div>
+    <div class="total"><span>Spent</span><span id="spent">$0</span></div>
+    <div class="small muted" id="spentNote"></div>
+  </div>
+  <div class="btns"><button type="button" class="btn ghost" id="lReset">Reset list</button></div>
+</section>
+
+<!-- RULES -->
+<section class="page" id="rules" aria-labelledby="h-rules">
+  <h2 id="h-rules">Rules for M (U12)</h2>
+  <p class="small muted">When the club and Alpine Ontario differ, the club rule wins.</p>
+  <div class="tablewrap"><table id="rulesTable"></table></div>
+  <div class="card" style="margin-top:12px">
+    <h3 style="margin-top:0">One helmet for both events</h3>
+    <p>Buy a hard-ear helmet with an FIS sticker and a chin guard that comes off. Slalom needs the chin guard. GS does not allow it.</p>
+  </div>
+  <div class="card">
+    <h3 style="margin-top:0">Race suit</h3>
+    <p>Allowed in U12, but the club says 10-year-olds cannot wear one at the local hill races. M counts as 10 all season. Skip it this year unless it is very cheap.</p>
+  </div>
+</section>
+
+<!-- INFO -->
+<section class="page" id="info" aria-labelledby="h-info">
+  <h2 id="h-info">To do and dates</h2>
+  <div class="card">
+    <div id="todo"></div>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0">Question for the coach</h3>
+    <div class="copybox" id="coachQ"></div>
+    <div class="btns"><button type="button" class="btn" id="copyQ">Copy</button></div>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0">Dates</h3>
+    <ul class="plain">
+      <li><b>Club swap</b> – date to confirm.</li>
+      <li><b>Toronto Ski &amp; Snowboard Show</b> – Oct 23–25, 2026, Better Living Centre, Exhibition Place. Fri 3–9, Sat 10–6, Sun 10–5. <a href="https://torontoskishow.ca/" rel="noopener">torontoskishow.ca</a></li>
+      <li><b>Ski Patrol swap at the show</b> – skis, boots and boards only. <a href="https://torontoskishow.ca/canadian-ski-patrol-ski-swap/" rel="noopener">Details</a></li>
+      <li><b>Milton Heights swap</b> (Corbetts) – Nov 4–8, 2026.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0">Handing down to Hailey</h3>
+    <ul class="plain small">
+      <li>Helmet: OK to hand down if it was never in a hard crash and is under 5 years old.</li>
+      <li>Skis and bindings: sized by weight. Hailey fits them when she reaches about 80 lbs.</li>
+      <li>Keep a note of each binding's model and year. Shops ask.</li>
+      <li>Guards and suits: buy a size up so they last two kids.</li>
+    </ul>
+  </div>
+
+  <details class="card">
+    <summary>Sources</summary>
+    <ul class="plain small" id="sources" style="margin-top:8px"></ul>
+  </details>
+
+  <div class="btns">
+    <button type="button" class="btn ghost" id="themeBtn">Theme: auto</button>
+  </div>
+  <p class="small muted" style="margin-top:12px">Last updated 2026-10-20. Works offline after the first visit. On iPhone: Share → Add to Home Screen.</p>
+</section>
+
+</main>
+
+<nav class="tabs" aria-label="Sections">
+  <a href="#start"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg>Start</a>
+  <a href="#price"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 12l-8 8-9-9V3h8z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg>Price</a>
+  <a href="#ski"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 21L18 3M10 21L22 3"/></svg>Ski check</a>
+  <a href="#list"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 6h12M9 12h12M9 18h12M4 6l1 1 2-2M4 12l1 1 2-2M4 18l1 1 2-2"/></svg>List</a>
+  <a href="#rules"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/></svg>Rules</a>
+  <a href="#info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg>Info</a>
+</nav>
+
+<div id="print"></div>
+
+<script>
+"use strict";
+
+/* ---------- Data ---------- */
+
+// Price thresholds in CAD: [good, fair, walk]. good = buy, fair = OK, up to walk = haggle, above walk = walk away.
+const ITEMS = [
+  { id: "skis", name: "SL skis (one pair)", plan: "must", buy: "Used OK",
+    note: "Slalom race ski with plate. Used with a binding is the cheapest route.",
+    conds: [
+      { k: "used1", label: "Used, 1 season, with binding", p: [275, 375, 425] },
+      { k: "used23", label: "Used, 2–3 seasons, with binding", p: [150, 250, 275] },
+      { k: "newflat", label: "New, ski only (no binding)", p: [450, 630, 650] },
+      { k: "newbind", label: "New, ski + binding", p: [565, 840, 900] }
+    ], lean: 250, full: 520 },
+  { id: "binding", name: "Binding (only if skis have none)", plan: "maybe", buy: "Used OK",
+    note: "Must fit the ski's plate and be indemnified. Ask the tech.",
+    conds: [
+      { k: "new", label: "New", p: [115, 210, 250] },
+      { k: "used", label: "Used", p: [60, 90, 110] }
+    ], lean: 0, full: 208 },
+  { id: "helmet", name: "Helmet – hard ear, FIS sticker", plan: "must", buy: "New only",
+    note: "Never used. Hailey can inherit it later if it is never crashed.",
+    conds: [
+      { k: "new", label: "New", p: [210, 300, 330] },
+      { k: "used", label: "Used (stranger)", p: null }
+    ], lean: 210, full: 250 },
+  { id: "chin", name: "Chin guard (comes off)", plan: "must", buy: "Used OK",
+    note: "Must fit the helmet you buy. Slalom only.",
+    conds: [
+      { k: "new", label: "New", p: [60, 90, 100] },
+      { k: "used", label: "Used (estimate)", p: [30, 45, 60] }
+    ], lean: 60, full: 70 },
+  { id: "shin", name: "Shin guards", plan: "must", buy: "Used OK",
+    note: "Club requires them for slalom. Buy a size up for Hailey.",
+    conds: [
+      { k: "new", label: "New", p: [140, 200, 230] },
+      { k: "used", label: "Used (estimate)", p: [60, 90, 110] }
+    ], lean: 60, full: 150 },
+  { id: "poleguard", name: "Pole guards (hand guards)", plan: "must", buy: "Used OK",
+    note: "Club requires them for slalom. Her poles have none. Cheaper: buy used race poles with guards already on.",
+    conds: [
+      { k: "new", label: "New", p: [50, 85, 95] },
+      { k: "used", label: "Used (estimate)", p: [25, 40, 50] }
+    ], lean: 25, full: 55 },
+  { id: "mouth", name: "Mouth guard", plan: "must", buy: "New only",
+    note: "Club requires it for slalom. Cheap – buy new.",
+    conds: [ { k: "new", label: "New (estimate)", p: [20, 40, 50] } ], lean: 20, full: 20 },
+  { id: "back", name: "Back protector", plan: "later", buy: "Used OK",
+    note: "Recommended, not required. Buy later if money allows.",
+    conds: [
+      { k: "new", label: "New", p: [150, 210, 230] },
+      { k: "used", label: "Used (estimate)", p: [60, 90, 110] }
+    ], lean: 0, full: 0 },
+  { id: "suit", name: "Race suit", plan: "skip", buy: "Used OK",
+    note: "Not allowed at local hill races for 10-year-olds. Only if under $80.",
+    conds: [
+      { k: "used", label: "Used", p: [120, 220, 250] },
+      { k: "new", label: "New (padded GS)", p: [350, 550, 600] }
+    ], lean: 0, full: 0 },
+  { id: "poles", name: "SL race poles with guards", plan: "alt", buy: "Used OK",
+    note: "Best value: used poles with guards on, instead of guards for her $30 poles. Cheap poles can bend on gates.",
+    conds: [
+      { k: "usedg", label: "Used, guards on (estimate)", p: [40, 60, 80] },
+      { k: "used", label: "Used, no guards", p: [25, 50, 70] },
+      { k: "new", label: "New", p: [90, 170, 180] }
+    ], lean: 0, full: 0 },
+  { id: "arm", name: "Arm guards", plan: "skip", buy: "Used OK",
+    note: "Optional. Ask the coach first.",
+    conds: [
+      { k: "used", label: "Used (estimate)", p: [30, 50, 70] },
+      { k: "new", label: "New", p: [70, 150, 160] }
+    ], lean: 0, full: 0 },
+  { id: "boots", name: "Boots", plan: "have", buy: "–",
+    note: "Has Dalbello DRS 75. Check sole length and wear.", conds: [], lean: 0, full: 0 },
+  { id: "regpoles", name: "Poles", plan: "have", buy: "–",
+    note: "Has $30 regular poles, no guards. OK for training if the length is right.", conds: [], lean: 0, full: 0 }
+];
+
+const PLAN_TAG = {
+  must: ["must", "Must buy"], maybe: ["should", "If needed"], later: ["should", "Later"],
+  skip: ["skip", "Skip this year"], have: ["have", "Has it"], alt: ["should", "Cheaper option"]
+};
+
+// SL ski lengths for an 81 lb U12. lo = chart size, hi = chart + 5 cm (club advice).
+const BRANDS = [
+  { id: "atomic", name: "Atomic", model: "Redster S9 FIS J-RP", lo: 131, hi: 138,
+    bind: "Atomic Colt 7 (boot sole ≤ 266 mm) or Icon 10" },
+  { id: "rossignol", name: "Rossignol", model: "Hero (Athlete) SL Pro, R21 Pro plate", lo: 135, hi: 142,
+    bind: "Look NX 7, NX 10, SPX 10, SPX 11" },
+  { id: "dynastar", name: "Dynastar", model: "Speed Omeglass (OMG) Team SL, R21 Pro", lo: 135, hi: 142,
+    bind: "Look NX 7, NX 10, SPX 10" },
+  { id: "head", name: "Head", model: "WC / WCR e.SL Rebel Team", lo: 132, hi: 139,
+    bind: "Head / Tyrolia Evo 9 or Freeflex 11 only" },
+  { id: "volkl", name: "Völkl", model: "Racetiger SL Jr", lo: 129, hi: 136,
+    bind: "Marker Comp 10 / Race 10 TCX / Comp JR 8" },
+  { id: "fischer", name: "Fischer", model: "RC4 Worldcup SL Jr", lo: 130, hi: 135,
+    bind: "Fischer RC4 Z9 or Z11" },
+  { id: "nordica", name: "Nordica", model: "Dobermann SLJ", lo: 128, hi: 135,
+    bind: "Marker junior race bindings" },
+  { id: "blizzard", name: "Blizzard", model: "Firebird SL JR-Racing", lo: 128, hi: 135,
+    bind: "Marker junior race bindings" },
+  { id: "salomon", name: "Salomon", model: "Junior SL race", lo: 131, hi: 138,
+    bind: "Salomon / Atomic family" },
+  { id: "other", name: "Other brand", model: "Junior SL race", lo: 130, hi: 140,
+    bind: "Ask the tech" }
+];
+
+const CHECKS = [
+  ["edges", "<b>Edges</b> straight, no cracks or rust, steel left"],
+  ["base", "<b>Base</b> has no gouges down to the core"],
+  ["rail", "<b>Rub the two bases together</b> – no clicking (clicking = edges stick up)"],
+  ["side", "<b>Sidewalls and top</b> have no cracks or peeling"],
+  ["plate", "<b>Plate</b> is solid, no loose or stripped screws"],
+  ["model", "<b>Binding model and year</b> written down"],
+  ["indem", "<b>Tech says the binding is indemnified</b> (still serviced)"],
+  ["boot", "<b>Binding adjusts to M's boot</b> (tech checked)"]
+];
+
+const RULES = [
+  ["Hard-ear helmet", "Required", "Required", "Buy one with an FIS sticker (club requires FIS approved)"],
+  ["Chin guard", "Required (club)", "Not allowed", "Must come off. Not on the AOA 2026-27 list"],
+  ["Pole guards", "Required (club)", "Not allowed", "AOA says permitted for SL"],
+  ["Shin guards", "Required (club)", "Not needed", "AOA says recommended for SL"],
+  ["Mouth guard", "Required (club)", "Recommended", "Not on the AOA 2026-27 list"],
+  ["Back protector", "Recommended", "Recommended", "Not required"],
+  ["Race suit", "Permitted*", "Permitted*", "*Not at local hill races for 10-year-olds"],
+  ["Soft-ear SL helmet", "Permitted", "Not allowed", "Not needed if you buy a hard-ear helmet"],
+  ["Skis", "1 SL pair, +5 cm", "Same pair", "AOA suggests SL + GS; club says 1 pair at age 10"],
+  ["Poles", "Recommended", "Recommended", "Her $30 poles are OK; guards needed for slalom"]
+];
+
+const TODO = [
+  ["aoa", "Register M with Alpine Ontario (AOA)", "Required to race. Do it before buying so the discount works.", "https://alpineontario.ca/im-an-athlete/"],
+  ["speed", "Get the Skiis & Biikes Speed Shop card", "20% off protection, bags, accessories and clothing for AOA athletes.", "https://skiisandbiikes.com/pages/deals"],
+  ["coach", "Ask the coach the length question", "Copy the question below.", ""],
+  ["bsl", "Find the boot sole length (mm) on the Dalbello heel", "Needed to mount the binding. Colt 7 only fits up to 266 mm.", ""],
+  ["height", "Measure M's height", "Needed for pole length and suit size.", ""],
+  ["swap", "Confirm the club swap date", "", ""]
+];
+
+const COACH_Q = "Hi, my daughter is a first-year U12, 81 lbs, new to racing, and will have one pair of slalom skis for all events. The U12 chart puts her at about 131 cm (Atomic) or 135 cm (Rossignol/Dynastar). Should I add the 5 cm on top of that (Atomic 138 or Rossignol 142), or is the chart size better since she is new? Also, does she need arm guards and pole guards this year, and can she use her regular poles?";
+
+const SOURCES = [
+  ["S1", "Club U12 Racing program page (club rules)", ""],
+  ["S3", "gearpass.io shop listings, 2026-10-20", "https://gearpass.io"],
+  ["S4", "AOA Gear Guide 2025-26 (Skiis & Biikes + Alpine Ontario)", "https://alpineontario.ca/wp-content/uploads/2025/09/AOA-Gear-Guide-2025-26.pdf"],
+  ["S6", "AOA Gear Guide 2026-27 app, Rules tab", "https://aoagearguide.com/"],
+  ["R", "Age rule – AOA U10/12 page", "https://alpineontario.ca/alpine-ontario-alpin-racing/u10-12-racing-program/"],
+  ["R", "Head sizing – Head Racing Canada", "https://headracingcanada.com/products/118cm-160cm-jr-wcr-e-sl-rebel-team-2026-27-with-team-plate"],
+  ["R", "Atomic 26/27 race catalogue (Colt 7 boot sole limit)", "https://www.sport-monz.com/fileadmin/user_upload/pdf-files/Atomic_Alpine_Race_EN_2627_lowres.pdf"],
+  ["R", "One pair: take SL one size longer – Race Place", "https://the-raceplace.com/products/2027-fischer-rc4-wc-noize-jr-sl-skis"],
+  ["R", "Völkl plates and bindings – Race Place", "https://the-raceplace.com/products/2027-volkl-racetiger-jr-sl-skis"],
+  ["R", "Rossignol Hero SL Pro lengths and bindings", "https://www.rossignol.com/ca-en/unisexs-racing-skis-hero-athlete-sl-pro-128-149-r21-pro-RANAF01000.html"],
+  ["R", "Helmet replacement – Salomon", "https://www.salomon.com/en-ca/sg/a/when-should-you-replace-your-ski-helmet"],
+  ["R", "Binding indemnification – Pro Ski", "https://theproskiandride.com/blogs/the-pros-blog/ski-binding-indemnification"],
+  ["R", "Used race ski checklist – Vermont Ski and Sport", "https://www.vermontskiandsport.com/blogs/articles/8-things-to-look-for-when-buying-ski-racing-equipment"],
+  ["R", "Toronto Ski & Snowboard Show", "https://torontoskishow.ca/"]
+];
+
+/* ---------- Storage (per phone, optional) ---------- */
+
+const store = {
+  get(key, fallback) {
+    try { const v = localStorage.getItem("skigear:" + key); return v === null ? fallback : JSON.parse(v); }
+    catch (e) { return fallback; }
+  },
+  set(key, value) {
+    try { localStorage.setItem("skigear:" + key, JSON.stringify(value)); } catch (e) { /* private mode */ }
+  }
+};
+
+/* ---------- Helpers ---------- */
+
+const $ = (sel) => document.querySelector(sel);
+const money = (n) => "$" + Math.round(n).toLocaleString("en-CA");
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+function priceVerdict(p, price) {
+  if (!p) return { cls: "bad", word: "Walk away", text: "Never buy this used from a stranger. You cannot know its crash history." };
+  const [g, f, w] = p;
+  if (price <= g) return { cls: "good", word: "Good price", text: "Buy it, if it passes the checks." };
+  if (price <= f) return { cls: "ok", word: "Fair price", text: "OK to buy. Try asking for " + money(g) + "." };
+  if (price <= w) return { cls: "warn", word: "High – haggle", text: "Offer " + money(f) + " or less. Walk away above " + money(w) + "." };
+  return { cls: "bad", word: "Walk away", text: "Too much. A fair price is " + money(f) + " or less." };
+}
+
+function verdictHTML(v, extra) {
+  return '<div class="big">' + esc(v.word) + "</div><p>" + esc(v.text) + "</p>" + (extra || "");
+}
+
+/* ---------- Start ---------- */
+
+function renderStart() {
+  const order = ["must", "alt", "maybe", "later", "skip", "have"];
+  const rows = ITEMS.slice().sort((a, b) => order.indexOf(a.plan) - order.indexOf(b.plan)).map((it) => {
+    const [cls, label] = PLAN_TAG[it.plan];
+    const buyTag = it.buy === "New only" ? ' <span class="tag new">New only</span>' : "";
+    return '<div class="item"><span class="name">' + esc(it.name) + buyTag + '</span><span class="tag ' + cls + '">' + label +
+      '</span><span class="note">' + esc(it.note) + "</span></div>";
+  }).join("");
+  $("#buyList").innerHTML = rows;
+
+  const h = '<tr><th>Brand and binding that fits</th><th class="num">Chart</th><th class="num">+5 cm</th></tr>';
+  $("#lenTable").innerHTML = h + BRANDS.map((b) =>
+    "<tr><td><b>" + esc(b.name) + "</b> <span class=\"small muted\">" + esc(b.model) + '</span><br><span class="small">Binding: ' + esc(b.bind) +
+    '</span></td><td class="num">' + b.lo + '</td><td class="num"><b>' + b.hi + "</b></td></tr>").join("");
+}
+
+/* ---------- Price check ---------- */
+
+function renderPrice() {
+  const priced = ITEMS.filter((it) => it.conds.length);
+  $("#pItem").innerHTML = priced.map((it) => '<option value="' + it.id + '">' + esc(it.name) + "</option>").join("");
+  const saved = store.get("price", {});
+  if (saved.item && priced.some((i) => i.id === saved.item)) $("#pItem").value = saved.item;
+  fillConds(saved.cond);
+  if (saved.price) $("#pPrice").value = saved.price;
+  updatePrice();
+
+  $("#pItem").addEventListener("change", () => { fillConds(); updatePrice(); });
+  $("#pCond").addEventListener("change", updatePrice);
+  $("#pPrice").addEventListener("input", updatePrice);
+
+  let t = '<tr><th>Item</th><th>Condition</th><th class="num">Good ≤</th><th class="num">Fair ≤</th><th class="num">Walk away &gt;</th></tr>';
+  priced.forEach((it) => it.conds.forEach((c, i) => {
+    t += "<tr><td>" + (i === 0 ? "<b>" + esc(it.name) + "</b>" : "") + "</td><td>" + esc(c.label) + "</td>" +
+      (c.p ? '<td class="num g">' + money(c.p[0]) + '</td><td class="num">' + money(c.p[1]) + '</td><td class="num b">' + money(c.p[2]) + "</td>"
+           : '<td colspan="3" class="b">Never buy</td>') + "</tr>";
+  }));
+  $("#priceTable").innerHTML = t;
+}
+
+function fillConds(sel) {
+  const it = ITEMS.find((i) => i.id === $("#pItem").value);
+  $("#pCond").innerHTML = it.conds.map((c) => '<option value="' + c.k + '">' + esc(c.label) + "</option>").join("");
+  if (sel && it.conds.some((c) => c.k === sel)) $("#pCond").value = sel;
+}
+
+function updatePrice() {
+  const it = ITEMS.find((i) => i.id === $("#pItem").value);
+  const c = it.conds.find((x) => x.k === $("#pCond").value);
+  const raw = $("#pPrice").value;
+  store.set("price", { item: it.id, cond: c.k, price: raw });
+  const out = $("#pOut");
+  if (!c.p) { const v = priceVerdict(null); out.className = "verdict " + v.cls; out.innerHTML = verdictHTML(v); return; }
+  const [g, f, w] = c.p;
+  const scale = (n) => Math.min(100, (n / (w * 1.25)) * 100);
+  const bar = '<div class="bar"><i class="g" style="width:' + scale(g) + '%"></i><i class="o" style="width:' + (scale(f) - scale(g)) +
+    '%"></i><i class="w" style="width:' + (scale(w) - scale(f)) + '%"></i><i class="b" style="width:' + (100 - scale(w)) + '%"></i>' +
+    (raw !== "" ? '<span class="pin" style="left:calc(' + scale(+raw) + '% - 2px)"></span>' : "") + "</div>" +
+    '<div class="barlabels">Good ≤ ' + money(g) + " · Fair ≤ " + money(f) + " · Walk away &gt; " + money(w) + "</div>";
+  if (raw === "" || isNaN(+raw)) {
+    out.className = "verdict none";
+    out.innerHTML = '<div class="big">Enter a price</div><p>Good up to ' + money(g) + ", fair up to " + money(f) + ", walk away above " + money(w) + ".</p>" + bar;
+    return;
+  }
+  const v = priceVerdict(c.p, +raw);
+  let extra = bar;
+  if (it.id === "suit" && +raw > 80) extra += "<p><b>Cheapest plan:</b> skip the suit unless it is under $80. She cannot wear it at local hill races this season.</p>";
+  if (it.id === "skis" && c.k.startsWith("used")) extra += "<p>Also run the <a href=\"#ski\">Ski check</a>.</p>";
+  out.className = "verdict " + v.cls;
+  out.innerHTML = '<div class="big">' + money(+raw) + " – " + esc(v.word) + "</div><p>" + esc(v.text) + "</p>" + extra;
+}
+
+/* ---------- Ski check ---------- */
+
+function renderSki() {
+  $("#sBrand").innerHTML = BRANDS.map((b) => '<option value="' + b.id + '">' + esc(b.name) + "</option>").join("");
+  const saved = store.get("ski", {});
+  if (saved.brand) $("#sBrand").value = saved.brand;
+  if (saved.type) $("#sType").value = saved.type;
+  if (saved.len) $("#sLen").value = saved.len;
+  if (saved.year) $("#sYear").value = saved.year;
+  ["#sBrand", "#sType", "#sYear"].forEach((s) => $(s).addEventListener("change", updateSki));
+  $("#sLen").addEventListener("input", updateSki);
+  updateSki();
+
+  const done = store.get("checks", {});
+  $("#checklist").innerHTML = CHECKS.map(([k, txt]) =>
+    '<div class="check"><input type="checkbox" id="c-' + k + '"' + (done[k] ? " checked" : "") + '><label for="c-' + k + '">' + txt + "</label></div>").join("");
+  CHECKS.forEach(([k]) => $("#c-" + k).addEventListener("change", updateChecks));
+  $("#cReset").addEventListener("click", () => { CHECKS.forEach(([k]) => { $("#c-" + k).checked = false; }); updateChecks(); });
+  updateChecks();
+}
+
+const RANK = { good: 0, ok: 1, warn: 2, bad: 3 };
+
+function updateSki() {
+  const b = BRANDS.find((x) => x.id === $("#sBrand").value);
+  const type = $("#sType").value, year = +$("#sYear").value, raw = $("#sLen").value;
+  store.set("ski", { brand: b.id, type, len: raw, year: String(year) });
+  const out = $("#sOut");
+  const notes = [];
+
+  if (type === "sl") notes.push(["good", "Slalom race ski – what the club asked for."]);
+  if (type === "combi") notes.push(["warn", "Multi-event ski – AOA allows it, but the club asked for SL. OK if cheap; ask the coach."]);
+  if (type === "gs") notes.push(["bad", "GS ski – the club wants a slalom ski for 10-year-olds. Skip."]);
+  if (type === "rec") notes.push(["bad", "Not a race ski. Walk away."]);
+
+  if (year === 0) notes.push(["good", "New this season."]);
+  else if (year <= 1) notes.push(["good", "1 season old – fine."]);
+  else if (year <= 3) notes.push(["ok", year + " seasons old – OK if edges and base are good."]);
+  else if (year === 4) notes.push(["bad", "4+ seasons old – too old. Binding may no longer be indemnified."]);
+  else notes.push(["warn", "Seller doesn't know the age – red flag. Look for the year on the ski or binding."]);
+
+  if (raw === "" || isNaN(+raw)) {
+    out.className = "verdict none";
+    out.innerHTML = '<div class="big">Enter a length</div><p>' + esc(b.name) + ": " + b.lo + "–" + b.hi + " cm is right for M.</p>";
+    return;
+  }
+  const L = +raw;
+  if (L < b.lo - 4) notes.unshift(["bad", L + " cm is too short. Look for " + b.lo + "–" + b.hi + " cm."]);
+  else if (L < b.lo) notes.unshift(["warn", L + " cm is a bit short. OK only if cheap – she is new to racing."]);
+  else if (L >= b.hi - 1 && L <= b.hi) notes.unshift(["good", L + " cm matches the club's +5 cm advice."]);
+  else if (L <= b.hi) notes.unshift(["good", L + " cm is chart size – good for a first-year racer."]);
+  else if (L <= b.hi + 4) notes.unshift(["warn", L + " cm is long. Harder to turn – ask the coach."]);
+  else notes.unshift(["bad", L + " cm is too long. Look for " + b.lo + "–" + b.hi + " cm."]);
+
+  const worst = notes.reduce((m, n) => (RANK[n[0]] > RANK[m] ? n[0] : m), "good");
+  const word = { good: "Good ski for M", ok: "OK ski", warn: "Maybe – check first", bad: "Walk away" }[worst];
+  out.className = "verdict " + worst;
+  out.innerHTML = '<div class="big">' + word + "</div>" +
+    "<ul style=\"margin:8px 0 0;padding:0;list-style:none;color:var(--text)\">" + notes.map((n) => "<li>" + ({ good: "✓", ok: "•", warn: "!", bad: "✗" }[n[0]]) + " " + esc(n[1]) + "</li>").join("") + "</ul>" +
+    "<p class=\"small\">Binding that fits " + esc(b.name) + ": " + esc(b.bind) + ".</p>";
+}
+
+function updateChecks() {
+  const done = {};
+  CHECKS.forEach(([k]) => { done[k] = $("#c-" + k).checked; });
+  store.set("checks", done);
+  const n = Object.values(done).filter(Boolean).length;
+  const out = $("#cOut");
+  if (n === CHECKS.length) { out.className = "verdict good"; out.innerHTML = '<div class="big">All 8 checked</div><p>Safe to buy at a good or fair price.</p>'; }
+  else if (n === 0) { out.className = "verdict none"; out.innerHTML = '<div class="big">0 of 8 checked</div><p>Tick each one as you check the ski.</p>'; }
+  else { out.className = "verdict warn"; out.innerHTML = '<div class="big">' + n + " of 8 checked</div><p>Any check that fails = walk away.</p>"; }
+}
+
+/* ---------- Shopping list ---------- */
+
+function renderList() {
+  const st = store.get("list", {});
+  $("#shopList").innerHTML = ITEMS.map((it) => {
+    const s = st[it.id] || {};
+    const status = s.status || (it.plan === "have" ? "have" : it.plan === "skip" ? "skip" : "need");
+    const [cls, label] = PLAN_TAG[it.plan];
+    return '<div class="item"><span class="name">' + esc(it.name) + '</span><span class="tag ' + cls + '">' + label + "</span>" +
+      '<div class="ctl"><select data-id="' + it.id + '" class="lStatus" aria-label="Status for ' + esc(it.name) + '">' +
+      ["need", "bought", "have", "skip"].map((o) => '<option value="' + o + '"' + (o === status ? " selected" : "") + ">" +
+        { need: "Still need", bought: "Bought", have: "Already have", skip: "Not buying" }[o] + "</option>").join("") +
+      '</select><input type="number" inputmode="decimal" min="0" placeholder="Paid $" class="lPaid" data-id="' + it.id + '" aria-label="Paid for ' + esc(it.name) + '" value="' + (s.paid || "") + '"></div></div>';
+  }).join("");
+  document.querySelectorAll(".lStatus, .lPaid").forEach((el) => el.addEventListener("input", saveList));
+  $("#lReset").addEventListener("click", () => { store.set("list", {}); renderList(); });
+  totals();
+}
+
+function saveList() {
+  const st = {};
+  document.querySelectorAll(".lStatus").forEach((el) => { st[el.dataset.id] = { status: el.value }; });
+  document.querySelectorAll(".lPaid").forEach((el) => { st[el.dataset.id].paid = el.value; });
+  store.set("list", st);
+  totals();
+}
+
+function totals() {
+  let spent = 0, left = 0, lean = 0;
+  ITEMS.forEach((it) => { lean += it.lean; });
+  document.querySelectorAll(".lStatus").forEach((el) => {
+    const it = ITEMS.find((i) => i.id === el.dataset.id);
+    const paid = +document.querySelector('.lPaid[data-id="' + it.id + '"]').value || 0;
+    spent += paid;
+    if (el.value === "need") left += it.lean;
+  });
+  $("#spent").textContent = money(spent);
+  $("#spentNote").textContent = "Cheapest plan total: " + money(lean) + ". Still to buy on that plan: about " + money(left) + ".";
+}
+
+/* ---------- Rules, info ---------- */
+
+function renderRules() {
+  $("#rulesTable").innerHTML = '<tr><th>Item</th><th>Slalom</th><th>GS</th></tr>' +
+    RULES.map((r) => "<tr><td><b>" + esc(r[0]) + "</b>" + (r[3] ? '<br><span class="small muted">' + esc(r[3]) + "</span>" : "") +
+      "</td><td>" + esc(r[1]) + "</td><td>" + esc(r[2]) + "</td></tr>").join("");
+}
+
+function renderInfo() {
+  const done = store.get("todo", {});
+  $("#todo").innerHTML = '<h3 style="margin-top:0">To do</h3>' + TODO.map(([k, t, d, url]) =>
+    '<div class="check"><input type="checkbox" id="t-' + k + '"' + (done[k] ? " checked" : "") + '><label for="t-' + k + '"><b>' + esc(t) + "</b>" +
+    (d ? '<br><span class="small muted">' + esc(d) + "</span>" : "") + (url ? ' <a class="small" href="' + url + '" rel="noopener">Link</a>' : "") + "</label></div>").join("");
+  TODO.forEach(([k]) => $("#t-" + k).addEventListener("change", (e) => { const d = store.get("todo", {}); d[k] = e.target.checked; store.set("todo", d); }));
+
+  $("#coachQ").textContent = COACH_Q;
+  $("#copyQ").addEventListener("click", async () => {
+    try { await navigator.clipboard.writeText(COACH_Q); $("#copyQ").textContent = "Copied"; }
+    catch (e) { $("#copyQ").textContent = "Select and copy"; }
+    setTimeout(() => { $("#copyQ").textContent = "Copy"; }, 2000);
+  });
+
+  $("#sources").innerHTML = SOURCES.map(([id, t, url]) =>
+    "<li><b>" + id + "</b> – " + (url ? '<a href="' + url + '" rel="noopener">' + esc(t) + "</a>" : esc(t)) + "</li>").join("");
+}
+
+/* ---------- Print sheet ---------- */
+
+function renderPrint() {
+  let html = "<h1>M's ski gear – swap card</h1><p>U12 first year · 81 lbs · has Dalbello DRS 75 boots and regular poles · new to racing</p>";
+  html += '<div class="box"><b>Rules:</b> Bring her boots. Never buy a used helmet or mouth guard. SL race skis only. ' +
+    "Tech must confirm the binding is indemnified. Over $200? Text Pete a photo first.</div>";
+  html += "<h2>What to buy</h2><table><tr><th>Item</th><th>Plan</th><th>Note</th></tr>" +
+    ITEMS.map((it) => "<tr><td>" + esc(it.name) + "</td><td>" + PLAN_TAG[it.plan][1] + (it.buy === "New only" ? " (new only)" : "") + "</td><td>" + esc(it.note) + "</td></tr>").join("") + "</table>";
+  html += "<h2>SL ski length (cm)</h2><table><tr><th>Brand</th><th>Chart</th><th>+5 cm</th><th>Binding that fits</th></tr>" +
+    BRANDS.map((b) => "<tr><td>" + esc(b.name) + "</td><td>" + b.lo + "</td><td>" + b.hi + "</td><td>" + esc(b.bind) + "</td></tr>").join("") + "</table>";
+  html += '<h2 class="pb">Prices (CAD)</h2><table><tr><th>Item</th><th>Condition</th><th>Good ≤</th><th>Fair ≤</th><th>Walk away &gt;</th></tr>';
+  ITEMS.filter((it) => it.conds.length).forEach((it) => it.conds.forEach((c) => {
+    html += "<tr><td>" + esc(it.name) + "</td><td>" + esc(c.label) + "</td>" +
+      (c.p ? "<td>" + money(c.p[0]) + "</td><td>" + money(c.p[1]) + "</td><td>" + money(c.p[2]) + "</td>" : '<td colspan="3">Never buy</td>') + "</tr>";
+  }));
+  html += "</table>";
+  html += "<h2>Used ski checklist</h2><ul>" + CHECKS.map(([, t]) => "<li>☐ " + t + "</li>").join("") + "</ul>";
+  html += "<h2>Helmet</h2><p>Hard-ear with FIS sticker. Chin guard must come off (slalom yes, GS no).</p>";
+  $("#print").innerHTML = html;
+}
+
+/* ---------- Shell: tabs, text size, theme ---------- */
+
+function route() {
+  const id = (location.hash || "#start").slice(1);
+  const page = document.getElementById(id) && document.getElementById(id).classList.contains("page") ? id : "start";
+  document.querySelectorAll("section.page").forEach((s) => s.classList.toggle("active", s.id === page));
+  document.querySelectorAll("nav.tabs a").forEach((a) => {
+    if (a.getAttribute("href") === "#" + page) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current");
+  });
+  window.scrollTo(0, 0);
+}
+
+function shell() {
+  const big = store.get("big", false);
+  document.documentElement.classList.toggle("big", big);
+  $("#bigBtn").setAttribute("aria-pressed", String(big));
+  $("#bigBtn").addEventListener("click", () => {
+    const on = !document.documentElement.classList.contains("big");
+    document.documentElement.classList.toggle("big", on);
+    $("#bigBtn").setAttribute("aria-pressed", String(on));
+    store.set("big", on);
+  });
+  $("#printBtn").addEventListener("click", () => window.print());
+
+  const themes = ["auto", "light", "dark"];
+  const applyTheme = (t) => {
+    if (t === "auto") document.documentElement.removeAttribute("data-theme"); else document.documentElement.setAttribute("data-theme", t);
+    $("#themeBtn").textContent = "Theme: " + t;
+  };
+  let theme = store.get("theme", "auto");
+  applyTheme(theme);
+  $("#themeBtn").addEventListener("click", () => { theme = themes[(themes.indexOf(theme) + 1) % 3]; store.set("theme", theme); applyTheme(theme); });
+
+  window.addEventListener("hashchange", route);
+  route();
+}
+
+renderStart(); renderPrice(); renderSki(); renderList(); renderRules(); renderInfo(); renderPrint(); shell();
+
+if ("serviceWorker" in navigator && location.protocol === "https:") {
+  navigator.serviceWorker.register("sw.js").catch(() => {});
+}
+</script>
+</body>
+</html>

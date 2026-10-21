@@ -1,0 +1,12 @@
+{
+  "name": "M's Ski Gear Guide",
+  "short_name": "Ski Gear",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f6f4f1",
+  "theme_color": "#b3122e",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

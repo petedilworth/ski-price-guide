@@ -1,5 +1,5 @@
 // Offline cache for the ski gear guide. Bump VERSION when files change.
-const VERSION = "skigear-2026-10-21f";
+const VERSION = "skigear-2026-10-21g";
 const FILES = ["./", "./index.html", "./manifest.webmanifest", "./icon.svg"];
 
 self.addEventListener("install", (e) => {
@@ -14,16 +14,19 @@ self.addEventListener("activate", (e) => {
   );
 });
 
-// Network first, so updates show up when online; fall back to cache when offline.
+// Cache first, refresh in the background. Weak signal at a ski swap or show
+// must never stall the page; updates appear on the next visit.
 self.addEventListener("fetch", (e) => {
   if (e.request.method !== "GET" || new URL(e.request.url).origin !== location.origin) return;
   e.respondWith(
-    fetch(e.request)
-      .then((res) => {
-        const copy = res.clone();
-        caches.open(VERSION).then((c) => c.put(e.request, copy));
-        return res;
+    caches.open(VERSION).then((cache) =>
+      cache.match(e.request, { ignoreSearch: true }).then((hit) => {
+        const update = fetch(e.request)
+          .then((res) => { if (res.ok) cache.put(e.request, res.clone()); return res; })
+          .catch(() => hit || cache.match("./index.html"));
+        if (hit) { e.waitUntil(update.catch(() => {})); return hit; }
+        return update;
       })
-      .catch(() => caches.match(e.request).then((r) => r || caches.match("./index.html")))
+    )
   );
 });

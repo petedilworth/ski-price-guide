@@ -990,26 +990,36 @@ const SHOW_UNSURE = [
   "Sporting Life, Squire John's and other race shops were not found on the exhibitor list."
 ];
 
+// Calendar date in Toronto, e.g. "2026-10-22".
+const torontoDay = (ms) => new Date(ms).toLocaleDateString("en-CA", { timeZone: "America/Toronto" });
+const dayGap = (a, b) => Math.round((Date.parse(torontoDay(b)) - Date.parse(torontoDay(a))) / 864e5);
+
 function showStatus(now) {
   const t = now.getTime();
   const fmt = (d) => d.toLocaleTimeString("en-CA", { hour: "numeric", minute: "2-digit", timeZone: "America/Toronto" });
   for (const d of SHOW_DAYS) {
     const o = Date.parse(d.open), c = Date.parse(d.close);
     if (t < o) {
-      const days = Math.ceil((o - t) / 864e5);
-      return t < Date.parse(SHOW_DAYS[0].open) && days > 1 ? "Starts in " + days + " days – Friday 3 pm" :
-        "Opens " + d.label + " at " + fmt(new Date(o));
+      const gap = dayGap(t, o);
+      if (gap === 0) return "Opens today at " + fmt(new Date(o));
+      if (gap === 1) return (d === SHOW_DAYS[0] ? "Starts tomorrow" : "Opens tomorrow") + " at " + fmt(new Date(o));
+      return "Starts in " + gap + " days – " + d.label + " at " + fmt(new Date(o));
     }
     if (t < c) return "Open now – until " + fmt(new Date(c)) + " " + d.label;
   }
   return "The show is over for 2026";
 }
 
-function renderShow() {
+function updateShowStatus() {
   const st = showStatus(new Date());
   $("#showStatus").textContent = st;
   $("#showBannerTxt").textContent = st;
-  if (st.startsWith("The show is over")) $("#showBanner").style.display = "none";
+  $("#showBanner").style.display = st.startsWith("The show is over") ? "none" : "block";
+}
+
+function renderShow() {
+  updateShowStatus();
+  setInterval(updateShowStatus, 60000);
 
   $("#showPlan").innerHTML = SHOW_PLAN.map((x) => "<li>" + x + "</li>").join("");
   $("#showBooths").innerHTML = SHOW_BOOTHS.map(([n, b, w, u]) =>
@@ -1153,7 +1163,7 @@ function updatePrice() {
     '%"></i><i class="w" style="width:' + (scale(w) - scale(f)) + '%"></i><i class="b" style="width:' + (100 - scale(w)) + '%"></i>' +
     (raw !== "" ? '<span class="pin" style="left:calc(' + scale(+raw) + '% - 2px)"></span>' : "") + "</div>" +
     '<div class="barlabels">Good ≤ ' + money(g) + " · Fair ≤ " + money(f) + " · Walk away &gt; " + money(w) + "</div>";
-  if (raw === "" || isNaN(+raw)) {
+  if (raw === "" || isNaN(+raw) || +raw < 0) {
     out.className = "verdict none";
     out.innerHTML = '<div class="big">Enter a price</div><p>Good up to ' + money(g) + ", fair up to " + money(f) + ", walk away above " + money(w) + ".</p>" + bar;
     return;

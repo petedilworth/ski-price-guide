@@ -28,6 +28,7 @@
   --bad: #a3141f;
   --bad-bg: #fbdcdd;
   --focus: #1b5fd1;
+  --bar: #2a78d6;
   --radius: 14px;
   --shadow: 0 1px 2px rgba(0,0,0,.06), 0 2px 8px rgba(0,0,0,.05);
   color-scheme: light;
@@ -51,6 +52,7 @@
     --bad: #ff8a8f;
     --bad-bg: #401a1c;
     --focus: #7fb0ff;
+    --bar: #3987e5;
     --shadow: none;
     color-scheme: dark;
   }
@@ -73,6 +75,7 @@
   --bad: #ff8a8f;
   --bad-bg: #401a1c;
   --focus: #7fb0ff;
+  --bar: #3987e5;
   --shadow: none;
   color-scheme: dark;
 }
@@ -208,7 +211,8 @@ summary { cursor: pointer; font-weight: 700; }
 .pill.aoa { background: var(--good-bg); color: var(--good); font-weight: 700; }
 .toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 0 0 12px; }
 .toolbar label { margin: 0; font-weight: 600; display: flex; gap: 6px; align-items: center; }
-.toolbar select { width: auto; padding: 6px 10px; }
+.toolbar select { width: auto; max-width: 100%; min-width: 0; padding: 6px 10px; }
+.toolbar label { flex-wrap: wrap; max-width: 100%; }
 .deal { display: grid; grid-template-columns: 5.2rem 1fr; gap: 2px 12px; padding: 10px 0; border-bottom: 1px solid var(--line); }
 .deal:last-child { border-bottom: 0; }
 .deal.best { background: var(--good-bg); border-radius: 10px; padding: 10px 8px; margin: 0 -8px; }
@@ -226,6 +230,24 @@ details.group[open] > summary { margin-bottom: 4px; }
 .steps li { counter-increment: st; position: relative; padding: 0 0 12px 40px; }
 .steps li::before { content: counter(st); position: absolute; left: 0; top: 0; width: 28px; height: 28px; border-radius: 50%;
   background: var(--brand); color: var(--brand-ink); font-weight: 800; display: grid; place-items: center; font-size: .9rem; }
+
+.cmp-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 8px; margin: 0 0 4px; }
+.cmp-head h3 { margin: 0; }
+.cmp-sum { font-size: .85rem; color: var(--muted); margin: 0 0 8px; }
+.cmp-row { display: grid; grid-template-columns: minmax(4.5rem, 7.2rem) minmax(0, 1fr) 4.4rem; gap: 2px 8px; align-items: center; padding: 6px 0; }
+.cmp-row .st { font-size: .85rem; font-weight: 600; line-height: 1.2; overflow-wrap: anywhere; }
+.cmp-row .st a { color: var(--text); }
+.cmp-row .track { position: relative; height: 18px; }
+.cmp-row .cbar { position: absolute; left: 0; top: 0; height: 18px; background: var(--bar); border-radius: 0 4px 4px 0; }
+.cmp-row.dead .cbar { background: var(--line); }
+.cmp-row .goodline { position: absolute; top: -4px; bottom: -4px; width: 0; border-left: 2px dashed var(--muted); opacity: .55; }
+.cmp-row .val { text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; font-size: .95rem; }
+.cmp-row .sub { grid-column: 1 / -1; font-size: .78rem; color: var(--muted); margin-top: -2px; }
+.cmp-row.low .val::after { content: " ◀"; font-size: .7rem; }
+.cmp-axis { display: grid; grid-template-columns: minmax(4.5rem, 7.2rem) minmax(0, 1fr) 4.4rem; gap: 0 8px; font-size: .72rem; color: var(--muted); }
+.cmp-axis .ticks { position: relative; height: 1.2em; border-top: 1px solid var(--line); }
+.cmp-axis .ticks span { position: absolute; transform: translateX(-50%); top: 2px; }
+.cmp-axis .ticks span:first-child { transform: none; }
 
 #print { display: none; }
 @media print {
@@ -370,7 +392,8 @@ details.group[open] > summary { margin-bottom: 4px; }
   <p class="small muted" id="skiAsOf"></p>
   <div class="toolbar">
     <label><input type="checkbox" id="skiInRange" checked> Only M's lengths</label>
-    <label for="skiSort">Sort <select id="skiSort"><option value="price">Cheapest first</option><option value="brand">By brand</option></select></label>
+    <label for="skiYear">Year <select id="skiYear"><option value="2027">New (2027)</option><option value="all">All years</option><option value="2026">2026</option><option value="old">2025 and older</option></select></label>
+    <label for="skiSort">View <select id="skiSort"><option value="compare">Compare stores</option><option value="price">Cheapest first</option><option value="brand">By brand</option></select></label>
   </div>
   <div class="card">
     <h3 style="margin-top:0">Cheapest in M's size</h3>
@@ -694,12 +717,26 @@ const RETAILERS = {
   cm: { name: "Comor", url: "https://www.comorsports.com" },
   st: { name: "Ski Town", url: "https://www.skitown.ca" },
   ob: { name: "Oberson", url: "https://www.oberson.com" },
-  gs: { name: "Genetik Sport", url: "https://genetiksport.com" }
+  gs: { name: "Genetik Sport", url: "https://genetiksport.com" },
+  ku: { name: "Kunstadt", url: "https://www.kunstadt.com" },
+  gb: { name: "Gates and Boards", url: "https://www.gatesandboards.com" },
+  bg: { name: "Boutique Garceau", url: "https://www.boutiquegarceau.com" },
+  ls: { name: "Spécialiste du Ski", url: "https://www.specialisteduski.com" },
+  di: { name: "Dinardo's", url: "https://www.dinardoskibikehike.com" },
+  af: { name: "Aerobics First", url: "https://www.aerobicsfirst.com" },
+  hr: { name: "Head Racing Canada", url: "https://headracingcanada.com" },
+  sp: { name: "SkatePro", url: "https://www.skatepro.ca" },
+  bv: { name: "Brunelle Ski & Vélo", url: "https://brunelleskivelo.com" },
+  sv: { name: "Ski Vélo Magog", url: "https://skivelo.com" },
+  ab: { name: "Atomic Canada (list price)", url: "https://www.atomic.com/en-ca/" },
+  rc: { name: "Rossignol Canada (list price)", url: "https://www.rossignol.com/ca-en/" },
+  vk: { name: "Völkl Canada (brand site)", url: "https://volkl.com" }
 };
 
 // Items the AOA 20% covers at Skiis & Biikes (protection, bags, accessories, clothing).
 const AOA_ITEMS = ["helmet", "chin", "back", "shin", "poleguard", "arm", "mouth", "suit"];
 let AOA_SKIS = "maybe"; // "yes" | "maybe" | "no"
+// Searched, nothing found: Rick's Pro Shop, Sports Experts, Atmosphere, La Cordée, Sail, Ski Pro.
 let AOA_NOTE = "AOA prices assume 20% off the price shown. Skiis & Biikes says race skis, boots and bindings get special pricing in store, and 20% is for \"select\" race products. Ask in store, or email info@skiisandbiikes.com with the subject \"Racer Pricing\". Also ask whether it stacks with a sale.";
 
 // m = BRANDS id. len = lengths listed. reg/sale = CAD. src = "page" or "snippet".
@@ -761,14 +798,44 @@ const SKI_PRICES = [
   { m: "head", r: "st", y: "2027", len: [139], reg: 629.00, sale: 440.30, url: "https://www.skitown.ca/en/wcr-esl-rebel-team-sw-rp-skis-w-wcr-t-plate-25-26.html", src: "snippet", note: "139 in stock. Free shipping over $100" },
   { m: "rossignol", r: "st", y: "2026", len: [], reg: 650.00, sale: 455.00, url: "https://www.skitown.ca/en/hero-sl-pro-r21-pro-skis-25-26.html", src: "snippet", note: "In stock" },
   // Oberson
-  { m: "dynastar", r: "ob", y: "2026", len: [135], reg: 599.95, sale: null, url: "https://www.oberson.com/en/products/dynastar-speed-omeglass-team-sl-r21-pro-kids-alpine-skis-254850", src: "snippet", note: "Sold out" },
+  { m: "dynastar", r: "ob", y: "2027", len: [135], reg: 599.95, sale: null, url: "https://www.oberson.com/en/products/dynastar-speed-omeglass-team-sl-r21-pro-kids-alpine-skis-254850", src: "snippet", note: "Labelled FW27. 135 sold out" },
   { m: "rossignol", r: "ob", y: "2026", len: [128, 135, 142, 149], reg: 649.95, sale: 454.96, url: "https://www.oberson.com/products/rossignol-skis-alpins-hero-sl-pro-128-149-r21-pro-enfant-164102", src: "snippet", note: "Sold out" },
   { m: "head", r: "ob", y: "2025", len: [139], reg: 628.95, sale: null, url: "https://www.oberson.com/en/products/head-wcr-e-sl-rebel-team-sw-rp-adult-alpine-skis-165771", src: "snippet", note: "Final sale" },
   // Genetik Sport (year not shown)
   { m: "rossignol", r: "gs", y: "?", len: [128, 142, 149], reg: 629.95, sale: 489.95, url: "https://genetiksport.com/en/collections/rossignol-1", src: "snippet", note: "Snapshots show $419.97–$489.95" },
-  { m: "dynastar", r: "gs", y: "?", len: [128, 135, 142, 149], reg: 599.95, sale: 479.95, url: "https://genetiksport.com/en/products/skis-dynastar-speed-omg-team-sl-pro-r21", src: "snippet" },
+  { m: "dynastar", r: "gs", y: "?", len: [128, 135, 142, 149], reg: 624.95, sale: 489.95, url: "https://genetiksport.com/en/products/skis-dynastar-speed-omg-team-sl-pro-r21", src: "snippet", note: "135 out of stock; 142 available" },
   { m: "head", r: "gs", y: "?", len: [118, 132, 139, 146, 153, 160], reg: 629.95, sale: 478.95, url: "https://genetiksport.com/en/products/skis-head-wcr-e-sl-rebel-team-sw-rp-wcr-t", src: "snippet" },
-  { m: "atomic", r: "gs", y: "?", len: [145, 152], reg: 699.95, sale: 504.95, url: "https://genetiksport.com/en/products/skis-atomic-nyi-redster-s9-fis-j-rp", src: "snippet", note: "Too long for M" }
+  { m: "atomic", r: "gs", y: "?", len: [145, 152], reg: 699.95, sale: 504.95, url: "https://genetiksport.com/en/products/skis-atomic-nyi-redster-s9-fis-j-rp", src: "snippet", note: "Too long for M" },
+
+  // Added 2026-10-21, round 2 (new-season focus). Search results only.
+  { m: "atomic", r: "ab", y: "?", len: [], reg: 699.99, sale: null, url: "https://www.atomic.com/en-ca/shop/product/redster-s9-fis-j-rp-aa7038.html", src: "snippet", note: "Brand list price; season unclear; out of stock" },
+  { m: "atomic", r: "af", y: "?", len: [131], reg: 629.99, sale: null, url: "https://www.aerobicsfirst.com/products/atom-aa0030594-nyi-redster-s9-fis-j-rp3", src: "snippet", note: "Halifax. Sold out" },
+  { m: "atomic", r: "bv", y: "?", len: [], reg: 699.99, sale: null, url: "https://brunelleskivelo.com/products/aa0030304", src: "snippet", note: "Quebec. Out of stock" },
+  { m: "rossignol", r: "rc", y: "2027", len: [128, 135, 142, 149], reg: 650.00, sale: null, url: "https://www.rossignol.com/ca-en/unisexs-racing-skis-hero-athlete-sl-pro-128-149-r21-pro-RANAF01000.html", src: "snippet", note: "Brand list price" },
+  { m: "rossignol", r: "gb", y: "2027", len: [135, 142, 149], reg: 625.00, sale: null, url: "https://www.gatesandboards.com/rossignol-hero-sl-pro-128-149-r21-pro-26-27.html", src: "snippet", note: "Barrie. Labelled 26/27. In stock (2)" },
+  { m: "rossignol", r: "ku", y: "2026", len: [], reg: 649.99, sale: 519.99, url: "https://www.kunstadt.com/collections/race-skis", src: "snippet" },
+  { m: "dynastar", r: "bg", y: "?", len: [128, 135, 142, 149], reg: 479.99, sale: null, url: "https://www.boutiquegarceau.com/products/skis-racing-junior-speed-omeglass-team-sl-r21-pro", src: "snippet", note: "Quebec. Unavailable" },
+  { m: "dynastar", r: "sv", y: "older", len: [128, 135, 142, 149], reg: 584.99, sale: 379.99, url: "https://skivelo.com/en/product/dynastar-speed-omg-team-sl-r21-pro-2/", src: "snippet", note: "Quebec. Probably older stock" },
+  { m: "head", r: "hr", y: "2027", len: [118, 125, 132, 139, 146, 153, 160], reg: 629.00, sale: 480.00, url: "https://headracingcanada.com/products/118cm-160cm-jr-wcr-e-sl-rebel-team-2026-27-with-team-plate", src: "snippet", note: "Labelled 2026/27" },
+  { m: "head", r: "bg", y: "2027", len: [118, 125, 132, 139, 146, 153, 160], reg: 479.99, sale: null, url: "https://www.boutiquegarceau.com/products/118cm-160cm-jr-wcr-esl-rebel-team-202627-with-team-plate", src: "snippet", note: "Quebec. Stock in her lengths unclear" },
+  { m: "head", r: "sp", y: "?", len: [125, 132, 153, 160], reg: 759.95, sale: 469.95, url: "https://www.skatepro.ca/en/171-52830.htm", src: "snippet", note: "Sold out" },
+  { m: "head", r: "ku", y: "2026", len: [], reg: null, sale: 503.99, url: "https://www.kunstadt.com", src: "snippet" },
+  { m: "head", r: "gb", y: "2026", len: [], reg: null, sale: 503.20, url: "https://www.gatesandboards.com", src: "snippet", note: "Labelled 25/26" },
+  { m: "volkl", r: "gb", y: "2027", len: [122, 129, 136, 143, 150], reg: 599.99, sale: null, url: "https://www.gatesandboards.com/volkl-racetiger-sl-r-jr-jr-plate-26-27.html", src: "snippet", note: "Barrie. Labelled 26/27. Out of stock" },
+  { m: "volkl", r: "bg", y: "2027", len: [], reg: 479.99, sale: null, url: "https://www.boutiquegarceau.com/en/collections/skis-course", src: "snippet", note: "Quebec. New arrival – check 129/136 stock" },
+  { m: "volkl", r: "vk", y: "2026", len: [], reg: 599.99, sale: 359.99, url: "https://volkl.com", src: "snippet", note: "Brand site (French Canada)" },
+  { m: "fischer", r: "sj", y: "2027", len: [130, 135], reg: 774.99, sale: null, url: "https://www.squirejohns.com/products/fischer-26w-rc4-noize-sl-jr-130-135", src: "snippet", note: "M-Plate" },
+  { m: "fischer", r: "ku", y: "2027", len: [130, 135], reg: 774.99, sale: null, url: "https://www.kunstadt.com/collections/fischer", src: "snippet", note: "Unavailable" },
+  { m: "fischer", r: "bg", y: "older", len: [130, 135, 140, 145, 150], reg: 499.99, sale: 399.99, url: "https://www.boutiquegarceau.com/products/rc4-wolrdcup-sl-jr", src: "snippet", note: "Quebec. Probably older model" },
+  { m: "nordica", r: "ku", y: "2027", len: [121, 128, 135, 142, 149], reg: 599.99, sale: null, url: "https://www.kunstadt.com/collections/nordica", src: "snippet", note: "Unavailable" },
+  { m: "nordica", r: "bg", y: "2027", len: [121, 128, 135, 142, 149], reg: 419.99, sale: 334.99, url: "https://www.boutiquegarceau.com/collections/nordica-1", src: "snippet", note: "Quebec. \"Racer price\" – may need proof" },
+  { m: "nordica", r: "ls", y: "?", len: [135], reg: 599.95, sale: null, url: "https://www.specialisteduski.com/dobermann-slj.html", src: "snippet", note: "Quebec. 135 in stock" },
+  { m: "blizzard", r: "di", y: "older", len: [], reg: 629.99, sale: 399.99, url: "https://www.dinardoskibikehike.com/blizzard-firebird-sl-jr-racing-skis-w-o-bindings-6.html", src: "snippet", note: "Ottawa. Likely older model" },
+  { m: "blizzard", r: "bg", y: "older", len: [], reg: 434.99, sale: 299.99, url: "https://www.boutiquegarceau.com/en/collections/liquidation-skis-de-course", src: "snippet", note: "Quebec. Clearance – older model" },
+  { m: "blizzard", r: "af", y: "?", len: [], reg: 599.95, sale: null, url: "https://www.aerobicsfirst.com/products/bliz-8a101500001-firebird-sl-jr-racing", src: "snippet", note: "Halifax. Sold out" },
+  { m: "salomon", r: "gb", y: "2027", len: [124, 131, 138], reg: 649.95, sale: null, url: "https://www.gatesandboards.com/salomon-ni-equipe-fis-sl-jr124-138jt3-26-27.html", src: "snippet", note: "Barrie. 138 in stock (1)" },
+  { m: "salomon", r: "ku", y: "2027", len: [124, 131, 138], reg: 649.99, sale: null, url: "https://www.kunstadt.com/collections/alpine-skiing", src: "snippet", note: "Unavailable" },
+  { m: "salomon", r: "af", y: "?", len: [124, 131, 138], reg: 649.95, sale: null, url: "https://www.aerobicsfirst.com/collections/ski-racing-equipment", src: "snippet", note: "Halifax" }
 ];
 const SKI_NOT_CARRIED = {
   sc: "no junior race skis found online",
@@ -1133,7 +1200,7 @@ function drawGear(it) {
   const rows = GEAR_PRICES.filter((x) => x.i === it.id);
   $("#gearTitle").textContent = "New " + it.name.toLowerCase() + " – prices by store";
   if (!rows.length) { $("#gearCompare").innerHTML = '<p class="muted small">No store prices found for this item yet.</p>'; return; }
-  const skip = (x) => /NOT FIS|sold out|out of stock/i.test(x.product + " " + (x.note || ""));
+  const skip = (x) => /NOT FIS|sold out|out of stock|unavailable/i.test(x.product + " " + (x.note || ""));
   rows.sort((a, b) => (skip(a) - skip(b)) || ((best(a) ?? 1e9) - (best(b) ?? 1e9)));
   const aoa = AOA_ITEMS.includes(it.id);
   $("#gearCompare").innerHTML = rows.map((x, i) => {
@@ -1193,6 +1260,8 @@ function renderSkis() {
   const saved = store.get("skis", {});
   if (saved.inRange === false) $("#skiInRange").checked = false;
   if (saved.sort) $("#skiSort").value = saved.sort;
+  if (saved.year) $("#skiYear").value = saved.year;
+  $("#skiYear").addEventListener("change", drawSkis);
   $("#skiInRange").addEventListener("change", drawSkis);
   $("#skiSort").addEventListener("change", drawSkis);
   drawSkis();
@@ -1219,21 +1288,71 @@ function priceLine(x) {
 function skiRow(r, isBest) {
   const rt = RETAILERS[r.r];
   const lens = !r.len.length ? "lengths not listed" : r.len.map((L) => (lensInRange({ ...r, len: [L] }).length ? "<b>" + L + "</b>" : L)).join(" · ") + " cm";
-  const dead = /sold out|out of stock/i.test(r.note || "");
+  const dead = /sold out|out of stock|unavailable/i.test(r.note || "");
   return '<div class="deal' + (isBest ? " best" : "") + '"' + (dead ? ' style="opacity:.6"' : "") + ">" + priceLine(r) +
-    '<span class="what">' + esc(BRANDS.find((b) => b.id === r.m).name) + " " + (r.y === "?" ? "(year not shown)" : r.y) + "</span>" +
+    '<span class="what">' + esc(BRANDS.find((b) => b.id === r.m).name) + " " + (r.y === "?" ? "(year not shown)" : r.y === "older" ? "(older model)" : r.y) + "</span>" +
     '<span class="where">' + (r.url ? '<a href="' + r.url + '" rel="noopener">' + esc(rt.name) + "</a>" : esc(rt.name)) + srcPill(r.src) +
     (r.sale != null && r.reg != null && r.sale < r.reg ? ' · was <span class="strike">' + money(r.reg) + "</span>" : "") +
     aoaPill(rt, best(r), AOA_SKIS === "yes") + "<br>" + lens + (r.note ? " · " + esc(r.note) : "") + "</span></div>";
 }
 
+// Store-by-store price bars for each model and year. One series, so one colour;
+// the lowest price is marked in text. Bars start at $0 so gaps are honest.
+function compareHTML(rows, mergeUnknown) {
+  const priced = rows.filter((r) => best(r) != null);
+  if (!priced.length) return "";
+  const goodMax = ITEMS.find((i) => i.id === "skis").conds.find((c) => c.k === "newflat").p[0];
+  const top = Math.ceil(Math.max(...SKI_PRICES.filter((r) => best(r) != null).map(best), goodMax) / 100) * 100;
+  const pct = (v) => (v / top) * 100;
+  const dead = (r) => /sold out|out of stock|unavailable/i.test(r.note || "");
+  const groups = {};
+  const gy = (r) => (mergeUnknown && r.y === "?" ? "2027" : r.y);
+  priced.forEach((r) => { (groups[r.m + "|" + gy(r)] = groups[r.m + "|" + gy(r)] || []).push(r); });
+  const keys = Object.keys(groups).sort((a, b) => Math.min(...groups[a].map(best)) - Math.min(...groups[b].map(best)));
+  const ticks = [0, Math.round(top / 2), top];
+  const axis = '<div class="cmp-axis" aria-hidden="true"><span></span><span class="ticks">' +
+    ticks.map((t) => '<span style="left:' + pct(t) + '%">' + money(t) + "</span>").join("") + "</span><span></span></div>";
+
+  return '<div class="card"><p class="small" style="margin:0">Each bar is one store\'s price for that ski. Dashed line = good price (' + money(goodMax) +
+    ' or less for a new ski). ◀ = lowest. Tap a store to open its page.</p></div>' +
+    keys.map((k) => {
+      const list = groups[k].sort((a, b) => (dead(a) - dead(b)) || (best(a) - best(b)));
+      const [m, y] = k.split("|");
+      const live = list.filter((r) => !dead(r));
+      const lo = live.length ? Math.min(...live.map(best)) : null, hi = Math.max(...list.map(best));
+      const stores = new Set(list.map((r) => r.r)).size;
+      const low = list.find((r) => best(r) === lo && !dead(r));
+      const sum = !low ? stores + (stores === 1 ? " store" : " stores") + " · all sold out or unavailable." :
+        stores === 1 ? "Only one store found so far." :
+        stores + " stores · " + money(lo) + "–" + money(hi) + (hi - lo > 0 ? " · save " + money(hi - lo) + " at " + RETAILERS[low.r].name : "");
+      return '<div class="card"><div class="cmp-head"><h3>' + esc(SKI_MODELS[m] || m) + '</h3><span class="pill">' + (y === "?" ? "year not shown" : y === "older" ? "older model" : y) + "</span></div>" +
+        '<p class="cmp-sum">' + esc(sum) + "</p>" +
+        list.map((r) => {
+          const rt = RETAILERS[r.r], v = best(r);
+          const lens = !r.len.length ? "lengths not listed" : (lensInRange(r).length ? "her size: " + lensInRange(r).join(", ") + " cm" : "not her size (" + r.len.join(", ") + ")");
+          const yr = r.y === "?" ? "year not shown · " : "";
+          const tip = rt.name + " · " + money(v) + (r.reg && r.sale ? " (was " + money(r.reg) + ")" : "") + " · " + lens + (r.note ? " · " + r.note : "");
+          return '<div class="cmp-row' + (r === low && stores > 1 ? " low" : "") + (dead(r) ? " dead" : "") + '" title="' + esc(tip) + '">' +
+            '<span class="st">' + (r.url ? '<a href="' + r.url + '" rel="noopener">' + esc(rt.name) + "</a>" : esc(rt.name)) + "</span>" +
+            '<span class="track" role="img" aria-label="' + esc(tip) + '"><span class="cbar" style="width:' + pct(v) + '%"></span>' +
+            '<span class="goodline" style="left:' + pct(goodMax) + '%"></span></span>' +
+            '<span class="val">' + money(v) + "</span>" +
+            '<span class="sub">' + esc(yr + lens) + (r.sale != null && r.reg != null && r.sale < r.reg ? " · was " + money(r.reg) : "") +
+            (rt.aoa && v != null ? " · AOA " + money(v * (1 - AOA_PCT)) + " if eligible" : "") +
+            (r.note ? " · " + esc(r.note) : "") + srcPill(r.src) + "</span></div>";
+        }).join("") + axis + "</div>";
+    }).join("");
+}
+
 function drawSkis() {
-  const inRange = $("#skiInRange").checked, sort = $("#skiSort").value;
-  store.set("skis", { inRange, sort });
+  const inRange = $("#skiInRange").checked, sort = $("#skiSort").value, yearSel = $("#skiYear").value;
+  store.set("skis", { inRange, sort, year: yearSel });
+  const yearOk = (r) => yearSel === "all" || (yearSel === "old" ? (r.y !== "2027" && r.y !== "2026" && r.y !== "?") :
+    yearSel === "2027" ? (r.y === "2027" || r.y === "?") : r.y === yearSel);
   const known = (r) => r.len.length > 0;
-  const dead = (r) => /sold out|out of stock/i.test(r.note || "");
+  const dead = (r) => /sold out|out of stock|unavailable/i.test(r.note || "");
   const order = (x, y) => (dead(x) - dead(y)) || ((best(x) ?? 1e9) - (best(y) ?? 1e9));
-  const rows = SKI_PRICES.filter((r) => !inRange || !known(r) || lensInRange(r).length);
+  const rows = SKI_PRICES.filter((r) => yearOk(r) && (!inRange || !known(r) || lensInRange(r).length));
 
   const top = SKI_PRICES.filter((r) => best(r) != null && known(r) && lensInRange(r).length && !dead(r)).sort(order);
   const seen = new Set();
@@ -1241,7 +1360,9 @@ function drawSkis() {
   $("#skiBest").innerHTML = deals.length ? deals.map((r, i) => skiRow(r, i === 0)).join("") : '<p class="muted">No prices yet.</p>';
 
   let html = "";
-  if (sort === "price") {
+  if (sort === "compare") {
+    html = compareHTML(rows, yearSel === "2027");
+  } else if (sort === "price") {
     const a = rows.filter(known).sort(order), b = rows.filter((r) => !known(r)).sort(order);
     html += '<div class="card"><h3 style="margin-top:0">All prices, cheapest first</h3>' + a.map((r) => skiRow(r, false)).join("") + "</div>";
     if (b.length) html += '<div class="card"><h3 style="margin-top:0">Lengths not listed – check the store</h3>' + b.map((r) => skiRow(r, false)).join("") + "</div>";
@@ -1253,7 +1374,8 @@ function drawSkis() {
         " cm. Binding: " + esc(br.bind) + ".</p>" + list.map((r, i) => skiRow(r, i === 0 && best(r) != null && !dead(r))).join("") + "</div>";
     });
   }
-  $("#skiCompare").innerHTML = html || '<div class="card"><p class="muted">No skis match. Untick "Only M\'s lengths".</p></div>';
+  $("#skiCompare").innerHTML = html || '<div class="card"><p class="muted">No skis match. Try "All years" or untick "Only M\'s lengths".</p></div>' +
+    (yearSel === "2027" ? '<p class="small muted">No 2027 price found yet for some brands – switch Year to "All years".</p>' : "");
 }
 
 /* ---------- Ski check ---------- */
@@ -1405,7 +1527,7 @@ function renderPrint() {
       (c.p ? "<td>" + money(c.p[0]) + "</td><td>" + money(c.p[1]) + "</td><td>" + money(c.p[2]) + "</td>" : '<td colspan="3">Never buy</td>') + "</tr>";
   }));
   html += "</table>";
-  const deals = SKI_PRICES.filter((r) => best(r) != null && r.len.length && lensInRange(r).length && !/sold out|out of stock/i.test(r.note || ""))
+  const deals = SKI_PRICES.filter((r) => best(r) != null && r.len.length && lensInRange(r).length && !/sold out|out of stock|unavailable/i.test(r.note || ""))
     .sort((x, y) => best(x) - best(y)).slice(0, 8);
   html += "<h2>Cheapest new SL skis in her size (as seen " + PRICES_AS_OF + ")</h2><table><tr><th>Price</th><th>Ski</th><th>Store</th><th>Her lengths</th></tr>" +
     deals.map((r) => "<tr><td>" + money(best(r)) + "</td><td>" + esc(SKI_MODELS[r.m]) + " " + r.y + "</td><td>" + esc(RETAILERS[r.r].name) + "</td><td>" + lensInRange(r).join(", ") + "</td></tr>").join("") + "</table>";

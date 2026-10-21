@@ -188,14 +188,14 @@ td.g { color: var(--good); font-weight: 700; } td.b { color: var(--bad); font-we
 nav.tabs {
   position: fixed; left: 0; right: 0; bottom: 0; z-index: 6;
   background: var(--surface); border-top: 1px solid var(--line);
-  display: grid; grid-template-columns: repeat(7, 1fr);
+  display: grid; grid-template-columns: repeat(8, 1fr);
   padding: 4px 4px calc(4px + env(safe-area-inset-bottom));
 }
 nav.tabs a {
   display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 6px 2px;
-  color: var(--muted); text-decoration: none; font-size: .7rem; font-weight: 600; border-radius: 10px;
+  color: var(--muted); text-decoration: none; font-size: .64rem; font-weight: 600; border-radius: 10px;
 }
-nav.tabs a svg { width: 22px; height: 22px; }
+nav.tabs a svg { width: 21px; height: 21px; }
 nav.tabs a[aria-current="page"] { color: var(--brand); background: var(--surface-2); }
 
 .copybox { background: var(--surface-2); border-radius: 10px; padding: 10px 12px; font-size: .95rem; white-space: pre-wrap; }
@@ -212,9 +212,20 @@ summary { cursor: pointer; font-weight: 700; }
 .deal { display: grid; grid-template-columns: 5.2rem 1fr; gap: 2px 12px; padding: 10px 0; border-bottom: 1px solid var(--line); }
 .deal:last-child { border-bottom: 0; }
 .deal.best { background: var(--good-bg); border-radius: 10px; padding: 10px 8px; margin: 0 -8px; }
-.deal .amt { font-size: 1.25rem; font-weight: 800; font-variant-numeric: tabular-nums; }
+.deal .amt { grid-row: span 2; font-size: 1.25rem; font-weight: 800; font-variant-numeric: tabular-nums; }
 .deal .what { font-weight: 600; }
 .deal .where { grid-column: 2; font-size: .85rem; color: var(--muted); }
+
+.status { font-size: 1.15rem; font-weight: 800; }
+.tip { padding: 9px 0; border-bottom: 1px solid var(--line); }
+.tip:last-child { border-bottom: 0; }
+.tip a { font-size: .8rem; margin-left: 4px; }
+details.group > summary { padding: 4px 0; }
+details.group[open] > summary { margin-bottom: 4px; }
+.steps { counter-reset: st; padding: 0; margin: 0; list-style: none; }
+.steps li { counter-increment: st; position: relative; padding: 0 0 12px 40px; }
+.steps li::before { content: counter(st); position: absolute; left: 0; top: 0; width: 28px; height: 28px; border-radius: 50%;
+  background: var(--brand); color: var(--brand-ink); font-weight: 800; display: grid; place-items: center; font-size: .9rem; }
 
 #print { display: none; }
 @media print {
@@ -245,6 +256,9 @@ summary { cursor: pointer; font-weight: 700; }
 
 <!-- START -->
 <section class="page" id="start" aria-labelledby="h-start">
+  <a href="#show" class="card alert" id="showBanner" style="display:block;text-decoration:none;color:inherit">
+    <b>Toronto Ski &amp; Snowboard Show</b> – <span id="showBannerTxt">Oct 23–25</span>. <span style="color:var(--brand)">Open the Show tab →</span>
+  </a>
   <h2 id="h-start">At the swap: start here</h2>
 
   <div class="card alert">
@@ -253,7 +267,7 @@ summary { cursor: pointer; font-weight: 700; }
       <li><b>Never buy a used helmet</b> or used mouth guard.</li>
       <li><b>Skis: slalom ("SL") race skis only.</b> Check the length in the <a href="#ski">Check</a> tab. New prices are in <a href="#skis">Skis</a>.</li>
       <li><b>Ask the binding tech</b> if the binding is still "indemnified" (shops will still service it). No = walk away.</li>
-      <li><b>Check the price</b> in the <a href="#price">Price check</a> tab before you pay.</li>
+      <li><b>Check the price</b> in the <a href="#price">Prices</a> tab before you pay.</li>
       <li><b>Over $200? Text Pete a photo first</b> – the side of the ski and the binding.</li>
     </ol>
   </div>
@@ -280,6 +294,43 @@ summary { cursor: pointer; font-weight: 700; }
     <h3 style="margin-top:0">Ski lengths for M</h3>
     <p class="small muted">Slalom (SL) race ski. Left number = chart size. Right number = chart + 5 cm (the club's advice for one pair).</p>
     <div class="tablewrap"><table id="lenTable"></table></div>
+  </div>
+</section>
+
+<!-- SHOW -->
+<section class="page" id="show" aria-labelledby="h-show">
+  <h2 id="h-show">Toronto Ski &amp; Snowboard Show</h2>
+  <div class="card alert">
+    <div class="status" id="showStatus">Oct 23–25, 2026</div>
+    <p style="margin:6px 0 0">Better Living Centre, Exhibition Place, 195 Princes' Blvd.<br>
+    Fri Oct 23: 3–9 pm · Sat Oct 24: 10 am–6 pm · Sun Oct 25: 10 am–5 pm</p>
+    <p class="small muted" style="margin:6px 0 0">One ticket covers all three days, and you can come and go. <a href="https://torontoskishow.ca/" rel="noopener">torontoskishow.ca</a></p>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0">M's game plan</h3>
+    <ol class="steps" id="showPlan"></ol>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0">Booths to visit</h3>
+    <div id="showBooths"></div>
+    <p class="small muted" style="margin-top:6px">Booth numbers come from the show's exhibitor list, which may still be last year's. Check the floor map at the door.</p>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0">What to bring</h3>
+    <div id="showBring"></div>
+  </div>
+
+  <h3>Pro tips</h3>
+  <input type="text" id="tipSearch" placeholder="Search tips (e.g. helmet, parking, swap)" aria-label="Search tips">
+  <p class="small muted" style="margin:6px 0 10px"><span id="tipCount"></span> <span class="pill">general</span> = common sense, no single source.</p>
+  <div id="showTips"></div>
+
+  <div class="card">
+    <h3 style="margin-top:0">Not confirmed</h3>
+    <ul class="plain small" id="showUnsure"></ul>
   </div>
 </section>
 
@@ -459,6 +510,7 @@ summary { cursor: pointer; font-weight: 700; }
 
 <nav class="tabs" aria-label="Sections">
   <a href="#start"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg>Start</a>
+  <a href="#show"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 9h18v11H3zM3 9l3-5h12l3 5M8 13h8"/></svg>Show</a>
   <a href="#price"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 12l-8 8-9-9V3h8z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg>Prices</a>
   <a href="#skis"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 20h16M7 20V10M12 20V4M17 20v-7"/></svg>Skis</a>
   <a href="#ski"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 21L18 3M10 21L22 3"/></svg>Check</a>
@@ -806,6 +858,187 @@ const GEAR_PRICES = [
   g("shin", "sj", "POC Shins Classic Jr", 99.99, null, "https://www.squirejohns.com/collections/race-protection"),
   g("shin", "ob", "Leki 4Race Kids", 219.95, 153.97, "https://www.oberson.com/en/products/leki-4race-kids-shin-guard-165068")
 ];
+
+/* ---------- Toronto Ski & Snowboard Show ---------- */
+
+// Show hours in Toronto time (EDT, UTC-4, until Nov 1, 2026).
+const SHOW_DAYS = [
+  { label: "Friday", open: "2026-10-23T15:00:00-04:00", close: "2026-10-23T21:00:00-04:00" },
+  { label: "Saturday", open: "2026-10-24T10:00:00-04:00", close: "2026-10-24T18:00:00-04:00" },
+  { label: "Sunday", open: "2026-10-25T10:00:00-04:00", close: "2026-10-25T17:00:00-04:00" }
+];
+
+const TSS = "https://torontoskishow.ca/";
+const SHOW_PLAN = [
+  "<b>Register M with Alpine Ontario first</b> if you have not. It unlocks the Speed Shop card at Skiis &amp; Biikes and the AOA ticket code.",
+  "<b>Buy tickets online with code AOA25</b> (25% off for the AOA community). Online tickets come with the 2-for-1 lift voucher. Kids 10 and under are free, so M and Hailey cost nothing – two adult tickets ($36 with the code) beat the $45 family pass.",
+  "<b>Friday from 3 pm: scout and shop the booths.</b> Best selection. Price-check everything in the <a href=\"#skis\">Skis</a> and <a href=\"#price\">Prices</a> tabs before you say yes.",
+  "<b>Friday 5:30–8 pm: Ontario Ski Racing Awards</b> at the Snow Desk T-Bar, free with a show ticket. A good way for M to see where racing can go – and to meet other U12 parents.",
+  "<b>Saturday 10 am: the Ski Patrol swap.</b> Sellers drop off until 9 pm Friday, so Saturday morning likely has the full stock. Skis only for M (no helmets, poles or guards there). Bring her boots.",
+  "<b>Sunday last two hours: go back for deals.</b> Your ticket covers re-entry. Ask booths what they would rather sell than pack up. Not guaranteed."
+];
+
+const SHOW_BOOTHS = [
+  ["Skiis & Biikes", "140 / 148", "Alpine Ontario's partner. Ask for Speed Shop / racer pricing at the booth, and about their kids' buy-back program.", "https://torontoskishow.ca/skiis-and-biikes/"],
+  ["Corbetts", "120", "Race clearance and the Jr. Exchange (50% credit back within 1 season). Ask about free bindings with skis.", "https://torontoskishow.ca/corbetts-ski-and-snowboard/"],
+  ["Atomic", "536 / 546", "Redster S9 junior slalom ski and Redster Jr helmet.", "https://torontoskishow.ca/exhibitors-list/"],
+  ["HEAD", "301", "e.SL Rebel Team junior slalom ski.", "https://torontoskishow.ca/exhibitors-list/"],
+  ["Dynastar", "737–838", "OMG Team SL (same factory as Rossignol).", "https://torontoskishow.ca/exhibitors-list/"],
+  ["Blizzard-Tecnica", "411", "Firebird SL JR.", "https://torontoskishow.ca/exhibitors-list/"],
+  ["Rick's Pro Shop", "–", "Retailer on the exhibitor list.", "https://torontoskishow.ca/ricks-pro-shop/"],
+  ["Canadian Ski Patrol swap", "–", "2,000+ new non-current and used skis, boots and boards.", "https://torontoskishow.ca/canadian-ski-patrol-ski-swap/"],
+  ["Mount St. Louis Moonstone", "299", "Flex8 lift-ticket packs on sale from Oct 23.", "https://www.mountstlouis.com/whats-happening/"]
+];
+
+const SHOW_BRING = [
+  ["kid", "M (for helmet fitting) and her Dalbello boots"],
+  ["bsl", "Her boot sole length (mm) – written down"],
+  ["size", "Her weight (81 lbs), height and age"],
+  ["pole", "One of her $30 poles – to test pole guard fit"],
+  ["goggles", "Her goggles – fit the helmet with them on"],
+  ["aoa", "AOA registration confirmation / Speed Shop card"],
+  ["app", "This app (open it once at home so it works offline) and the printed swap card"],
+  ["pay", "Debit/credit card (food is cashless) and some cash for the swap"],
+  ["strap", "A ski strap or bag, if you take transit home"],
+  ["snack", "Water, snacks, phone charger, comfortable shoes"],
+  ["voucher", "Somewhere safe for the lift voucher – originals only, no copies"]
+];
+
+const SHOW_TIPS = [
+  ["Tickets and timing", "Use code AOA25 for 25% off online tickets. Corbetts (CorbettsSki&Ride25) and Mount St. Louis (MSLM25) codes also give 25% off.", "https://alpineontario.ca/2026-ontario-ski-racing-awards-join-us/"],
+  ["Tickets and timing", "Kids 10 and under are free; adults $24, juniors 11–17 $18, family pass $45 (all plus tax). One page still says under-12 – check at the box office.", "https://www.globenewswire.com/news-release/2026/10/14/3380756/0/en/toronto-ski-snowboard-show-invites-everyone-to-find-their-way-into-winter.html"],
+  ["Tickets and timing", "Buy online, not at the door – the 2-for-1 lift voucher comes with online tickets.", TSS],
+  ["Tickets and timing", "One ticket covers the whole weekend with re-entry. Scout Friday, decide overnight, buy Saturday or Sunday.", TSS],
+  ["Tickets and timing", "Ticket sales are final.", "https://torontoskishow.ca/tickets/"],
+  ["Tickets and timing", "About 20,000 people come. Friday afternoon is the calmest time to talk to staff.", "https://torontoskishow.ca/about/"],
+  ["Tickets and timing", "The Ontario Ski Racing Awards run Friday 5:30–8 pm at the Snow Desk T-Bar, free with a show ticket.", "https://alpineontario.ca/2026-ontario-ski-racing-awards-join-us/"],
+
+  ["Prices and haggling", "Check every price against the Skis and Prices tabs. Show prices are not always lower than online sales.", "https://www.skitalk.com/threads/help-buying-ski-boots.29906/"],
+  ["Prices and haggling", "Ask for deals that are not posted. One shopper got free bindings with skis from Corbetts – \"had to ask; it wasn't written anywhere.\"", "https://forums.redflagdeals.com/2010-toronto-ski-snowboard-show-949935/"],
+  ["Prices and haggling", "Bundles are where to haggle: ask for the binding, mounting or a tune included with the skis.", null],
+  ["Prices and haggling", "Past shoppers saw last year's gear at 40–60% off at equipment booths.", "https://forums.redflagdeals.com/2010-toronto-ski-snowboard-show-949935/"],
+  ["Prices and haggling", "Benchmarks: 20% off is easy, 30% is common on clearance, 40% is a good score.", "https://www.skitalk.com/threads/best-time-of-year-to-buy-ski.35922/"],
+  ["Prices and haggling", "At Skiis & Biikes, always ask: \"Is this the AOA racer price?\" Race ski and binding pricing is done in person, not posted.", "https://skiisandbiikes.com/pages/ways-to-save"],
+  ["Prices and haggling", "Ask if the AOA 20% stacks on top of a show price. Get the answer before paying.", null],
+  ["Prices and haggling", "Screenshot online prices for your target skis before you go, in case there's no signal inside.", "https://snowbrains.com/top-10-ski-swafp-tips/"],
+  ["Prices and haggling", "No rush on regular kids' gear: Sporting Life's in-store sale (up to 50% off) runs to Nov 12.", "https://www.redflagdeals.com/deal/sports-fitness/sporting-life-ultimate-ski-snowboard-event-up-to-50-off-top-brands-gear-and-outerwear/"],
+  ["Prices and haggling", "Sunday's last hour may bring markdowns on items booths don't want to pack. Ask – but don't count on it.", null],
+
+  ["Buying M's skis", "Target lengths: Atomic 131–138, Rossignol/Dynastar 135–142, Head 132–139, Völkl 129–136. Use the Check tab.", null],
+  ["Buying M's skis", "Brand booths (Atomic, Head, Dynastar, Blizzard) show skis but may not sell. Retailers (Skiis & Biikes, Corbetts) sell.", "https://torontoskishow.ca/exhibitors-list/"],
+  ["Buying M's skis", "Ask where and when the binding gets mounted, and get a pick-up date before her first training day.", "https://aussieskier.com/pages/binding-mounting"],
+  ["Buying M's skis", "Mounted skis are usually final sale. Confirm the length before they drill.", "https://aussieskier.com/pages/binding-mounting"],
+  ["Buying M's skis", "Bring her actual boots so the binding is set to them, plus her height, weight and age for the release setting.", null],
+  ["Buying M's skis", "Atomic Colt 7 only fits boot soles up to 266 mm. Know her boot sole length.", "https://www.sport-monz.com/fileadmin/user_upload/pdf-files/Atomic_Alpine_Race_EN_2627_lowres.pdf"],
+  ["Buying M's skis", "Corbetts Jr. Exchange gives 50% credit back within 1 season (30% within 2). Ask if show purchases qualify.", "https://www.corbetts.com/jr-exchange-program"],
+  ["Buying M's skis", "Sporting Life's Junior Half Back excludes race gear – don't count on it for race skis.", "https://www.sportinglife.ca/blog/tune-your-skis-and-get-50-of-jr-snowsport-equipment-back-at-sporting-life/"],
+  ["Buying M's skis", "If the skis will go to Hailey later, a trade-in credit matters less than the lowest price today.", null],
+  ["Buying M's skis", "Keep every receipt – warranty and trade-in credits depend on it.", "https://www.corbetts.com/jr-exchange-program"],
+
+  ["Helmet and protection", "Buy the helmet in person with M there. Fit it with her goggles on: no gap at the brow, no movement with the strap undone.", "https://talesofamountainmama.com/best-ski-and-snowboard-helmets-for-kids/"],
+  ["Helmet and protection", "Look for the FIS sticker inside the helmet. The POC POCito Skull is not FIS – skip it.", null],
+  ["Helmet and protection", "Buy the chin guard with the helmet, same brand, so it fits. It must come off for GS.", null],
+  ["Helmet and protection", "The 20% AOA discount covers protection at Skiis & Biikes – helmet, chin guard, shin guards, pole guards, back protector.", "https://alpineontario.ca/wp-content/uploads/2025/09/AOA-Gear-Guide-2025-26.pdf"],
+  ["Helmet and protection", "Test pole guards on her actual pole. Some only fit race poles with a special grip.", null],
+  ["Helmet and protection", "The swap will not have helmets, guards or poles. Buy those at the booths.", "https://torontoskishow.ca/canadian-ski-patrol-ski-swap/"],
+  ["Helmet and protection", "Buy shin guards and suits a size up so they last for Hailey too.", null],
+
+  ["The Ski Patrol swap", "2,000+ items: new non-current and used skis, boots and snowboards only. No poles or clothing.", "https://torontoskishow.ca/canadian-ski-patrol-ski-swap/"],
+  ["The Ski Patrol swap", "Sellers drop off until 9 pm Friday, so Saturday at 10 am is likely the first time everything is out.", null],
+  ["The Ski Patrol swap", "The best gear goes in the first hour or two. Be at the door when it opens.", "https://snowbrains.com/top-10-ski-swafp-tips/"],
+  ["The Ski Patrol swap", "Prices are set by the seller and can't change – there is no haggling with volunteers.", "https://torontoskishow.ca/canadian-ski-patrol-ski-swap/"],
+  ["The Ski Patrol swap", "Check bindings are still indemnified. Shops won't adjust ones that aren't, usually anything over about 10 years old.", "https://theproskiandride.com/blogs/the-pros-blog/ski-binding-indemnification"],
+  ["The Ski Patrol swap", "Check bases, edges and mounting holes. More than about three mounts weakens the ski.", "https://www.powder.com/gear/what-is-a-ski-swap"],
+  ["The Ski Patrol swap", "Volunteers don't fit boots or set bindings. Have a shop set the release value after you buy.", "https://www.spokesman.com/stories/2022/oct/27/ski-swap-101-a-guide-to-scoring-the-best-deals/"],
+  ["The Ski Patrol swap", "Decide size and budget before you go, and allow about $100 over budget for the right item.", "https://www.outsideonline.com/outdoor-gear/snow-sports-gear/8-rules-scoring-best-ski-swap-deals/"],
+  ["The Ski Patrol swap", "Missed out? Unsold gear goes to the Barrie swap the following weekend.", "https://skiswapsontario.ca/wp1/index.php/toronto-snow-show/"],
+  ["The Ski Patrol swap", "Selling Hailey's outgrown gear? Drop-off is Thu Oct 22 or Fri Oct 23, 6–9 pm. $5 per item plus 25% commission.", "https://torontoskishow.ca/canadian-ski-patrol-ski-swap/"],
+
+  ["Kids at the show", "Bring the kids for helmet and boot fitting – a swap director's top tip.", "https://www.spokesman.com/stories/2018/oct/26/tips-and-tricks-to-remember-while-at-the-mt-spokan/"],
+  ["Kids at the show", "Use the Family Zone (45-foot putt, inflatables, simulators) and Little Riders as a reward after fittings.", "https://evolvecamps.com/blogs/news/toronto-ski-snowboard-show-2026-dates"],
+  ["Kids at the show", "Do fittings first, while they're fresh. Fun second.", null],
+  ["Kids at the show", "Let them pick up trail maps and handle gear at resort booths to keep them engaged.", "https://snowboundexpo.com/news/kate-hawley-joined-the-ski-moms-podcast"],
+  ["Kids at the show", "Two Canadian Olympians and a National Alpine Team member are speaking at the Snow Desk – check the schedule on the day.", "https://www.globenewswire.com/news-release/2026/10/14/3380756/0/en/toronto-ski-snowboard-show-invites-everyone-to-find-their-way-into-winter.html"],
+
+  ["Lift and pass deals", "The 2-for-1 voucher is for adult weekday lift tickets, Jan 4–29, 2027, at Blue Mountain, Brimacombe, Hockley, Horseshoe, Mount St. Louis, Snow Valley and Sir Sam's.", TSS],
+  ["Lift and pass deals", "Originals only – no photocopies, no other offers, kids' tickets not covered. Don't lose it.", "https://torontoskishow.ca/tickets/"],
+  ["Lift and pass deals", "Blue Mountain's 5x7 XL pass price ends Oct 26 – show weekend is the deadline.", "https://www.bluemountain.ca/plan-your-trip/season-passes"],
+  ["Lift and pass deals", "Mount St. Louis Flex8 packs go on sale Oct 23 from $169 + HST (booth 299).", "https://www.mountstlouis.com/whats-happening/"],
+  ["Lift and pass deals", "Tremblant has show promotions on 2–7-day tickets until Nov 26.", "https://www.tremblant.ca/things-to-do/events/ski-snowboard-shows"],
+  ["Lift and pass deals", "Check each resort's website before buying at a booth – some show prices match online sales.", null],
+
+  ["Getting there", "TTC 509 or 511 streetcar to Exhibition Loop, or GO Lakeshore West to Exhibition station. Check the GO weekend timetable.", "https://en.wikipedia.org/wiki/Exhibition_GO_Station"],
+  ["Getting there", "Driving: the show suggests Lots 854 and 855. Exhibition Place lists $18/day ($15 after 6 pm), but rates rise on busy days.", "https://www.explace.on.ca/visiting-us/getting-here/"],
+  ["Getting there", "Food at the Base Lodge is cashless. ATMs are around the venue.", TSS],
+  ["Getting there", "Wear layers – no coat check was confirmed.", null],
+  ["Getting there", "Buying skis on transit? Bring a strap. Or buy first and make one run to the car.", null],
+
+  ["Mistakes to avoid", "Buying swap skis with bindings no shop will touch.", "https://www.skibum.net/do-it-up/gear-guide/indemnified-bindings/"],
+  ["Mistakes to avoid", "Buying a helmet without the FIS sticker – the club requires it.", null],
+  ["Mistakes to avoid", "Rushing a boot fit in a crowd. M's boots already fit – don't let anyone upsell new ones.", "https://www.bootfitters.com/10-steps-perfect-boot-fit"],
+  ["Mistakes to avoid", "Assuming the show beats online or March sales without checking.", "https://www.skitalk.com/threads/help-buying-ski-boots.29906/"],
+  ["Mistakes to avoid", "Losing the paper lift voucher.", "https://torontoskishow.ca/tickets/"],
+  ["Mistakes to avoid", "Buying a race suit she can't wear at local hill races this season – only buy if the price is right.", null]
+];
+
+const SHOW_UNSURE = [
+  "Free-entry age: the 2026 press release says 10 and under; an older page says under 12.",
+  "Booth numbers may be from the 2025 list.",
+  "Whether the AOA 20% / Speed Shop card works at the show booths.",
+  "When buyers can first shop the Ski Patrol swap, and how they pay.",
+  "Which door is the public entrance.",
+  "Sporting Life, Squire John's and other race shops were not found on the exhibitor list."
+];
+
+function showStatus(now) {
+  const t = now.getTime();
+  const fmt = (d) => d.toLocaleTimeString("en-CA", { hour: "numeric", minute: "2-digit", timeZone: "America/Toronto" });
+  for (const d of SHOW_DAYS) {
+    const o = Date.parse(d.open), c = Date.parse(d.close);
+    if (t < o) {
+      const days = Math.ceil((o - t) / 864e5);
+      return t < Date.parse(SHOW_DAYS[0].open) && days > 1 ? "Starts in " + days + " days – Friday 3 pm" :
+        "Opens " + d.label + " at " + fmt(new Date(o));
+    }
+    if (t < c) return "Open now – until " + fmt(new Date(c)) + " " + d.label;
+  }
+  return "The show is over for 2026";
+}
+
+function renderShow() {
+  const st = showStatus(new Date());
+  $("#showStatus").textContent = st;
+  $("#showBannerTxt").textContent = st;
+  if (st.startsWith("The show is over")) $("#showBanner").style.display = "none";
+
+  $("#showPlan").innerHTML = SHOW_PLAN.map((x) => "<li>" + x + "</li>").join("");
+  $("#showBooths").innerHTML = SHOW_BOOTHS.map(([n, b, w, u]) =>
+    '<div class="deal"><span class="amt" style="font-size:1rem">' + (b === "–" ? "" : "Booth<br>" + esc(b)) + '</span><span class="what"><a href="' + u + '" rel="noopener">' + esc(n) +
+    '</a></span><span class="where">' + esc(w) + "</span></div>").join("");
+
+  const done = store.get("bring", {});
+  $("#showBring").innerHTML = SHOW_BRING.map(([k, t]) =>
+    '<div class="check"><input type="checkbox" id="b-' + k + '"' + (done[k] ? " checked" : "") + '><label for="b-' + k + '">' + esc(t) + "</label></div>").join("");
+  SHOW_BRING.forEach(([k]) => $("#b-" + k).addEventListener("change", (e) => { const d = store.get("bring", {}); d[k] = e.target.checked; store.set("bring", d); }));
+
+  $("#showUnsure").innerHTML = SHOW_UNSURE.map((x) => "<li>" + esc(x) + "</li>").join("");
+  $("#tipSearch").addEventListener("input", drawTips);
+  drawTips();
+}
+
+function drawTips() {
+  const q = $("#tipSearch").value.trim().toLowerCase();
+  const groups = [...new Set(SHOW_TIPS.map((t) => t[0]))];
+  let shown = 0;
+  $("#showTips").innerHTML = groups.map((gname, gi) => {
+    const tips = SHOW_TIPS.filter((t) => t[0] === gname && (!q || (t[0] + " " + t[1]).toLowerCase().includes(q)));
+    if (!tips.length) return "";
+    shown += tips.length;
+    return '<details class="card group"' + (q || gi < 2 ? " open" : "") + "><summary>" + esc(gname) + " (" + tips.length + ")</summary>" +
+      tips.map((t) => '<div class="tip">' + esc(t[1]) + (t[2] ? ' <a href="' + t[2] + '" rel="noopener">Source</a>' : ' <span class="pill">general</span>') + "</div>").join("") + "</details>";
+  }).join("") || '<div class="card"><p class="muted">No tips match.</p></div>';
+  $("#tipCount").textContent = shown + " tips" + (q ? " match" : "") + ".";
+}
 
 /* ---------- Storage (per phone, optional) ---------- */
 
@@ -1168,6 +1401,10 @@ function renderPrint() {
     deals.map((r) => "<tr><td>" + money(best(r)) + "</td><td>" + esc(SKI_MODELS[r.m]) + " " + r.y + "</td><td>" + esc(RETAILERS[r.r].name) + "</td><td>" + lensInRange(r).join(", ") + "</td></tr>").join("") + "</table>";
   html += "<h2>Used ski checklist</h2><ul>" + CHECKS.map(([, t]) => "<li>☐ " + t + "</li>").join("") + "</ul>";
   html += "<h2>Helmet</h2><p>Hard-ear with FIS sticker. Chin guard must come off (slalom yes, GS no).</p>";
+  html += '<h2 class="pb">Toronto Ski &amp; Snowboard Show – Oct 23–25, Better Living Centre</h2><p>Fri 3–9 pm · Sat 10–6 · Sun 10–5. One ticket covers all three days with re-entry.</p><ol>' +
+    SHOW_PLAN.map((x) => "<li>" + x + "</li>").join("") + "</ol><h2>Booths</h2><ul>" +
+    SHOW_BOOTHS.map(([n, b, w]) => "<li><b>" + esc(n) + "</b>" + (b === "–" ? "" : " (booth " + esc(b) + ")") + " – " + esc(w) + "</li>").join("") +
+    "</ul><h2>Bring</h2><ul>" + SHOW_BRING.map(([, t]) => "<li>☐ " + esc(t) + "</li>").join("") + "</ul>";
   $("#print").innerHTML = html;
 }
 
@@ -1208,7 +1445,7 @@ function shell() {
   route();
 }
 
-renderStart(); renderPrice(); renderSkis(); renderSki(); renderList(); renderRules(); renderInfo(); renderPrint(); shell();
+renderStart(); renderShow(); renderPrice(); renderSkis(); renderSki(); renderList(); renderRules(); renderInfo(); renderPrint(); shell();
 
 if ("serviceWorker" in navigator && location.protocol === "https:") {
   navigator.serviceWorker.register("sw.js").catch(() => {});

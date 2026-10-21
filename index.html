@@ -188,7 +188,7 @@ td.g { color: var(--good); font-weight: 700; } td.b { color: var(--bad); font-we
 nav.tabs {
   position: fixed; left: 0; right: 0; bottom: 0; z-index: 6;
   background: var(--surface); border-top: 1px solid var(--line);
-  display: grid; grid-template-columns: repeat(6, 1fr);
+  display: grid; grid-template-columns: repeat(7, 1fr);
   padding: 4px 4px calc(4px + env(safe-area-inset-bottom));
 }
 nav.tabs a {
@@ -201,6 +201,20 @@ nav.tabs a[aria-current="page"] { color: var(--brand); background: var(--surface
 .copybox { background: var(--surface-2); border-radius: 10px; padding: 10px 12px; font-size: .95rem; white-space: pre-wrap; }
 details { margin: 0 0 10px; }
 summary { cursor: pointer; font-weight: 700; }
+
+.strike { text-decoration: line-through; color: var(--muted); font-weight: 400; }
+.best { background: var(--good-bg); }
+.pill { display: inline-block; font-size: .72rem; padding: 1px 7px; border-radius: 999px; background: var(--surface-2); color: var(--muted); white-space: nowrap; }
+.pill.aoa { background: var(--good-bg); color: var(--good); font-weight: 700; }
+.toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 0 0 12px; }
+.toolbar label { margin: 0; font-weight: 600; display: flex; gap: 6px; align-items: center; }
+.toolbar select { width: auto; padding: 6px 10px; }
+.deal { display: grid; grid-template-columns: 5.2rem 1fr; gap: 2px 12px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.deal:last-child { border-bottom: 0; }
+.deal.best { background: var(--good-bg); border-radius: 10px; padding: 10px 8px; margin: 0 -8px; }
+.deal .amt { font-size: 1.25rem; font-weight: 800; font-variant-numeric: tabular-nums; }
+.deal .what { font-weight: 600; }
+.deal .where { grid-column: 2; font-size: .85rem; color: var(--muted); }
 
 #print { display: none; }
 @media print {
@@ -237,7 +251,7 @@ summary { cursor: pointer; font-weight: 700; }
     <ol class="rules">
       <li><b>Bring M's boots</b> (or M). The binding must be set to her boot.</li>
       <li><b>Never buy a used helmet</b> or used mouth guard.</li>
-      <li><b>Skis: slalom ("SL") race skis only.</b> Check the length in the <a href="#ski">Ski check</a> tab.</li>
+      <li><b>Skis: slalom ("SL") race skis only.</b> Check the length in the <a href="#ski">Check</a> tab. New prices are in <a href="#skis">Skis</a>.</li>
       <li><b>Ask the binding tech</b> if the binding is still "indemnified" (shops will still service it). No = walk away.</li>
       <li><b>Check the price</b> in the <a href="#price">Price check</a> tab before you pay.</li>
       <li><b>Over $200? Text Pete a photo first</b> – the side of the ski and the binding.</li>
@@ -288,15 +302,39 @@ summary { cursor: pointer; font-weight: 700; }
     <div id="pOut" class="verdict none" aria-live="polite"><div class="big">Enter a price</div></div>
   </div>
 
+  <div class="card" id="gearBox">
+    <h3 style="margin-top:0" id="gearTitle">New prices by store</h3>
+    <div id="gearCompare"></div>
+  </div>
+
   <h3>Full price table (CAD)</h3>
   <p class="small muted">Good = buy. Fair = OK. High = haggle. Above the last number = walk away.</p>
   <div class="tablewrap"><table id="priceTable"></table></div>
   <p class="small muted" style="margin-top:8px">Used prices are thin (mostly US listings) and some are estimates. Show prices: AOA athletes get 20% off protection at Skiis &amp; Biikes.</p>
 </section>
 
+<!-- SKIS (new price comparison) -->
+<section class="page" id="skis" aria-labelledby="h-skis">
+  <h2 id="h-skis">New slalom ski prices</h2>
+  <p class="small muted" id="skiAsOf"></p>
+  <div class="toolbar">
+    <label><input type="checkbox" id="skiInRange" checked> Only M's lengths</label>
+    <label for="skiSort">Sort <select id="skiSort"><option value="price">Cheapest first</option><option value="brand">By brand</option></select></label>
+  </div>
+  <div class="card">
+    <h3 style="margin-top:0">Cheapest in M's size</h3>
+    <div id="skiBest"></div>
+  </div>
+  <div id="skiCompare"></div>
+  <div class="card">
+    <h3 style="margin-top:0">Stores checked</h3>
+    <div id="skiStores" class="small"></div>
+  </div>
+</section>
+
 <!-- SKI CHECK -->
 <section class="page" id="ski" aria-labelledby="h-ski">
-  <h2 id="h-ski">Ski check</h2>
+  <h2 id="h-ski">Used ski check</h2>
   <div class="card">
     <div class="row">
       <div>
@@ -387,12 +425,6 @@ summary { cursor: pointer; font-weight: 700; }
   </div>
 
   <div class="card">
-    <h3 style="margin-top:0">Question for the coach</h3>
-    <div class="copybox" id="coachQ"></div>
-    <div class="btns"><button type="button" class="btn" id="copyQ">Copy</button></div>
-  </div>
-
-  <div class="card">
     <h3 style="margin-top:0">Dates</h3>
     <ul class="plain">
       <li><b>Club swap</b> – date to confirm.</li>
@@ -420,15 +452,16 @@ summary { cursor: pointer; font-weight: 700; }
   <div class="btns">
     <button type="button" class="btn ghost" id="themeBtn">Theme: auto</button>
   </div>
-  <p class="small muted" style="margin-top:12px">Last updated 2026-10-20. Works offline after the first visit. On iPhone: Share → Add to Home Screen.</p>
+  <p class="small muted" style="margin-top:12px">Last updated 2026-10-21. Works offline after the first visit. On iPhone: Share → Add to Home Screen.</p>
 </section>
 
 </main>
 
 <nav class="tabs" aria-label="Sections">
   <a href="#start"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg>Start</a>
-  <a href="#price"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 12l-8 8-9-9V3h8z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg>Price</a>
-  <a href="#ski"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 21L18 3M10 21L22 3"/></svg>Ski check</a>
+  <a href="#price"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 12l-8 8-9-9V3h8z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg>Prices</a>
+  <a href="#skis"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 20h16M7 20V10M12 20V4M17 20v-7"/></svg>Skis</a>
+  <a href="#ski"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 21L18 3M10 21L22 3"/></svg>Check</a>
   <a href="#list"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 6h12M9 12h12M9 18h12M4 6l1 1 2-2M4 12l1 1 2-2M4 18l1 1 2-2"/></svg>List</a>
   <a href="#rules"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/></svg>Rules</a>
   <a href="#info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg>Info</a>
@@ -475,12 +508,12 @@ const ITEMS = [
       { k: "new", label: "New", p: [140, 200, 230] },
       { k: "used", label: "Used (estimate)", p: [60, 90, 110] }
     ], lean: 60, full: 150 },
-  { id: "poleguard", name: "Pole guards (hand guards)", plan: "must", buy: "Used OK",
-    note: "Club requires them for slalom. Her poles have none. Cheaper: buy used race poles with guards already on.",
+  { id: "poleguard", name: "Pole guards for her poles", plan: "either", buy: "Used OK",
+    note: "Only if you don't buy race poles with guards. Slalom needs one or the other.",
     conds: [
-      { k: "new", label: "New", p: [50, 85, 95] },
+      { k: "new", label: "New", p: [60, 90, 110] },
       { k: "used", label: "Used (estimate)", p: [25, 40, 50] }
-    ], lean: 25, full: 55 },
+    ], lean: 25, full: 70 },
   { id: "mouth", name: "Mouth guard", plan: "must", buy: "New only",
     note: "Club requires it for slalom. Cheap – buy new.",
     conds: [ { k: "new", label: "New (estimate)", p: [20, 40, 50] } ], lean: 20, full: 20 },
@@ -490,18 +523,18 @@ const ITEMS = [
       { k: "new", label: "New", p: [150, 210, 230] },
       { k: "used", label: "Used (estimate)", p: [60, 90, 110] }
     ], lean: 0, full: 0 },
-  { id: "suit", name: "Race suit", plan: "skip", buy: "Used OK",
-    note: "Not allowed at local hill races for 10-year-olds. Only if under $80.",
+  { id: "suit", name: "Race suit", plan: "optional", buy: "Used OK",
+    note: "Optional – most kids have one. She can wear it at outside races, not at local hill races while she is 10. Used is fine; buy a size up.",
     conds: [
       { k: "used", label: "Used", p: [120, 220, 250] },
       { k: "new", label: "New (padded GS)", p: [350, 550, 600] }
     ], lean: 0, full: 0 },
-  { id: "poles", name: "SL race poles with guards", plan: "alt", buy: "Used OK",
-    note: "Best value: used poles with guards on, instead of guards for her $30 poles. Cheap poles can bend on gates.",
+  { id: "poles", name: "SL race poles with guards", plan: "either", buy: "Used OK",
+    note: "Or buy these instead of separate guards. Used with guards on is best value. Cheap poles can bend on gates.",
     conds: [
       { k: "usedg", label: "Used, guards on (estimate)", p: [40, 60, 80] },
       { k: "used", label: "Used, no guards", p: [25, 50, 70] },
-      { k: "new", label: "New", p: [90, 170, 180] }
+      { k: "new", label: "New, no guards", p: [100, 165, 180] }
     ], lean: 0, full: 0 },
   { id: "arm", name: "Arm guards", plan: "skip", buy: "Used OK",
     note: "Optional. Ask the coach first.",
@@ -517,7 +550,8 @@ const ITEMS = [
 
 const PLAN_TAG = {
   must: ["must", "Must buy"], maybe: ["should", "If needed"], later: ["should", "Later"],
-  skip: ["skip", "Skip this year"], have: ["have", "Has it"], alt: ["should", "Cheaper option"]
+  skip: ["skip", "Skip this year"], have: ["have", "Has it"], either: ["should", "One or the other"],
+  optional: ["skip", "Optional"]
 };
 
 // SL ski lengths for an 81 lb U12. lo = chart size, hi = chart + 5 cm (club advice).
@@ -571,13 +605,10 @@ const RULES = [
 const TODO = [
   ["aoa", "Register M with Alpine Ontario (AOA)", "Required to race. Do it before buying so the discount works.", "https://alpineontario.ca/im-an-athlete/"],
   ["speed", "Get the Skiis & Biikes Speed Shop card", "20% off protection, bags, accessories and clothing for AOA athletes.", "https://skiisandbiikes.com/pages/deals"],
-  ["coach", "Ask the coach the length question", "Copy the question below.", ""],
   ["bsl", "Find the boot sole length (mm) on the Dalbello heel", "Needed to mount the binding. Colt 7 only fits up to 266 mm.", ""],
   ["height", "Measure M's height", "Needed for pole length and suit size.", ""],
   ["swap", "Confirm the club swap date", "", ""]
 ];
-
-const COACH_Q = "Hi, my daughter is a first-year U12, 81 lbs, new to racing, and will have one pair of slalom skis for all events. The U12 chart puts her at about 131 cm (Atomic) or 135 cm (Rossignol/Dynastar). Should I add the 5 cm on top of that (Atomic 138 or Rossignol 142), or is the chart size better since she is new? Also, does she need arm guards and pole guards this year, and can she use her regular poles?";
 
 const SOURCES = [
   ["S1", "Club U12 Racing program page (club rules)", ""],
@@ -594,6 +625,186 @@ const SOURCES = [
   ["R", "Binding indemnification – Pro Ski", "https://theproskiandride.com/blogs/the-pros-blog/ski-binding-indemnification"],
   ["R", "Used race ski checklist – Vermont Ski and Sport", "https://www.vermontskiandsport.com/blogs/articles/8-things-to-look-for-when-buying-ski-racing-equipment"],
   ["R", "Toronto Ski & Snowboard Show", "https://torontoskishow.ca/"]
+];
+
+/* ---------- Store prices (filled from research) ---------- */
+
+const PRICES_AS_OF = "2026-10-21";
+const AOA_PCT = 0.2;
+
+// aoa: true = Skiis & Biikes AOA Speed Shop discount. skisAoa: how it applies to skis.
+const RETAILERS = {
+  sb: { name: "Skiis & Biikes", url: "https://skiisandbiikes.com", aoa: true },
+  sl: { name: "Sporting Life", url: "https://www.sportinglife.ca" },
+  sc: { name: "Sport Chek", url: "https://www.sportchek.ca" },
+  co: { name: "Corbetts", url: "https://www.corbetts.com" },
+  sj: { name: "Squire John's", url: "https://www.squirejohns.com" },
+  cm: { name: "Comor", url: "https://www.comorsports.com" },
+  st: { name: "Ski Town", url: "https://www.skitown.ca" },
+  ob: { name: "Oberson", url: "https://www.oberson.com" },
+  gs: { name: "Genetik Sport", url: "https://genetiksport.com" }
+};
+
+// Items the AOA 20% covers at Skiis & Biikes (protection, bags, accessories, clothing).
+const AOA_ITEMS = ["helmet", "chin", "back", "shin", "poleguard", "arm", "mouth", "suit"];
+let AOA_SKIS = "maybe"; // "yes" | "maybe" | "no"
+let AOA_NOTE = "AOA prices assume 20% off the price shown. Skiis & Biikes says race skis, boots and bindings get special pricing in store, and 20% is for \"select\" race products. Ask in store, or email info@skiisandbiikes.com with the subject \"Racer Pricing\". Also ask whether it stacks with a sale.";
+
+// m = BRANDS id. len = lengths listed. reg/sale = CAD. src = "page" or "snippet".
+const SKI_MODELS = {
+  atomic: "Atomic Redster S9 FIS J-RP³", rossignol: "Rossignol Hero Athlete SL Pro R21 Pro",
+  dynastar: "Dynastar Speed Omeglass (OMG) Team SL R21 Pro", head: "Head WCR e.SL Rebel Team",
+  volkl: "Völkl Racetiger SL R Jr", fischer: "Fischer RC4 WC (Noize) SL Jr", nordica: "Nordica Dobermann SLJ",
+  blizzard: "Blizzard Firebird SL JR-Racing", salomon: "Salomon Equipe FIS SL Jr"
+};
+
+// src: "shot" = your GearPass screenshot (Oct 20), "snippet" = search result only. len [] = lengths not listed.
+const SB = "https://skiisandbiikes.com", GP = "https://gearpass.io", SLF = "https://www.sportinglife.ca/en-CA/equipment/ski/ski-racing/skis/";
+const SKI_PRICES = [
+  // Skiis & Biikes – GearPass app screenshots
+  { m: "atomic", r: "sb", y: "2027", len: [138], reg: 649.90, sale: 519.99, url: GP, src: "shot", note: "GearPass app" },
+  { m: "rossignol", r: "sb", y: "2027", len: [135], reg: 624.90, sale: 489.95, url: GP, src: "shot", note: "GearPass app" },
+  { m: "dynastar", r: "sb", y: "2027", len: [135], reg: 624.90, sale: 489.95, url: GP, src: "shot", note: "GearPass app" },
+  { m: "head", r: "sb", y: "2027", len: [125], reg: 629.90, sale: 480.00, url: GP, src: "shot", note: "GearPass app" },
+  { m: "atomic", r: "sb", y: "2026", len: [131, 138], reg: 629.90, sale: null, url: GP, src: "shot", note: "GearPass app" },
+  { m: "rossignol", r: "sb", y: "2026", len: [135, 142], reg: 599.90, sale: null, url: GP, src: "shot", note: "GearPass app" },
+  { m: "dynastar", r: "sb", y: "2026", len: [135, 142], reg: 599.90, sale: null, url: GP, src: "shot", note: "GearPass app" },
+  { m: "head", r: "sb", y: "2026", len: [132], reg: 629.90, sale: null, url: GP, src: "shot", note: "GearPass app" },
+  { m: "volkl", r: "sb", y: "2026", len: [129, 136], reg: 599.90, sale: null, url: GP, src: "shot", note: "GearPass app" },
+  // Skiis & Biikes – website
+  { m: "atomic", r: "sb", y: "2027", len: [131, 138, 145, 152], reg: 629.90, sale: null, url: SB + "/products/atomic-redster-s9-fis-j-rp-ski-2027", src: "snippet", note: "Website (app showed $519.99 for 138)" },
+  { m: "rossignol", r: "sb", y: "2026", len: [128, 135, 142, 149], reg: 599.90, sale: 479.95, url: SB + "/products/rossignol-hero-sl-pro-r21-ski-2026", src: "snippet", note: "Website" },
+  { m: "dynastar", r: "sb", y: "2026", len: [128, 135, 142, 149], reg: 599.90, sale: 489.95, url: SB + "/products/dynastar-omg-team-sl-r21-pro-ski-2026", src: "snippet", note: "Website" },
+  { m: "head", r: "sb", y: "2026", len: [125, 132, 139, 146, 153], reg: 629.90, sale: 479.00, url: SB + "/products/head-wcr-e-sl-rebel-team-sw-rp-wcr-t-ski-2026", src: "snippet", note: "Website" },
+  { m: "volkl", r: "sb", y: "2025", len: [136, 143, 150], reg: 599.90, sale: 359.94, url: SB + "/products/volkl-racetiger-sl-r-junior-ski-2025", src: "snippet", note: "Website, last year's model" },
+  { m: "fischer", r: "sb", y: "2026", len: [135, 140, 150], reg: 749.90, sale: null, url: SB + "/products/fischer-rc4-noize-sl-junior-m-plate-ski-2026", src: "snippet", note: "M-Plate version" },
+  // Sporting Life
+  { m: "atomic", r: "sl", y: "2026", len: [], reg: 699.99, sale: null, url: SLF, src: "snippet", note: "Another page shows $629.99" },
+  { m: "rossignol", r: "sl", y: "2027", len: [128, 135, 142, 149], reg: 625.00, sale: null, url: SLF, src: "snippet" },
+  { m: "dynastar", r: "sl", y: "2026", len: [], reg: 650.00, sale: 519.98, url: SLF, src: "snippet", note: "Sale may be last spring's" },
+  { m: "head", r: "sl", y: "2026", len: [132, 139, 146], reg: 629.00, sale: null, url: "https://www.sportinglife.ca/en-CA/juniors-wcr-e.sl-rebel-team-ski-2026/25924064.html", src: "snippet" },
+  { m: "volkl", r: "sl", y: "2026", len: [], reg: 599.99, sale: 419.98, url: SLF, src: "snippet", note: "Flash sale, may be last spring's" },
+  { m: "volkl", r: "sl", y: "2025", len: [122, 136, 143, 150], reg: 599.99, sale: 359.94, url: "https://www.sportinglife.ca/en-CA/juniors-racetiger-sl-r-jr-ski-2025-25915483.html", src: "snippet", note: "Final sale" },
+  { m: "fischer", r: "sl", y: "2026", len: [140, 150], reg: 750.00, sale: null, url: SLF, src: "snippet", note: "140–150 version only" },
+  { m: "blizzard", r: "sl", y: "2022", len: [], reg: null, sale: 299.94, url: SLF, src: "snippet", note: "Old stock, final sale" },
+  // Corbetts
+  { m: "atomic", r: "co", y: "2026", len: [124, 131, 138], reg: 629.99, sale: null, url: "https://www.corbetts.com/atomic-redster-s9-fis-124-138-j-rp3-jr-skis-2026/", src: "snippet" },
+  { m: "rossignol", r: "co", y: "2027", len: [], reg: 624.99, sale: 489.99, url: "https://www.corbetts.com", src: "snippet", note: "Low confidence – seen on another page" },
+  { m: "rossignol", r: "co", y: "2026", len: [], reg: 649.99, sale: null, url: "https://www.corbetts.com/rossignol-hero-sl-pro-r21-pro-jr-skis-2026/", src: "snippet" },
+  { m: "dynastar", r: "co", y: "2027", len: [], reg: 624.99, sale: null, url: "https://www.corbetts.com", src: "snippet" },
+  { m: "dynastar", r: "co", y: "2026", len: [], reg: 649.99, sale: null, url: "https://www.corbetts.com/dynastar-speed-omeglass-team-sl-r21-pro-jr-skis-2026/", src: "snippet" },
+  { m: "head", r: "co", y: "2026", len: [139, 146, 153], reg: 629.99, sale: null, url: "https://www.corbetts.com/head-wcr-e-sl-rebel-team-jr-skis-2026/", src: "snippet" },
+  { m: "volkl", r: "co", y: "2025", len: [129, 136, 143, 150], reg: 599.99, sale: 479.99, url: "https://www.corbetts.com/volkl-racetiger-sl-r-jr-skis-2025/", src: "snippet", note: "Online only" },
+  { m: "nordica", r: "co", y: "2027", len: [], reg: 599.99, sale: 449.99, url: "https://www.corbetts.com", src: "snippet", note: "Snippets conflict" },
+  // Squire John's
+  { m: "atomic", r: "sj", y: "2027", len: [124, 131, 138], reg: 649.99, sale: null, url: "https://www.squirejohns.com/products/atomic-26w-redster-s9-fis-j-rp", src: "snippet", note: "131 and 138 in stock" },
+  { m: "rossignol", r: "sj", y: "2027", len: [128, 135, 142, 149], reg: 624.99, sale: null, url: "https://www.squirejohns.com/products/rossignol-26w-hero-sl-pro-128-149-r21-pro", src: "snippet", note: "In stock" },
+  { m: "rossignol", r: "sj", y: "2026", len: [], reg: 649.99, sale: 389.99, url: "https://www.squirejohns.com/products/rossignol-25w-ranaf01-hero-sl-pro-128-149-r21-pro", src: "snippet", note: "Stock unknown" },
+  { m: "dynastar", r: "sj", y: "2027", len: [128, 135, 142, 149], reg: 624.99, sale: null, url: "https://www.squirejohns.com/products/dynastar-26w-speed-omg-team-sl-r21-pro", src: "snippet" },
+  { m: "head", r: "sj", y: "2027", len: [132], reg: 629.99, sale: null, url: "https://www.squirejohns.com/products/head-26w-wcr-e-sl-rebel-team-junior", src: "snippet", note: "In stock" },
+  { m: "volkl", r: "sj", y: "2026", len: [129, 136, 143, 150], reg: 599.99, sale: 419.99, url: "https://www.squirejohns.com/products/volkl-25w-racetiger-sl-r-jr-jr-plate", src: "snippet", note: "129 and 136 in stock" },
+  { m: "nordica", r: "sj", y: "2025", len: [128, 135, 142, 149], reg: 629.99, sale: null, url: "https://www.squirejohns.com/products/nordica-24w-dobermann-slj-plate", src: "snippet", note: "128 and 135 in stock" },
+  { m: "salomon", r: "sj", y: "2027", len: [124, 131, 138], reg: 649.99, sale: null, url: "https://www.squirejohns.com/collections/race-skis", src: "snippet", note: "Listed with JT3 – ask if binding included" },
+  // Ski Town
+  { m: "head", r: "st", y: "2027", len: [139], reg: 629.00, sale: 440.30, url: "https://www.skitown.ca/en/wcr-esl-rebel-team-sw-rp-skis-w-wcr-t-plate-25-26.html", src: "snippet", note: "139 in stock. Free shipping over $100" },
+  { m: "rossignol", r: "st", y: "2026", len: [], reg: 650.00, sale: 455.00, url: "https://www.skitown.ca/en/hero-sl-pro-r21-pro-skis-25-26.html", src: "snippet", note: "In stock" },
+  // Oberson
+  { m: "dynastar", r: "ob", y: "2026", len: [135], reg: 599.95, sale: null, url: "https://www.oberson.com/en/products/dynastar-speed-omeglass-team-sl-r21-pro-kids-alpine-skis-254850", src: "snippet", note: "Sold out" },
+  { m: "rossignol", r: "ob", y: "2026", len: [128, 135, 142, 149], reg: 649.95, sale: 454.96, url: "https://www.oberson.com/products/rossignol-skis-alpins-hero-sl-pro-128-149-r21-pro-enfant-164102", src: "snippet", note: "Sold out" },
+  { m: "head", r: "ob", y: "2025", len: [139], reg: 628.95, sale: null, url: "https://www.oberson.com/en/products/head-wcr-e-sl-rebel-team-sw-rp-adult-alpine-skis-165771", src: "snippet", note: "Final sale" },
+  // Genetik Sport (year not shown)
+  { m: "rossignol", r: "gs", y: "?", len: [128, 142, 149], reg: 629.95, sale: 489.95, url: "https://genetiksport.com/en/collections/rossignol-1", src: "snippet", note: "Snapshots show $419.97–$489.95" },
+  { m: "dynastar", r: "gs", y: "?", len: [128, 135, 142, 149], reg: 599.95, sale: 479.95, url: "https://genetiksport.com/en/products/skis-dynastar-speed-omg-team-sl-pro-r21", src: "snippet" },
+  { m: "head", r: "gs", y: "?", len: [118, 132, 139, 146, 153, 160], reg: 629.95, sale: 478.95, url: "https://genetiksport.com/en/products/skis-head-wcr-e-sl-rebel-team-sw-rp-wcr-t", src: "snippet" },
+  { m: "atomic", r: "gs", y: "?", len: [145, 152], reg: 699.95, sale: 504.95, url: "https://genetiksport.com/en/products/skis-atomic-nyi-redster-s9-fis-j-rp", src: "snippet", note: "Too long for M" }
+];
+const SKI_NOT_CARRIED = {
+  sc: "no junior race skis found online",
+  cm: "only recreational kids' skis online"
+};
+
+// i = ITEMS id. All web prices are search results only – confirm on the store page.
+const g = (i, r, product, reg, sale, url, src, note) => ({ i, r, product, reg, sale, url, src: src || "snippet", note });
+const GEAR_PRICES = [
+  g("helmet", "sb", "POC POCito Skull Jr 2026 – NOT FIS (EN 1077-B), skip", 219.99, 153.99, SB + "/products/poc-pocito-skull-junior-helmet-2026", "snippet", "Club needs FIS approved"),
+  g("helmet", "ob", "Briko Vulcano FIS 6.8 Jr (FIS)", 199.95, 119.95, "https://www.oberson.com/en/products/briko-vulcano-fis-6-8-junior-ski-helmet", "snippet", "\"As low as\" – may be one size or colour"),
+  g("helmet", "ob", "POC Skull Dura Jr FW24 (FIS)", 239.95, 167.97, "https://www.oberson.com/en/products/poc-skull-dura-junior-ski-helmet", "snippet", "M/L sold out, final sale"),
+  g("helmet", "sb", "POC Skull Dura Jr 2025 (FIS)", 279.99, null, SB + "/products/poc-skull-dura-junior-helmet-2025"),
+  g("helmet", "co", "Atomic Redster Jr 2025 (FIS)", 249.99, 149.99, "https://www.corbetts.com/2024-atomic-redster-helmet/"),
+  g("helmet", "co", "POC Skull Dura Jr 2026 (FIS)", 299.99, null, "https://www.corbetts.com/poc-skull-dura-jr-helmet-2026/", "snippet", "Snippets also show $179.99–$209.99"),
+  g("helmet", "sj", "POC Skull Dura Jr 2026 (FIS)", 299.99, null, "https://www.squirejohns.com/products/poc-26w-skull-dura-jr"),
+  g("helmet", "st", "POC Skull Dura Jr 25/26 (FIS)", 300.00, null, "https://www.skitown.ca/en/skull-dura-jr-helmet-25-26.html"),
+
+  g("chin", "sb", "POC Maxilla (fits Skull Dura)", null, 62.99, SB + "/products/poc-maxilla-breakaway-system-chin-guard-1"),
+  g("chin", "co", "POC Maxilla 2026 (fits Skull Dura)", 89.99, 62.99, "https://www.corbetts.com/poc-maxilla-breakaway-system-2026/"),
+  g("chin", "co", "Atomic Redster chin guard (fits Redster Jr)", null, 49.99, "https://www.corbetts.com/atomic-redster-chin-guard-system/"),
+  g("chin", "sj", "POC Maxilla", 89.99, 62.99, "https://www.squirejohns.com/products/poc-25w-maxilla-breakaway-system"),
+  g("chin", "st", "POC Maxilla 26/27", 90.00, null, "https://www.skitown.ca/en/protection-maxilla-breakaway-system.html"),
+  g("chin", "sl", "POC Maxilla Breakaway", 70.00, null, "https://www.sportinglife.ca"),
+  g("chin", "ob", "POC Maxilla (fits Skull Dura)", 89.95, null, "https://www.oberson.com/en/products/poc-maxilla-breakaway-system-chin-guard-253839"),
+  g("chin", "ob", "Atomic Redster chin guard Jr", 49.95, null, "https://www.oberson.com/en/products/atomic-redster-chin-guard-system-junior-ski-helmet-164672", "snippet", "Sold out"),
+
+  g("back", "sb", "Sweet Protection Jr back protector vest", 179.99, 89.98, SB + "/products/sweet-protection-junior-back-protector-vest-3"),
+  g("back", "co", "Sweet Back Protector Vest 2.0 Jr 2026", null, 179.99, "https://www.corbetts.com/sweet-back-protector-2025/"),
+  g("back", "sj", "Atomic Live Shield Amid Lite Jr vest", null, 169.99, "https://www.squirejohns.com/collections/body-protection"),
+  g("back", "sj", "POC VPD Air Jr", null, 179.99, "https://www.squirejohns.com/collections/body-protection"),
+  g("back", "st", "Sweet Back Protector Jr 2.0 26/27", 160.00, null, "https://www.skitown.ca/en/race-department/racing-accessories/protective/"),
+  g("back", "sl", "POC Youth VPD Air vest (8–16)", 180.00, null, "https://www.sportinglife.ca/en-CA/equipment/ski/ski-racing/ski-accessories/juniors-8-16-youth-vpd-air-vest/25924599.html"),
+
+  g("suit", "sb", "Arctica AMP Jr GS suit", 425.00, 212.50, SB + "/products/arctica-amp-junior-gs-speed-suit"),
+  g("suit", "sb", "Spyder Performance GS Girls", 589.99, 501.49, SB + "/products/spyder-performance-gs-girls-race-suit"),
+  g("suit", "co", "Karbon Defender GS Jr 2024", 750.00, 450.00, "https://www.corbetts.com/2024-karbon-defender-gs-junior-suit/"),
+  g("suit", "co", "Spyder Performance Boys GS 2025", 590.00, 472.00, "https://www.corbetts.com/spyder-performance-boys-gs-race-suit-2025/"),
+  g("suit", "sj", "Arctica Youth Pinnacle GS", 559.99, null, "https://www.squirejohns.com/products/arctica-26w-youth-pinnacle-gs-race-suit", "snippet", "Some sizes sold out"),
+  g("suit", "sj", "Spyder Jr Performance GS", 589.99, null, "https://www.squirejohns.com"),
+  g("suit", "st", "Spyder Performance GS Girl's", 500.00, null, "https://www.skitown.ca/spyder-performance-gs-girl-s-skinsuit-199080-148-eur"),
+  g("suit", "sl", "SYNC Juniors' (8–12) Champ Race Suit, padded", 499.99, 99.99, "https://www.sportinglife.ca/en-CA/juniors-8-12-champ-race-suit-25107111_000_012.html", "snippet", "Old listing – may be gone"),
+  g("suit", "sl", "Spyder Jr Boys Performance GS (2015)", 425.00, 69.99, "https://www.sportinglife.ca/en-CA/junior-boys-6-16-performance-gs-suit-2015-24370686_000_015.html", "snippet", "2015 stock – may be gone"),
+
+  g("binding", "sb", "Atomic Icon 10 2027 – fits Atomic", 259.90, 207.99, GP, "shot"),
+  g("binding", "sb", "Head Evo 9 GW CA 2027 – fits Head", 149.90, 115.00, GP, "shot"),
+  g("binding", "sb", "Look SPX 11 GW 2027 – fits Rossignol/Dynastar", 229.90, 174.95, GP, "shot"),
+  g("binding", "sb", "Look SPX 11 GW (older) – fits Rossignol/Dynastar", 199.90, 119.94, SB + "/products/look-spx-11-gw-binding-2026"),
+  g("binding", "sb", "Marker Comp 10 TCX 2027 – fits Völkl", 249.90, 199.99, GP, "shot"),
+  g("binding", "sb", "Fischer RC4 Z11 Freeflex 2027 – fits Fischer", 289.90, 190.00, GP, "shot"),
+  g("binding", "sb", "Atomic Colt 7 GW CA 2026 – fits Atomic (boot sole ≤ 266 mm)", 139.90, null, GP, "shot"),
+  g("binding", "sl", "Look SPX 10 GW (2023) – fits Rossignol/Dynastar", 179.99, null, "https://www.sportinglife.ca/en-CA/juniors-spx-10-gw-b73-ski-binding-2023-25453465.html"),
+  g("binding", "sl", "Look SPX 11 GW 2026 – fits Rossignol/Dynastar", 199.95, null, "https://www.sportinglife.ca"),
+  g("binding", "sl", "Marker Comp 10 TCX 2026 – fits Völkl", 249.99, null, "https://www.sportinglife.ca/en-CA/comp-10-tcx-ski-binding-2026/25915621.html"),
+  g("binding", "co", "Atomic Icon 10 Jr 2026 – fits Atomic", 259.99, null, "https://www.corbetts.com/categories/race/junior/bindings.html"),
+  g("binding", "co", "Atomic Colt 7 GW CA 2026 – fits Atomic (boot sole ≤ 266 mm)", 139.99, null, "https://www.corbetts.com/categories/race/junior/bindings.html"),
+  g("binding", "co", "Look SPX 11 GW 2026 – fits Rossignol/Dynastar", 229.99, 137.99, "https://www.corbetts.com/look-spx-11-gw-ski-bindings-2027/"),
+  g("binding", "co", "Look SPX 10 GW 2024 – fits Rossignol/Dynastar", 189.99, 113.99, "https://www.corbetts.com/categories/race/junior/bindings.html"),
+  g("binding", "co", "Marker Comp 10 TCX 2026 – fits Völkl", 249.99, null, "https://www.corbetts.com/marker-comp-10-tcx-b85-black-flo-red-ski-bindings-2026/"),
+  g("binding", "sj", "Look SPX 10 GW – fits Rossignol/Dynastar", 189.99, null, "https://www.squirejohns.com/products/look-23w-fclas07-spx-10-gw-b73-hot-red"),
+  g("binding", "cm", "Look Kids NX 10 GW 2025 – fits Rossignol/Dynastar", 139.99, 97.99, "https://www.comorsports.com/products/look-kids-nx-10-gw-ski-binding-2025-black"),
+  g("binding", "st", "Look SPX 10 GW 23/24 – fits Rossignol/Dynastar", 189.95, 132.96, "https://www.skitown.ca/en/spx-10-gw-bindings.html"),
+  g("binding", "st", "Atomic Colt 7 GW 26/27 – fits Atomic (boot sole ≤ 266 mm)", 149.99, null, "https://www.skitown.ca/en/race-department/racing-bindings/"),
+  g("binding", "st", "Look SPX 11 GW 26/27 – fits Rossignol/Dynastar", 229.95, null, "https://www.skitown.ca/en/race-department/racing-bindings/"),
+  g("binding", "ob", "Look SPX 10 GW Jr – fits Rossignol/Dynastar", 179.95, null, "https://www.oberson.com/en/collections/ski-bindings"),
+  g("binding", "ob", "Atomic Colt 7 GW CA Kids – fits Atomic (boot sole ≤ 266 mm)", 149.95, null, "https://www.oberson.com/en/collections/ski-bindings"),
+
+  g("poles", "sb", "Leki WCR Lite SL 3D 2026 (no guards)", 164.90, null, SB + "/products/leki-wcr-lite-sl-3d-ski-poles-2025"),
+  g("poles", "sb", "Komperdell National Team 18mm SL (no guards)", 129.99, null, SB + "/collections/race-poles/products/komperdell-national-team-18mm-sl-ski-pole"),
+  g("poles", "sl", "Leki Kids' Racing 2025 (entry pole, no guards)", 50.00, null, "https://www.sportinglife.ca/en-CA/kids-racing-ski-pole-2025/25802968.html"),
+  g("poles", "co", "Leki WCR Lite SL 3D Jr 2026 (no guards)", 164.99, 98.99, "https://www.corbetts.com/leki-wcr-lite-sl-3d-jr-ski-poles-2026/"),
+  g("poles", "co", "Komperdell NationalTeam Carbon Jr 2025", 149.99, 119.99, "https://www.corbetts.com/komperdell-nationalteam-carbon-jr-ski-poles-2025/"),
+  g("poles", "sj", "Leki WCR Lite SL 3D (no guards)", 164.99, null, "https://www.squirejohns.com/collections/ski-poles"),
+  g("poles", "sj", "Komperdell NT Carbon Jr", 149.99, null, "https://www.squirejohns.com/collections/komperdell"),
+  g("poles", "st", "Leki WCR Lite SL 3D 25/26 (no guards)", 165.00, 115.50, "https://www.skitown.ca/en/wcr-lite-sl-3d-ski-poles.html"),
+  g("poles", "ob", "Leki WCR Lite SL 3D Kids (in store only)", 164.95, 115.47, "https://www.oberson.com/en/products/leki-wcr-lite-sl-3d-junior-ski-poles-1"),
+
+  g("poleguard", "sb", "POC pole guard set – fits 16 mm shafts with shim (most universal)", 69.99, null, SB + "/products/poc-ski-pole-guard-set", "snippet", "Out of stock"),
+  g("poleguard", "sb", "One Way Gate Guards WC", 69.90, null, SB + "/products/one-way-gate-guards-wc"),
+  g("poleguard", "sb", "Leki Gate Guard Closed WC – fits Leki Trigger and most poles with a strap screw", 104.90, 73.43, SB + "/products/leki-closed-wc-adult-gate-guards-1"),
+  g("poleguard", "co", "Kerma guard (2021)", 69.99, 41.99, "https://www.corbetts.com/categories/race/protective/pole-guards.html"),
+  g("poleguard", "co", "Komperdell Punch Profi", 69.99, null, "https://www.corbetts.com/komperdell-punch-profi-pole-guard-2025/"),
+  g("poleguard", "co", "Leki Closed WC / Cobra", 99.99, null, "https://www.corbetts.com/categories/race/protective/pole-guards.html"),
+  g("poleguard", "st", "Leki Gate Guard Closed WC 26/27", 105.00, null, "https://www.skitown.ca/en/race-department/racing-accessories/protective/"),
+  g("poleguard", "ob", "Leki Gate Guard Closed Lite", 89.95, null, "https://www.oberson.com/products/leki-gate-guard-closed-lite"),
+
+  g("shin", "sj", "POC Shins Classic Jr", 99.99, null, "https://www.squirejohns.com/collections/race-protection"),
+  g("shin", "ob", "Leki 4Race Kids", 219.95, 153.97, "https://www.oberson.com/en/products/leki-4race-kids-shin-guard-165068")
 ];
 
 /* ---------- Storage (per phone, optional) ---------- */
@@ -630,7 +841,7 @@ function verdictHTML(v, extra) {
 /* ---------- Start ---------- */
 
 function renderStart() {
-  const order = ["must", "alt", "maybe", "later", "skip", "have"];
+  const order = ["must", "either", "maybe", "optional", "later", "skip", "have"];
   const rows = ITEMS.slice().sort((a, b) => order.indexOf(a.plan) - order.indexOf(b.plan)).map((it) => {
     const [cls, label] = PLAN_TAG[it.plan];
     const buyTag = it.buy === "New only" ? ' <span class="tag new">New only</span>' : "";
@@ -675,8 +886,29 @@ function fillConds(sel) {
   if (sel && it.conds.some((c) => c.k === sel)) $("#pCond").value = sel;
 }
 
+function drawGear(it) {
+  const rows = GEAR_PRICES.filter((x) => x.i === it.id);
+  $("#gearTitle").textContent = "New " + it.name.toLowerCase() + " – prices by store";
+  if (!rows.length) { $("#gearCompare").innerHTML = '<p class="muted small">No store prices found for this item yet.</p>'; return; }
+  const skip = (x) => /NOT FIS|sold out|out of stock/i.test(x.product + " " + (x.note || ""));
+  rows.sort((a, b) => (skip(a) - skip(b)) || ((best(a) ?? 1e9) - (best(b) ?? 1e9)));
+  const aoa = AOA_ITEMS.includes(it.id);
+  $("#gearCompare").innerHTML = rows.map((x, i) => {
+    const rt = RETAILERS[x.r];
+    return '<div class="deal' + (i === 0 && !skip(x) && best(x) != null ? " best" : "") + '"' + (skip(x) ? ' style="opacity:.6"' : "") + ">" + priceLine(x) +
+      '<span class="what">' + esc(x.product) + "</span>" +
+      '<span class="where">' + (x.url ? '<a href="' + x.url + '" rel="noopener">' + esc(rt.name) + "</a>" : esc(rt.name)) + srcPill(x.src) +
+      (x.sale != null && x.reg != null && x.sale < x.reg ? ' · was <span class="strike">' + money(x.reg) + "</span>" : "") +
+      aoaPill(rt, best(x), aoa) + (x.note ? "<br>" + esc(x.note) : "") + "</span></div>";
+  }).join("") +
+    '<p class="small muted" style="margin-top:6px">CAD before tax, as seen ' + PRICES_AS_OF + ". Cheapest in green." +
+    " AOA = Skiis &amp; Biikes price after the 20% Speed Shop discount – ask if it stacks with a sale." +
+    " Search results only – confirm on the store page. Sport Chek had no junior race gear online.</p>";
+}
+
 function updatePrice() {
   const it = ITEMS.find((i) => i.id === $("#pItem").value);
+  drawGear(it);
   const c = it.conds.find((x) => x.k === $("#pCond").value);
   const raw = $("#pPrice").value;
   store.set("price", { item: it.id, cond: c.k, price: raw });
@@ -695,10 +927,90 @@ function updatePrice() {
   }
   const v = priceVerdict(c.p, +raw);
   let extra = bar;
-  if (it.id === "suit" && +raw > 80) extra += "<p><b>Cheapest plan:</b> skip the suit unless it is under $80. She cannot wear it at local hill races this season.</p>";
-  if (it.id === "skis" && c.k.startsWith("used")) extra += "<p>Also run the <a href=\"#ski\">Ski check</a>.</p>";
+  if (it.id === "suit") extra += "<p>Optional. She can't wear it at local hill races this season, only at outside races.</p>";
+  if (it.id === "skis" && c.k.startsWith("used")) extra += "<p>Also run the <a href=\"#ski\">Check</a> tab.</p>";
   out.className = "verdict " + v.cls;
   out.innerHTML = '<div class="big">' + money(+raw) + " – " + esc(v.word) + "</div><p>" + esc(v.text) + "</p>" + extra;
+}
+
+/* ---------- New ski price comparison ---------- */
+
+const best = (r) => (r.sale != null ? r.sale : r.reg);
+const srcPill = (src) => (src === "snippet" ? ' <span class="pill">search result</span>' : src === "shot" ? ' <span class="pill">your screenshot</span>' : "");
+
+function lensInRange(r) {
+  const b = BRANDS.find((x) => x.id === r.m);
+  if (!r.len.length) return ["?"];
+  return r.len.filter((L) => L >= b.lo && L <= b.hi);
+}
+
+function renderSkis() {
+  $("#skiAsOf").textContent = "New skis, CAD before tax, as seen " + PRICES_AS_OF + ". Prices change often – check the link before you buy. " +
+    "M's lengths = chart size to chart + 5 cm.";
+  const saved = store.get("skis", {});
+  if (saved.inRange === false) $("#skiInRange").checked = false;
+  if (saved.sort) $("#skiSort").value = saved.sort;
+  $("#skiInRange").addEventListener("change", drawSkis);
+  $("#skiSort").addEventListener("change", drawSkis);
+  drawSkis();
+
+  const carried = new Set(SKI_PRICES.map((r) => r.r));
+  $("#skiStores").innerHTML = Object.entries(RETAILERS).map(([id, rt]) =>
+    "<div style=\"padding:4px 0\"><b>" + esc(rt.name) + "</b> – " +
+    (SKI_NOT_CARRIED[id] ? esc(SKI_NOT_CARRIED[id]) : carried.has(id) ? "listed below" : "no prices found") +
+    (rt.aoa ? ' <span class="pill aoa">AOA 20%</span>' : "") + "</div>").join("") +
+    (AOA_NOTE ? '<p class="muted" style="margin-top:8px">' + esc(AOA_NOTE) + "</p>" : "");
+}
+
+function aoaPill(rt, price, sure) {
+  if (!rt.aoa || price == null) return "";
+  return ' <span class="pill aoa">AOA ' + money(price * (1 - AOA_PCT)) + (sure ? "" : " if eligible") + "</span>";
+}
+
+function priceLine(x) {
+  if (best(x) == null) return '<span class="amt muted" style="font-size:1rem">No price</span>';
+  return '<span class="amt">' + money(best(x)) + "</span>";
+}
+
+// One stacked row: price on the left, details on the right. Fits a phone screen.
+function skiRow(r, isBest) {
+  const rt = RETAILERS[r.r];
+  const lens = !r.len.length ? "lengths not listed" : r.len.map((L) => (lensInRange({ ...r, len: [L] }).length ? "<b>" + L + "</b>" : L)).join(" · ") + " cm";
+  const dead = /sold out|out of stock/i.test(r.note || "");
+  return '<div class="deal' + (isBest ? " best" : "") + '"' + (dead ? ' style="opacity:.6"' : "") + ">" + priceLine(r) +
+    '<span class="what">' + esc(BRANDS.find((b) => b.id === r.m).name) + " " + (r.y === "?" ? "(year not shown)" : r.y) + "</span>" +
+    '<span class="where">' + (r.url ? '<a href="' + r.url + '" rel="noopener">' + esc(rt.name) + "</a>" : esc(rt.name)) + srcPill(r.src) +
+    (r.sale != null && r.reg != null && r.sale < r.reg ? ' · was <span class="strike">' + money(r.reg) + "</span>" : "") +
+    aoaPill(rt, best(r), AOA_SKIS === "yes") + "<br>" + lens + (r.note ? " · " + esc(r.note) : "") + "</span></div>";
+}
+
+function drawSkis() {
+  const inRange = $("#skiInRange").checked, sort = $("#skiSort").value;
+  store.set("skis", { inRange, sort });
+  const known = (r) => r.len.length > 0;
+  const dead = (r) => /sold out|out of stock/i.test(r.note || "");
+  const order = (x, y) => (dead(x) - dead(y)) || ((best(x) ?? 1e9) - (best(y) ?? 1e9));
+  const rows = SKI_PRICES.filter((r) => !inRange || !known(r) || lensInRange(r).length);
+
+  const top = SKI_PRICES.filter((r) => best(r) != null && known(r) && lensInRange(r).length && !dead(r)).sort(order);
+  const seen = new Set();
+  const deals = top.filter((r) => { const k = r.m + r.y; if (seen.has(k)) return false; seen.add(k); return true; }).slice(0, 6);
+  $("#skiBest").innerHTML = deals.length ? deals.map((r, i) => skiRow(r, i === 0)).join("") : '<p class="muted">No prices yet.</p>';
+
+  let html = "";
+  if (sort === "price") {
+    const a = rows.filter(known).sort(order), b = rows.filter((r) => !known(r)).sort(order);
+    html += '<div class="card"><h3 style="margin-top:0">All prices, cheapest first</h3>' + a.map((r) => skiRow(r, false)).join("") + "</div>";
+    if (b.length) html += '<div class="card"><h3 style="margin-top:0">Lengths not listed – check the store</h3>' + b.map((r) => skiRow(r, false)).join("") + "</div>";
+  } else {
+    BRANDS.forEach((br) => {
+      const list = rows.filter((r) => r.m === br.id).sort(order);
+      if (!list.length) return;
+      html += '<div class="card"><h3 style="margin-top:0">' + esc(SKI_MODELS[br.id] || br.name) + '</h3><p class="small muted">M\'s length: ' + br.lo + "–" + br.hi +
+        " cm. Binding: " + esc(br.bind) + ".</p>" + list.map((r, i) => skiRow(r, i === 0 && best(r) != null && !dead(r))).join("") + "</div>";
+    });
+  }
+  $("#skiCompare").innerHTML = html || '<div class="card"><p class="muted">No skis match. Untick "Only M\'s lengths".</p></div>';
 }
 
 /* ---------- Ski check ---------- */
@@ -829,12 +1141,6 @@ function renderInfo() {
     (d ? '<br><span class="small muted">' + esc(d) + "</span>" : "") + (url ? ' <a class="small" href="' + url + '" rel="noopener">Link</a>' : "") + "</label></div>").join("");
   TODO.forEach(([k]) => $("#t-" + k).addEventListener("change", (e) => { const d = store.get("todo", {}); d[k] = e.target.checked; store.set("todo", d); }));
 
-  $("#coachQ").textContent = COACH_Q;
-  $("#copyQ").addEventListener("click", async () => {
-    try { await navigator.clipboard.writeText(COACH_Q); $("#copyQ").textContent = "Copied"; }
-    catch (e) { $("#copyQ").textContent = "Select and copy"; }
-    setTimeout(() => { $("#copyQ").textContent = "Copy"; }, 2000);
-  });
 
   $("#sources").innerHTML = SOURCES.map(([id, t, url]) =>
     "<li><b>" + id + "</b> – " + (url ? '<a href="' + url + '" rel="noopener">' + esc(t) + "</a>" : esc(t)) + "</li>").join("");
@@ -856,6 +1162,10 @@ function renderPrint() {
       (c.p ? "<td>" + money(c.p[0]) + "</td><td>" + money(c.p[1]) + "</td><td>" + money(c.p[2]) + "</td>" : '<td colspan="3">Never buy</td>') + "</tr>";
   }));
   html += "</table>";
+  const deals = SKI_PRICES.filter((r) => best(r) != null && r.len.length && lensInRange(r).length && !/sold out|out of stock/i.test(r.note || ""))
+    .sort((x, y) => best(x) - best(y)).slice(0, 8);
+  html += "<h2>Cheapest new SL skis in her size (as seen " + PRICES_AS_OF + ")</h2><table><tr><th>Price</th><th>Ski</th><th>Store</th><th>Her lengths</th></tr>" +
+    deals.map((r) => "<tr><td>" + money(best(r)) + "</td><td>" + esc(SKI_MODELS[r.m]) + " " + r.y + "</td><td>" + esc(RETAILERS[r.r].name) + "</td><td>" + lensInRange(r).join(", ") + "</td></tr>").join("") + "</table>";
   html += "<h2>Used ski checklist</h2><ul>" + CHECKS.map(([, t]) => "<li>☐ " + t + "</li>").join("") + "</ul>";
   html += "<h2>Helmet</h2><p>Hard-ear with FIS sticker. Chin guard must come off (slalom yes, GS no).</p>";
   $("#print").innerHTML = html;
@@ -898,7 +1208,7 @@ function shell() {
   route();
 }
 
-renderStart(); renderPrice(); renderSki(); renderList(); renderRules(); renderInfo(); renderPrint(); shell();
+renderStart(); renderPrice(); renderSkis(); renderSki(); renderList(); renderRules(); renderInfo(); renderPrint(); shell();
 
 if ("serviceWorker" in navigator && location.protocol === "https:") {
   navigator.serviceWorker.register("sw.js").catch(() => {});

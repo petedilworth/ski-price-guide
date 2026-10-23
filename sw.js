@@ -1,9 +1,16 @@
-// Offline cache for the ski gear guide. Bump VERSION when files change.
-const VERSION = "skigear-2026-10-23a";
+// Offline cache for the ski gear guide. Bump VERSION when files change
+// (keep it equal to APP_VERSION in index.html).
+const VERSION = "skigear-2026-10-23b";
 const FILES = ["./", "./index.html", "./manifest.webmanifest", "./icon.svg"];
+const WAIT_MS = 3000; // longest we wait for the network before using the saved copy
 
 self.addEventListener("install", (e) => {
-  e.waitUntil(caches.open(VERSION).then((c) => c.addAll(FILES)).then(() => self.skipWaiting()));
+  // cache: "reload" skips the browser's HTTP cache, so a new version never saves a stale page.
+  e.waitUntil(
+    caches.open(VERSION)
+      .then((c) => c.addAll(FILES.map((u) => new Request(u, { cache: "reload" }))))
+      .then(() => self.skipWaiting())
+  );
 });
 
 self.addEventListener("activate", (e) => {
@@ -14,19 +21,26 @@ self.addEventListener("activate", (e) => {
   );
 });
 
-// Cache first, refresh in the background. Weak signal at a ski swap or show
-// must never stall the page; updates appear on the next visit.
+// Fresh from the network (revalidated), saved for offline use.
+function fromNetwork(req) {
+  return fetch(new Request(req.url, { cache: "no-cache", credentials: "same-origin" })).then((res) => {
+    if (res.ok) { const copy = res.clone(); caches.open(VERSION).then((c) => c.put(req, copy)); }
+    return res;
+  });
+}
+
+// Network first, but never wait more than WAIT_MS: weak signal at a swap or show
+// falls back to the saved copy, and the fresh copy is saved for next time.
 self.addEventListener("fetch", (e) => {
-  if (e.request.method !== "GET" || new URL(e.request.url).origin !== location.origin) return;
-  e.respondWith(
-    caches.open(VERSION).then((cache) =>
-      cache.match(e.request, { ignoreSearch: true }).then((hit) => {
-        const update = fetch(e.request)
-          .then((res) => { if (res.ok) cache.put(e.request, res.clone()); return res; })
-          .catch(() => hit || cache.match("./index.html"));
-        if (hit) { e.waitUntil(update.catch(() => {})); return hit; }
-        return update;
-      })
-    )
-  );
+  const req = e.request;
+  if (req.method !== "GET" || new URL(req.url).origin !== location.origin) return;
+  e.respondWith((async () => {
+    const cache = await caches.open(VERSION);
+    const hit = await cache.match(req, { ignoreSearch: true });
+    const net = fromNetwork(req);
+    if (!hit) return net.catch(() => cache.match("./index.html"));
+    e.waitUntil(net.catch(() => {}));
+    const slow = new Promise((resolve) => setTimeout(() => resolve(hit), WAIT_MS));
+    return Promise.race([net.catch(() => hit), slow]);
+  })());
 });

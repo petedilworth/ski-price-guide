@@ -258,6 +258,10 @@ details.group[open] > summary { margin-bottom: 4px; }
 .yr-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 8px; }
 .yr-head b { font-size: 1rem; }
 
+#updateBar { position: fixed; left: 12px; right: 12px; bottom: calc(76px + env(safe-area-inset-bottom)); z-index: 7;
+  font: inherit; font-weight: 700; padding: 12px 14px; border: 0; border-radius: 12px; background: var(--text); color: var(--bg);
+  box-shadow: 0 4px 16px rgba(0,0,0,.25); cursor: pointer; }
+
 #print { display: none; }
 @media print {
   @page { margin: 12mm; }
@@ -536,7 +540,7 @@ details.group[open] > summary { margin-bottom: 4px; }
   <div class="btns">
     <button type="button" class="btn ghost" id="themeBtn">Theme: auto</button>
   </div>
-  <p class="small muted" style="margin-top:12px">Last updated 2026-10-21. Works offline after the first visit. On iPhone: Share → Add to Home Screen.</p>
+  <p class="small muted" style="margin-top:12px">Version <b id="appVersion"></b>. Works offline after the first visit. On iPhone: Share → Add to Home Screen.</p>
 </section>
 
 </main>
@@ -553,6 +557,7 @@ details.group[open] > summary { margin-bottom: 4px; }
 </nav>
 
 <div id="print"></div>
+<button type="button" id="updateBar" hidden>New version ready – tap to reload</button>
 
 <script>
 "use strict";
@@ -711,6 +716,8 @@ const SOURCES = [
   ["R", "Used race ski checklist – Vermont Ski and Sport", "https://www.vermontskiandsport.com/blogs/articles/8-things-to-look-for-when-buying-ski-racing-equipment"],
   ["R", "Toronto Ski & Snowboard Show", "https://torontoskishow.ca/"]
 ];
+
+const APP_VERSION = "2026-10-23b"; // keep equal to VERSION in sw.js
 
 /* ---------- Store prices (filled from research) ---------- */
 
@@ -1595,8 +1602,19 @@ function shell() {
 
 renderStart(); renderShow(); renderPrice(); renderSkis(); renderSki(); renderList(); renderRules(); renderInfo(); renderPrint(); shell();
 
+$("#appVersion").textContent = APP_VERSION;
+
+// Offline support. When a new version takes over, offer a reload rather than
+// reloading on its own (someone may be mid-way through a price check).
 if ("serviceWorker" in navigator && location.protocol === "https:") {
-  navigator.serviceWorker.register("sw.js").catch(() => {});
+  const hadController = !!navigator.serviceWorker.controller;
+  navigator.serviceWorker.register("sw.js").then((reg) => reg.update()).catch(() => {});
+  navigator.serviceWorker.addEventListener("controllerchange", () => {
+    if (!hadController) return; // first install: the page is already current
+    const bar = $("#updateBar");
+    bar.hidden = false;
+    bar.onclick = () => location.reload();
+  });
 }
 </script>
 </body>

@@ -1,5 +1,5 @@
 // Offline cache for the ski gear guide. Bump VERSION when files change.
-const VERSION = "skigear-2026-10-21i";
+const VERSION = "skigear-2026-10-23a";
 const FILES = ["./", "./index.html", "./manifest.webmanifest", "./icon.svg"];
 
 self.addEventListener("install", (e) => {

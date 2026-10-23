@@ -249,6 +249,15 @@ details.group[open] > summary { margin-bottom: 4px; }
 .cmp-axis .ticks span { position: absolute; transform: translateX(-50%); top: 2px; }
 .cmp-axis .ticks span:first-child { transform: none; }
 
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 12px; }
+.chips button { font: inherit; font-size: .85rem; font-weight: 600; padding: 6px 12px; border-radius: 999px; border: 1.5px solid var(--line);
+  background: var(--surface); color: var(--text); cursor: pointer; }
+.brand-sub { font-size: .85rem; color: var(--muted); margin: 2px 0 6px; }
+.yr { border-top: 1px solid var(--line); margin-top: 10px; padding-top: 10px; }
+.yr:first-of-type { border-top: 0; margin-top: 4px; padding-top: 0; }
+.yr-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 8px; }
+.yr-head b { font-size: 1rem; }
+
 #print { display: none; }
 @media print {
   @page { margin: 12mm; }
@@ -392,9 +401,10 @@ details.group[open] > summary { margin-bottom: 4px; }
   <p class="small muted" id="skiAsOf"></p>
   <div class="toolbar">
     <label><input type="checkbox" id="skiInRange" checked> Only M's lengths</label>
-    <label for="skiYear">Year <select id="skiYear"><option value="2027">New (2027)</option><option value="all">All years</option><option value="2026">2026</option><option value="old">2025 and older</option></select></label>
-    <label for="skiSort">View <select id="skiSort"><option value="compare">Compare stores</option><option value="price">Cheapest first</option><option value="brand">By brand</option></select></label>
+    <label for="skiYear">Year <select id="skiYear"><option value="all">All years</option><option value="2027">2027 (new)</option><option value="2026">2026</option><option value="old">2025 and older</option><option value="unknown">Year not shown</option></select></label>
+    <label for="skiSort">View <select id="skiSort"><option value="bmy">Brand › model › year</option><option value="price">Cheapest first</option></select></label>
   </div>
+  <div class="chips" id="skiJump" aria-label="Jump to brand"></div>
   <div class="card">
     <h3 style="margin-top:0">Cheapest in M's size</h3>
     <div id="skiBest"></div>
@@ -1259,8 +1269,8 @@ function renderSkis() {
     "M's lengths = chart size to chart + 5 cm.";
   const saved = store.get("skis", {});
   if (saved.inRange === false) $("#skiInRange").checked = false;
-  if (saved.sort) $("#skiSort").value = saved.sort;
-  if (saved.year) $("#skiYear").value = saved.year;
+  if (saved.sort === "price") $("#skiSort").value = "price";
+  if (saved.year && saved.v === 2) $("#skiYear").value = saved.year;
   $("#skiYear").addEventListener("change", drawSkis);
   $("#skiInRange").addEventListener("change", drawSkis);
   $("#skiSort").addEventListener("change", drawSkis);
@@ -1296,59 +1306,68 @@ function skiRow(r, isBest) {
     aoaPill(rt, best(r), AOA_SKIS === "yes") + "<br>" + lens + (r.note ? " · " + esc(r.note) : "") + "</span></div>";
 }
 
-// Store-by-store price bars for each model and year. One series, so one colour;
-// the lowest price is marked in text. Bars start at $0 so gaps are honest.
-function compareHTML(rows, mergeUnknown) {
+// Brand > model > year. Each year lists every source's price as a bar.
+// One series, so one colour; the lowest is marked in text. Bars start at $0.
+const YEAR_LABEL = { "2027": "2027 – new this season", "2026": "2026 – last season", "2025": "2025", older: "Older model", "?": "Year not shown" };
+
+function brandModelYearHTML(rows) {
   const priced = rows.filter((r) => best(r) != null);
   if (!priced.length) return "";
   const goodMax = ITEMS.find((i) => i.id === "skis").conds.find((c) => c.k === "newflat").p[0];
   const top = Math.ceil(Math.max(...SKI_PRICES.filter((r) => best(r) != null).map(best), goodMax) / 100) * 100;
   const pct = (v) => (v / top) * 100;
   const dead = (r) => /sold out|out of stock|unavailable/i.test(r.note || "");
-  const groups = {};
-  const gy = (r) => (mergeUnknown && r.y === "?" ? "2027" : r.y);
-  priced.forEach((r) => { (groups[r.m + "|" + gy(r)] = groups[r.m + "|" + gy(r)] || []).push(r); });
-  const keys = Object.keys(groups).sort((a, b) => Math.min(...groups[a].map(best)) - Math.min(...groups[b].map(best)));
   const ticks = [0, Math.round(top / 2), top];
   const axis = '<div class="cmp-axis" aria-hidden="true"><span></span><span class="ticks">' +
     ticks.map((t) => '<span style="left:' + pct(t) + '%">' + money(t) + "</span>").join("") + "</span><span></span></div>";
 
-  return '<div class="card"><p class="small" style="margin:0">Each bar is one store\'s price for that ski. Dashed line = good price (' + money(goodMax) +
-    ' or less for a new ski). ◀ = lowest. Tap a store to open its page.</p></div>' +
-    keys.map((k) => {
-      const list = groups[k].sort((a, b) => (dead(a) - dead(b)) || (best(a) - best(b)));
-      const [m, y] = k.split("|");
-      const live = list.filter((r) => !dead(r));
-      const lo = live.length ? Math.min(...live.map(best)) : null, hi = Math.max(...list.map(best));
-      const stores = new Set(list.map((r) => r.r)).size;
-      const low = list.find((r) => best(r) === lo && !dead(r));
-      const sum = !low ? stores + (stores === 1 ? " store" : " stores") + " · all sold out or unavailable." :
-        stores === 1 ? "Only one store found so far." :
-        stores + " stores · " + money(lo) + "–" + money(hi) + (hi - lo > 0 ? " · save " + money(hi - lo) + " at " + RETAILERS[low.r].name : "");
-      return '<div class="card"><div class="cmp-head"><h3>' + esc(SKI_MODELS[m] || m) + '</h3><span class="pill">' + (y === "?" ? "year not shown" : y === "older" ? "older model" : y) + "</span></div>" +
-        '<p class="cmp-sum">' + esc(sum) + "</p>" +
-        list.map((r) => {
-          const rt = RETAILERS[r.r], v = best(r);
-          const lens = !r.len.length ? "lengths not listed" : (lensInRange(r).length ? "her size: " + lensInRange(r).join(", ") + " cm" : "not her size (" + r.len.join(", ") + ")");
-          const yr = r.y === "?" ? "year not shown · " : "";
-          const tip = rt.name + " · " + money(v) + (r.reg && r.sale ? " (was " + money(r.reg) + ")" : "") + " · " + lens + (r.note ? " · " + r.note : "");
-          return '<div class="cmp-row' + (r === low && stores > 1 ? " low" : "") + (dead(r) ? " dead" : "") + '" title="' + esc(tip) + '">' +
-            '<span class="st">' + (r.url ? '<a href="' + r.url + '" rel="noopener">' + esc(rt.name) + "</a>" : esc(rt.name)) + "</span>" +
-            '<span class="track" role="img" aria-label="' + esc(tip) + '"><span class="cbar" style="width:' + pct(v) + '%"></span>' +
-            '<span class="goodline" style="left:' + pct(goodMax) + '%"></span></span>' +
-            '<span class="val">' + money(v) + "</span>" +
-            '<span class="sub">' + esc(yr + lens) + (r.sale != null && r.reg != null && r.sale < r.reg ? " · was " + money(r.reg) : "") +
-            (rt.aoa && v != null ? " · AOA " + money(v * (1 - AOA_PCT)) + " if eligible" : "") +
-            (r.note ? " · " + esc(r.note) : "") + srcPill(r.src) + "</span></div>";
+  const brands = BRANDS.filter((b) => priced.some((r) => r.m === b.id)).sort((a, b) => a.name.localeCompare(b.name));
+  $("#skiJump").innerHTML = brands.map((b) => '<button type="button" data-b="' + b.id + '">' + esc(b.name) + "</button>").join("");
+
+  const rowHTML = (r, isLow) => {
+    const rt = RETAILERS[r.r], v = best(r);
+    const lens = !r.len.length ? "lengths not listed" : (lensInRange(r).length ? "her size: " + lensInRange(r).join(", ") + " cm" : "not her size (" + r.len.join(", ") + ")");
+    const tip = rt.name + " · " + money(v) + (r.reg && r.sale ? " (was " + money(r.reg) + ")" : "") + " · " + lens + (r.note ? " · " + r.note : "");
+    return '<div class="cmp-row' + (isLow ? " low" : "") + (dead(r) ? " dead" : "") + '" title="' + esc(tip) + '">' +
+      '<span class="st">' + (r.url ? '<a href="' + r.url + '" rel="noopener">' + esc(rt.name) + "</a>" : esc(rt.name)) + "</span>" +
+      '<span class="track" role="img" aria-label="' + esc(tip) + '"><span class="cbar" style="width:' + pct(v) + '%"></span>' +
+      '<span class="goodline" style="left:' + pct(goodMax) + '%"></span></span>' +
+      '<span class="val">' + money(v) + "</span>" +
+      '<span class="sub">' + esc(lens) + (r.sale != null && r.reg != null && r.sale < r.reg ? " · was " + money(r.reg) : "") +
+      (rt.aoa && v != null ? " · AOA " + money(v * (1 - AOA_PCT)) + " if eligible" : "") +
+      (r.note ? " · " + esc(r.note) : "") + srcPill(r.src) + "</span></div>";
+  };
+
+  return '<div class="card"><p class="small" style="margin:0">Each bar is one source\'s price. Dashed line = good price (' + money(goodMax) +
+    ' or less for a new ski). ◀ = lowest you can buy. Grey = sold out or unavailable. Tap a store to open its page.</p></div>' +
+    brands.map((b) => {
+      const mine = priced.filter((r) => r.m === b.id);
+      const yrank = (y) => (/^\d{4}$/.test(y) ? 3000 - +y : y === "older" ? 5000 : 6000); // newest first, then older, then unknown
+      const years = [...new Set(mine.map((r) => r.y))].sort((x, y) => yrank(x) - yrank(y));
+      const live = mine.filter((r) => !dead(r));
+      const cheapest = live.length ? live.reduce((a, c) => (best(c) < best(a) ? c : a)) : null;
+      return '<div class="card" id="brand-' + b.id + '" style="scroll-margin-top:70px"><h3 style="margin:0">' + esc(b.name) + "</h3>" +
+        '<div style="font-weight:600">' + esc(SKI_MODELS[b.id] || b.model) + "</div>" +
+        '<p class="brand-sub">M\'s length: ' + b.lo + "–" + b.hi + " cm · Binding: " + esc(b.bind) +
+        (cheapest ? " · Lowest any year: " + money(best(cheapest)) + " (" + (cheapest.y === "?" ? "year not shown" : cheapest.y) + ", " + esc(RETAILERS[cheapest.r].name) + ")" : "") + "</p>" +
+        years.map((y) => {
+          const list = mine.filter((r) => r.y === y).sort((a, c) => (dead(a) - dead(c)) || (best(a) - best(c)));
+          const ok = list.filter((r) => !dead(r));
+          const lo = ok.length ? Math.min(...ok.map(best)) : null, hi = Math.max(...list.map(best));
+          const n = list.length, low = ok.find((r) => best(r) === lo);
+          const sum = !low ? n + (n === 1 ? " source" : " sources") + " · all sold out or unavailable" :
+            n === 1 ? "1 source" : n + " sources · " + money(lo) + "–" + money(hi) + (hi - lo > 0 ? " · save " + money(hi - lo) : "");
+          return '<div class="yr"><div class="yr-head"><b>' + esc(YEAR_LABEL[y] || y) + '</b><span class="cmp-sum" style="margin:0">' + esc(sum) + "</span></div>" +
+            list.map((r) => rowHTML(r, r === low && n > 1)).join("") + "</div>";
         }).join("") + axis + "</div>";
     }).join("");
 }
 
 function drawSkis() {
   const inRange = $("#skiInRange").checked, sort = $("#skiSort").value, yearSel = $("#skiYear").value;
-  store.set("skis", { inRange, sort, year: yearSel });
+  store.set("skis", { inRange, sort, year: yearSel, v: 2 });
   const yearOk = (r) => yearSel === "all" || (yearSel === "old" ? (r.y !== "2027" && r.y !== "2026" && r.y !== "?") :
-    yearSel === "2027" ? (r.y === "2027" || r.y === "?") : r.y === yearSel);
+    yearSel === "unknown" ? r.y === "?" : r.y === yearSel);
   const known = (r) => r.len.length > 0;
   const dead = (r) => /sold out|out of stock|unavailable/i.test(r.note || "");
   const order = (x, y) => (dead(x) - dead(y)) || ((best(x) ?? 1e9) - (best(y) ?? 1e9));
@@ -1360,22 +1379,19 @@ function drawSkis() {
   $("#skiBest").innerHTML = deals.length ? deals.map((r, i) => skiRow(r, i === 0)).join("") : '<p class="muted">No prices yet.</p>';
 
   let html = "";
-  if (sort === "compare") {
-    html = compareHTML(rows, yearSel === "2027");
-  } else if (sort === "price") {
+  $("#skiJump").innerHTML = "";
+  if (sort === "price") {
     const a = rows.filter(known).sort(order), b = rows.filter((r) => !known(r)).sort(order);
     html += '<div class="card"><h3 style="margin-top:0">All prices, cheapest first</h3>' + a.map((r) => skiRow(r, false)).join("") + "</div>";
     if (b.length) html += '<div class="card"><h3 style="margin-top:0">Lengths not listed – check the store</h3>' + b.map((r) => skiRow(r, false)).join("") + "</div>";
   } else {
-    BRANDS.forEach((br) => {
-      const list = rows.filter((r) => r.m === br.id).sort(order);
-      if (!list.length) return;
-      html += '<div class="card"><h3 style="margin-top:0">' + esc(SKI_MODELS[br.id] || br.name) + '</h3><p class="small muted">M\'s length: ' + br.lo + "–" + br.hi +
-        " cm. Binding: " + esc(br.bind) + ".</p>" + list.map((r, i) => skiRow(r, i === 0 && best(r) != null && !dead(r))).join("") + "</div>";
-    });
+    html = brandModelYearHTML(rows);
   }
-  $("#skiCompare").innerHTML = html || '<div class="card"><p class="muted">No skis match. Try "All years" or untick "Only M\'s lengths".</p></div>' +
-    (yearSel === "2027" ? '<p class="small muted">No 2027 price found yet for some brands – switch Year to "All years".</p>' : "");
+  $("#skiCompare").innerHTML = html || '<div class="card"><p class="muted">No skis match. Try "All years" or untick "Only M\'s lengths".</p></div>';
+  $("#skiJump").querySelectorAll("button").forEach((btn) => btn.addEventListener("click", () => {
+    const el = document.getElementById("brand-" + btn.dataset.b);
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+  }));
 }
 
 /* ---------- Ski check ---------- */

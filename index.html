@@ -262,6 +262,10 @@ details.group[open] > summary { margin-bottom: 4px; }
   font: inherit; font-weight: 700; padding: 12px 14px; border: 0; border-radius: 12px; background: var(--text); color: var(--bg);
   box-shadow: 0 4px 16px rgba(0,0,0,.25); cursor: pointer; }
 
+.seg { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin: 0 0 12px; border: 1.5px solid var(--brand); border-radius: 12px; overflow: hidden; }
+.seg button { font: inherit; font-weight: 700; font-size: .9rem; padding: 10px 8px; border: 0; background: var(--surface); color: var(--brand); cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--brand); color: var(--brand-ink); }
+
 #print { display: none; }
 @media print {
   @page { margin: 12mm; }
@@ -406,7 +410,11 @@ details.group[open] > summary { margin-bottom: 4px; }
   <div class="toolbar">
     <label><input type="checkbox" id="skiInRange" checked> Only M's lengths</label>
     <label for="skiYear">Year <select id="skiYear"><option value="all">All years</option><option value="2027">2027 (new)</option><option value="2026">2026</option><option value="old">2025 and older</option><option value="unknown">Year not shown</option></select></label>
-    <label for="skiSort">View <select id="skiSort"><option value="bmy">Brand › model › year</option><option value="price">Cheapest first</option></select></label>
+
+  </div>
+  <div class="seg" role="group" aria-label="View">
+    <button type="button" data-v="bmy" aria-pressed="true">By brand</button>
+    <button type="button" data-v="price" aria-pressed="false">Cheapest first</button>
   </div>
   <div class="chips" id="skiJump" aria-label="Jump to brand"></div>
   <div class="card">
@@ -717,7 +725,7 @@ const SOURCES = [
   ["R", "Toronto Ski & Snowboard Show", "https://torontoskishow.ca/"]
 ];
 
-const APP_VERSION = "2026-10-23b"; // keep equal to VERSION in sw.js
+const APP_VERSION = "2026-10-23c"; // keep equal to VERSION in sw.js
 
 /* ---------- Store prices (filled from research) ---------- */
 
@@ -1271,16 +1279,19 @@ function lensInRange(r) {
   return r.len.filter((L) => L >= b.lo && L <= b.hi);
 }
 
+let skiView = "bmy";
+
 function renderSkis() {
   $("#skiAsOf").textContent = "New skis, CAD before tax, as seen " + PRICES_AS_OF + ". Prices change often – check the link before you buy. " +
-    "M's lengths = chart size to chart + 5 cm.";
-  const saved = store.get("skis", {});
-  if (saved.inRange === false) $("#skiInRange").checked = false;
-  if (saved.sort === "price") $("#skiSort").value = "price";
-  if (saved.year && saved.v === 2) $("#skiYear").value = saved.year;
+    "M's lengths = chart size to chart + 5 cm. App version " + APP_VERSION + ".";
+  // Always open on the brand view with all years – saved filters confused people.
   $("#skiYear").addEventListener("change", drawSkis);
   $("#skiInRange").addEventListener("change", drawSkis);
-  $("#skiSort").addEventListener("change", drawSkis);
+  document.querySelectorAll(".seg button").forEach((btn) => btn.addEventListener("click", () => {
+    skiView = btn.dataset.v;
+    document.querySelectorAll(".seg button").forEach((x) => x.setAttribute("aria-pressed", String(x === btn)));
+    drawSkis();
+  }));
   drawSkis();
 
   const carried = new Set(SKI_PRICES.map((r) => r.r));
@@ -1371,8 +1382,7 @@ function brandModelYearHTML(rows) {
 }
 
 function drawSkis() {
-  const inRange = $("#skiInRange").checked, sort = $("#skiSort").value, yearSel = $("#skiYear").value;
-  store.set("skis", { inRange, sort, year: yearSel, v: 2 });
+  const inRange = $("#skiInRange").checked, sort = skiView, yearSel = $("#skiYear").value;
   const yearOk = (r) => yearSel === "all" || (yearSel === "old" ? (r.y !== "2027" && r.y !== "2026" && r.y !== "?") :
     yearSel === "unknown" ? r.y === "?" : r.y === yearSel);
   const known = (r) => r.len.length > 0;

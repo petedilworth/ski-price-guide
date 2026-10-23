@@ -1,6 +1,6 @@
 // Offline cache for the ski gear guide. Bump VERSION when files change
 // (keep it equal to APP_VERSION in index.html).
-const VERSION = "skigear-2026-10-23e";
+const VERSION = "skigear-2026-10-23f";
 const FILES = ["./", "./index.html", "./manifest.webmanifest", "./icon.svg"];
 const WAIT_MS = 3000; // longest we wait for the network before using the saved copy
 

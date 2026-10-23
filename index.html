@@ -266,6 +266,13 @@ details.group[open] > summary { margin-bottom: 4px; }
 .seg button { font: inherit; font-weight: 700; font-size: .9rem; padding: 10px 8px; border: 0; background: var(--surface); color: var(--brand); cursor: pointer; }
 .seg button[aria-pressed="true"] { background: var(--brand); color: var(--brand-ink); }
 
+.swap-item { border-top: 1px solid var(--line); padding: 10px 0 4px; }
+.swap-item:first-child { border-top: 0; }
+.swap-item summary { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+.swap-item ul { margin: 6px 0 4px; padding-left: 1.1rem; }
+.swap-item li { margin: 0 0 4px; }
+.swap-item .got { display: flex; gap: 8px; align-items: center; font-weight: 600; margin: 4px 0 0; }
+
 #print { display: none; }
 @media print {
   @page { margin: 12mm; }
@@ -311,22 +318,28 @@ details.group[open] > summary { margin-bottom: 4px; }
     </ol>
   </div>
 
+  <div class="card" id="swapCard">
+    <h3 style="margin-top:0">Used sale plan – 3 things to find</h3>
+    <p class="small muted" style="margin:0 0 6px">Bring: her boots, one of her poles, a tape measure and cash. The Ski Patrol swap at the Toronto show only takes skis, boots and boards – look for these at the club swap.</p>
+    <div id="swapPlan"></div>
+  </div>
+
   <div class="card">
     <h3 style="margin-top:0">M</h3>
     <div class="facts">
       <div class="fact"><b>81 lbs</b><span>Weight (37 kg)</span></div>
       <div class="fact"><b>U12, year 1</b><span>Counts as 10 all season</span></div>
       <div class="fact"><b>First race year</b><span>Shorter end of range is fine</span></div>
-      <div class="fact"><b>Has boots</b><span>Dalbello DRS 75</span></div>
+      <div class="fact"><b>Has boots</b><span>Dalbello DRS 75, sole 262 mm</span></div>
       <div class="fact"><b>Has poles</b><span>Cheap regular, no guards</span></div>
-      <div class="fact"><b>Height</b><span id="heightTxt">To come</span></div>
+      <div class="fact"><b>About 140 cm</b><span>Height – average for age (estimate)</span></div>
     </div>
   </div>
 
   <div class="card">
     <h3 style="margin-top:0">What to buy (cheapest plan)</h3>
     <div id="buyList"></div>
-    <p class="small muted" style="margin-top:10px">Cheapest plan with used skis: <b>about $625</b>. Everything new: <b>about $1,275</b>. Prices in CAD before tax.</p>
+    <p class="small muted" style="margin-top:10px">Cheapest plan with used gear: <b>about <span id="leanTotal"></span></b>. Everything new: <b>about <span id="fullTotal"></span></b>. Prices in CAD before tax.</p>
   </div>
 
   <div class="card">
@@ -481,7 +494,7 @@ details.group[open] > summary { margin-bottom: 4px; }
       <li>Model name is on the heel piece (e.g. "Colt 7", "Icon 10", "SPX 10", "Evo 9", "Race 10").</li>
       <li>The small window with numbers is the release setting (DIN). The number after the model name is roughly the top setting.</li>
       <li>A tech sets it for M's weight, height, age and boot. Do not set it yourself.</li>
-      <li>Atomic Colt 7 fits boots with a sole length up to 266 mm only. Check her boot.</li>
+      <li>Atomic Colt 7 fits boot soles up to 266 mm. Her Dalbellos are 262 mm, so it fits.</li>
     </ul>
   </details>
 </section>
@@ -581,13 +594,13 @@ const ITEMS = [
       { k: "used23", label: "Used, 2–3 seasons, with binding", p: [150, 250, 275] },
       { k: "newflat", label: "New, ski only (no binding)", p: [450, 630, 650] },
       { k: "newbind", label: "New, ski + binding", p: [565, 840, 900] }
-    ], lean: 250, full: 520 },
+    ], lean: 250, full: 420 },
   { id: "binding", name: "Binding (only if skis have none)", plan: "maybe", buy: "Used OK",
     note: "Must fit the ski's plate and be indemnified. Ask the tech.",
     conds: [
       { k: "new", label: "New", p: [115, 210, 250] },
       { k: "used", label: "Used", p: [60, 90, 110] }
-    ], lean: 0, full: 208 },
+    ], lean: 0, full: 150 },
   { id: "helmet", name: "Helmet – hard ear, FIS sticker", plan: "must", buy: "New only",
     note: "Never used. Hailey can inherit it later if it is never crashed.",
     conds: [
@@ -600,18 +613,18 @@ const ITEMS = [
       { k: "new", label: "New", p: [60, 90, 100] },
       { k: "used", label: "Used (estimate)", p: [30, 45, 60] }
     ], lean: 60, full: 70 },
-  { id: "shin", name: "Shin guards", plan: "must", buy: "Used OK",
+  { id: "shin", name: "Shin guards", plan: "used", buy: "Used OK",
     note: "Club requires them for slalom. Buy the junior size (about 31–33 cm) – most brands make just one. Too long hits her knee; trim if needed. Fits Hailey later too.",
     conds: [
       { k: "new", label: "New", p: [140, 200, 230] },
       { k: "used", label: "Used (estimate)", p: [60, 90, 110] }
     ], lean: 60, full: 150 },
-  { id: "poleguard", name: "Pole guards for her poles", plan: "either", buy: "Used OK",
-    note: "Only if you don't buy race poles with guards. Slalom needs one or the other.",
+  { id: "poleguard", name: "Pole guards for her poles", plan: "maybe", buy: "Used OK",
+    note: "Back-up only: if no race poles with guards turn up, add guards to her $30 poles.",
     conds: [
       { k: "new", label: "New", p: [60, 90, 110] },
       { k: "used", label: "Used (estimate)", p: [25, 40, 50] }
-    ], lean: 25, full: 70 },
+    ], lean: 0, full: 0 },
   { id: "mouth", name: "Mouth guard", plan: "must", buy: "New only",
     note: "Club requires it for slalom. Cheap – buy new.",
     conds: [ { k: "new", label: "New (estimate)", p: [20, 40, 50] } ], lean: 20, full: 20 },
@@ -621,19 +634,19 @@ const ITEMS = [
       { k: "new", label: "New", p: [150, 210, 230] },
       { k: "used", label: "Used (estimate)", p: [60, 90, 110] }
     ], lean: 0, full: 0 },
-  { id: "suit", name: "Race suit", plan: "optional", buy: "Used OK",
-    note: "Optional – most kids have one. She can wear it at outside races, not at local hill races while she is 10. Used is fine; buy a size up.",
+  { id: "suit", name: "Race suit", plan: "usedopt", buy: "Used OK",
+    note: "Buying used. Size about 140–146 cm (kids 10–12). She can wear it at outside races, not at local hill races while she is 10.",
     conds: [
       { k: "used", label: "Used", p: [120, 220, 250] },
       { k: "new", label: "New (padded GS)", p: [350, 550, 600] }
-    ], lean: 0, full: 0 },
-  { id: "poles", name: "SL race poles with guards", plan: "either", buy: "Used OK",
-    note: "Or buy these instead of separate guards. Used with guards on is best value. Cheap poles can bend on gates.",
+    ], lean: 100, full: 212 },
+  { id: "poles", name: "SL race poles with hand guards", plan: "used", buy: "Used OK",
+    note: "Buying used, guards already on. About 95 cm (95–100). Club requires hand guards for slalom.",
     conds: [
       { k: "usedg", label: "Used, guards on (estimate)", p: [40, 60, 80] },
       { k: "used", label: "Used, no guards", p: [25, 50, 70] },
       { k: "new", label: "New, no guards", p: [100, 165, 180] }
-    ], lean: 0, full: 0 },
+    ], lean: 40, full: 170 },
   { id: "arm", name: "Arm guards", plan: "skip", buy: "Used OK",
     note: "Optional. Ask the coach first.",
     conds: [
@@ -646,9 +659,29 @@ const ITEMS = [
     note: "Has $30 regular poles, no guards. OK for training if the length is right.", conds: [], lean: 0, full: 0 }
 ];
 
+// Used-sale plan: the three things to find at the club swap.
+const SWAP_PLAN = [
+  { id: "poles", title: "Slalom poles with hand guards", tag: "Must", price: "poles", cond: "usedg",
+    size: "About 95 cm (95–100). Test: in her boots, she turns the pole upside down and grips just under the basket – elbow should bend to about 90°.",
+    want: "Straight junior race poles with the hand guards already fitted (Leki, Komperdell, Swix, Scott). Not bent GS poles.",
+    check: ["Shaft straight – roll it on the floor; no dents or kinks", "Guard solid, no cracks, bolted on tight", "Grip and strap in good shape; baskets on"],
+    backup: "Guards only for her $30 poles: used $25 or less, or new POC set $70 ($56 with AOA). New race poles: Leki WCR Lite SL 3D Jr $98.99 at Corbetts (no guards)." },
+  { id: "suit", title: "Race suit (used)", tag: "Optional", price: "suit", cond: "used",
+    size: "About 140–146 cm (kids 10–12, Spyder 10/12). Snug like a swimsuit. One size up at most – a baggy suit flaps and catches gates.",
+    want: "Padded GS suit (pads on shins and forearms help in slalom).",
+    check: ["Try on over a base layer; she squats into a tuck – no pulling at shoulders or crotch", "Sleeves reach the wrists, legs reach the ankles", "Zip runs full length", "No holes or cuts – inner legs, knees, elbows (ski edges cut here)", "Seams and cuffs intact. Wash before use"],
+    backup: "She can't wear it at local hill races this season, so aim for $100 or less. New: Arctica AMP Jr GS $212.50 ($170 with AOA) at Skiis & Biikes." },
+  { id: "shin", title: "Shin guards", tag: "Must", price: "shin", cond: "used",
+    size: "Junior size (about 31–33 cm) – most brands make one. Measure kneecap to first boot buckle with her boots on.",
+    want: "POC, Leki, Kerma (Jr S), Komperdell or Energiapura junior slalom shin guards.",
+    check: ["Strap them on over her boots; she bends into a tuck – top doesn't dig into her knee, bottom covers the boot top", "Shells not cracked", "Velcro still grips; padding intact; all straps there"],
+    backup: "New: POC Shins Classic Jr $99.99 at Squire John's. Ask Skiis & Biikes – protection is 20% off with AOA." }
+];
+
 const PLAN_TAG = {
   must: ["must", "Must buy"], maybe: ["should", "If needed"], later: ["should", "Later"],
   skip: ["skip", "Skip this year"], have: ["have", "Has it"], either: ["should", "One or the other"],
+  used: ["must", "Must – buy used"], usedopt: ["should", "Buy used (optional)"],
   optional: ["skip", "Optional"]
 };
 
@@ -656,7 +689,7 @@ const PLAN_TAG = {
 // lo/hi = t ± 3 cm, so a brand's nearest length (e.g. 131 vs 132) still counts as her size.
 const BRANDS = [
   { id: "atomic", name: "Atomic", model: "Redster S9 FIS J-RP", t: 131, lo: 128, hi: 134,
-    bind: "Atomic Colt 7 (boot sole ≤ 266 mm) or Icon 10" },
+    bind: "Atomic Colt 7 (fits her 262 mm sole) or Icon 10" },
   { id: "rossignol", name: "Rossignol", model: "Hero (Athlete) SL Pro, R21 Pro plate", t: 135, lo: 132, hi: 138,
     bind: "Look NX 7, NX 10, SPX 10, SPX 11" },
   { id: "dynastar", name: "Dynastar", model: "Speed Omeglass (OMG) Team SL, R21 Pro", t: 135, lo: 132, hi: 138,
@@ -704,7 +737,6 @@ const RULES = [
 const TODO = [
   ["aoa", "Register M with Alpine Ontario (AOA)", "Required to race. Do it before buying so the discount works.", "https://alpineontario.ca/im-an-athlete/"],
   ["speed", "Get the Skiis & Biikes Speed Shop card", "20% off protection, bags, accessories and clothing for AOA athletes.", "https://skiisandbiikes.com/pages/deals"],
-  ["bsl", "Find the boot sole length (mm) on the Dalbello heel", "Needed to mount the binding. Colt 7 only fits up to 266 mm.", ""],
   ["height", "Measure M's height", "Needed for pole length and suit size.", ""],
   ["swap", "Confirm the club swap date", "", ""]
 ];
@@ -726,7 +758,7 @@ const SOURCES = [
   ["R", "Toronto Ski & Snowboard Show", "https://torontoskishow.ca/"]
 ];
 
-const APP_VERSION = "2026-10-23e"; // keep equal to VERSION in sw.js
+const APP_VERSION = "2026-10-23f"; // keep equal to VERSION in sw.js
 
 /* ---------- Store prices (filled from research) ---------- */
 
@@ -912,22 +944,22 @@ const GEAR_PRICES = [
   g("binding", "sb", "Look SPX 11 GW (older) – fits Rossignol/Dynastar", 199.90, 119.94, SB + "/products/look-spx-11-gw-binding-2026"),
   g("binding", "sb", "Marker Comp 10 TCX 2027 – fits Völkl", 249.90, 199.99, GP, "shot"),
   g("binding", "sb", "Fischer RC4 Z11 Freeflex 2027 – fits Fischer", 289.90, 190.00, GP, "shot"),
-  g("binding", "sb", "Atomic Colt 7 GW CA 2026 – fits Atomic (boot sole ≤ 266 mm)", 139.90, null, GP, "shot"),
+  g("binding", "sb", "Atomic Colt 7 GW CA 2026 – fits Atomic and her 262 mm boot sole", 139.90, null, GP, "shot"),
   g("binding", "sl", "Look SPX 10 GW (2023) – fits Rossignol/Dynastar", 179.99, null, "https://www.sportinglife.ca/en-CA/juniors-spx-10-gw-b73-ski-binding-2023-25453465.html"),
   g("binding", "sl", "Look SPX 11 GW 2026 – fits Rossignol/Dynastar", 199.95, null, "https://www.sportinglife.ca"),
   g("binding", "sl", "Marker Comp 10 TCX 2026 – fits Völkl", 249.99, null, "https://www.sportinglife.ca/en-CA/comp-10-tcx-ski-binding-2026/25915621.html"),
   g("binding", "co", "Atomic Icon 10 Jr 2026 – fits Atomic", 259.99, null, "https://www.corbetts.com/categories/race/junior/bindings.html"),
-  g("binding", "co", "Atomic Colt 7 GW CA 2026 – fits Atomic (boot sole ≤ 266 mm)", 139.99, null, "https://www.corbetts.com/categories/race/junior/bindings.html"),
+  g("binding", "co", "Atomic Colt 7 GW CA 2026 – fits Atomic and her 262 mm boot sole", 139.99, null, "https://www.corbetts.com/categories/race/junior/bindings.html"),
   g("binding", "co", "Look SPX 11 GW 2026 – fits Rossignol/Dynastar", 229.99, 137.99, "https://www.corbetts.com/look-spx-11-gw-ski-bindings-2027/"),
   g("binding", "co", "Look SPX 10 GW 2024 – fits Rossignol/Dynastar", 189.99, 113.99, "https://www.corbetts.com/categories/race/junior/bindings.html"),
   g("binding", "co", "Marker Comp 10 TCX 2026 – fits Völkl", 249.99, null, "https://www.corbetts.com/marker-comp-10-tcx-b85-black-flo-red-ski-bindings-2026/"),
   g("binding", "sj", "Look SPX 10 GW – fits Rossignol/Dynastar", 189.99, null, "https://www.squirejohns.com/products/look-23w-fclas07-spx-10-gw-b73-hot-red"),
   g("binding", "cm", "Look Kids NX 10 GW 2025 – fits Rossignol/Dynastar", 139.99, 97.99, "https://www.comorsports.com/products/look-kids-nx-10-gw-ski-binding-2025-black"),
   g("binding", "st", "Look SPX 10 GW 23/24 – fits Rossignol/Dynastar", 189.95, 132.96, "https://www.skitown.ca/en/spx-10-gw-bindings.html"),
-  g("binding", "st", "Atomic Colt 7 GW 26/27 – fits Atomic (boot sole ≤ 266 mm)", 149.99, null, "https://www.skitown.ca/en/race-department/racing-bindings/"),
+  g("binding", "st", "Atomic Colt 7 GW 26/27 – fits Atomic and her 262 mm boot sole", 149.99, null, "https://www.skitown.ca/en/race-department/racing-bindings/"),
   g("binding", "st", "Look SPX 11 GW 26/27 – fits Rossignol/Dynastar", 229.95, null, "https://www.skitown.ca/en/race-department/racing-bindings/"),
   g("binding", "ob", "Look SPX 10 GW Jr – fits Rossignol/Dynastar", 179.95, null, "https://www.oberson.com/en/collections/ski-bindings"),
-  g("binding", "ob", "Atomic Colt 7 GW CA Kids – fits Atomic (boot sole ≤ 266 mm)", 149.95, null, "https://www.oberson.com/en/collections/ski-bindings"),
+  g("binding", "ob", "Atomic Colt 7 GW CA Kids – fits Atomic and her 262 mm boot sole", 149.95, null, "https://www.oberson.com/en/collections/ski-bindings"),
 
   g("poles", "sb", "Leki WCR Lite SL 3D 2026 (no guards)", 164.90, null, SB + "/products/leki-wcr-lite-sl-3d-ski-poles-2025"),
   g("poles", "sb", "Komperdell National Team 18mm SL (no guards)", 129.99, null, SB + "/collections/race-poles/products/komperdell-national-team-18mm-sl-ski-pole"),
@@ -985,7 +1017,7 @@ const SHOW_BOOTHS = [
 
 const SHOW_BRING = [
   ["kid", "M (for helmet fitting) and her Dalbello boots"],
-  ["bsl", "Her boot sole length (mm) – written down"],
+  ["bsl", "Her boot sole length: 262 mm"],
   ["size", "Her weight (81 lbs), height and age"],
   ["pole", "One of her $30 poles – to test pole guard fit"],
   ["goggles", "Her goggles – fit the helmet with them on"],
@@ -1022,7 +1054,7 @@ const SHOW_TIPS = [
   ["Buying M's skis", "Ask where and when the binding gets mounted, and get a pick-up date before her first training day.", "https://aussieskier.com/pages/binding-mounting"],
   ["Buying M's skis", "Mounted skis are usually final sale. Confirm the length before they drill.", "https://aussieskier.com/pages/binding-mounting"],
   ["Buying M's skis", "Bring her actual boots so the binding is set to them, plus her height, weight and age for the release setting.", null],
-  ["Buying M's skis", "Atomic Colt 7 only fits boot soles up to 266 mm. Know her boot sole length.", "https://www.sport-monz.com/fileadmin/user_upload/pdf-files/Atomic_Alpine_Race_EN_2627_lowres.pdf"],
+  ["Buying M's skis", "Her boot sole is 262 mm, so the cheaper Atomic Colt 7 fits (limit 266 mm). Tell the binding tech the number.", "https://www.sport-monz.com/fileadmin/user_upload/pdf-files/Atomic_Alpine_Race_EN_2627_lowres.pdf"],
   ["Buying M's skis", "Corbetts Jr. Exchange gives 50% credit back within 1 season (30% within 2). Ask if show purchases qualify.", "https://www.corbetts.com/jr-exchange-program"],
   ["Buying M's skis", "Sporting Life's Junior Half Back excludes race gear – don't count on it for race skis.", "https://www.sportinglife.ca/blog/tune-your-skis-and-get-50-of-jr-snowsport-equipment-back-at-sporting-life/"],
   ["Buying M's skis", "If the skis will go to Hailey later, a trade-in credit matters less than the lowest price today.", null],
@@ -1177,8 +1209,29 @@ function verdictHTML(v, extra) {
 
 /* ---------- Start ---------- */
 
+function renderSwap() {
+  const got = store.get("swapGot", {});
+  $("#swapPlan").innerHTML = SWAP_PLAN.map((x) => {
+    const it = ITEMS.find((i) => i.id === x.price), c = it.conds.find((k) => k.k === x.cond);
+    const pr = c && c.p ? "Good ≤ " + money(c.p[0]) + " · Fair ≤ " + money(c.p[1]) + " · Walk away over " + money(c.p[2]) : "";
+    return '<details class="swap-item"' + (got[x.id] ? "" : " open") + '><summary><b>' + esc(x.title) + '</b><span class="tag ' + (x.tag === "Must" ? "must" : "should") + '">' +
+      (got[x.id] ? "Got it ✓" : x.tag) + "</span></summary>" +
+      "<ul><li><b>Size:</b> " + esc(x.size) + "</li><li><b>Look for:</b> " + esc(x.want) + "</li>" +
+      "<li><b>Check:</b><ul>" + x.check.map((t) => "<li>" + esc(t) + "</li>").join("") + "</ul></li>" +
+      '<li><b>Price:</b> ' + esc(pr) + ' <a class="small" href="#price">Price check</a></li>' +
+      "<li><b>Not found?</b> " + esc(x.backup) + "</li></ul>" +
+      '<label class="got"><input type="checkbox" data-got="' + x.id + '"' + (got[x.id] ? " checked" : "") + "> Got it</label></details>";
+  }).join("");
+  document.querySelectorAll("[data-got]").forEach((cb) => cb.addEventListener("change", () => {
+    const g = store.get("swapGot", {}); g[cb.dataset.got] = cb.checked; store.set("swapGot", g); renderSwap();
+  }));
+}
+
 function renderStart() {
-  const order = ["must", "either", "maybe", "optional", "later", "skip", "have"];
+  renderSwap();
+  $("#leanTotal").textContent = money(ITEMS.reduce((n, i) => n + i.lean, 0));
+  $("#fullTotal").textContent = money(ITEMS.reduce((n, i) => n + i.full, 0));
+  const order = ["must", "used", "usedopt", "either", "maybe", "optional", "later", "skip", "have"];
   const rows = ITEMS.slice().sort((a, b) => order.indexOf(a.plan) - order.indexOf(b.plan)).map((it) => {
     const [cls, label] = PLAN_TAG[it.plan];
     const buyTag = it.buy === "New only" ? ' <span class="tag new">New only</span>' : "";
@@ -1551,6 +1604,11 @@ function renderPrint() {
   let html = "<h1>M's ski gear – swap card</h1><p>U12 first year · 81 lbs · has Dalbello DRS 75 boots and regular poles · new to racing</p>";
   html += '<div class="box"><b>Rules:</b> Bring her boots. Never buy a used helmet or mouth guard. SL race skis only. ' +
     "Tech must confirm the binding is indemnified. Over $200? Text Pete a photo first.</div>";
+  html += "<h2>Used sale plan</h2>" + SWAP_PLAN.map((x) => {
+    const it = ITEMS.find((i) => i.id === x.price), c = it.conds.find((k) => k.k === x.cond);
+    return '<div class="box"><b>☐ ' + esc(x.title) + "</b> (" + esc(x.tag) + ")<br>Size: " + esc(x.size) + "<br>Check: " + x.check.map(esc).join("; ") +
+      "<br>Price: good ≤ " + money(c.p[0]) + ", fair ≤ " + money(c.p[1]) + ", walk away over " + money(c.p[2]) + "<br>Not found? " + esc(x.backup) + "</div>";
+  }).join("");
   html += "<h2>What to buy</h2><table><tr><th>Item</th><th>Plan</th><th>Note</th></tr>" +
     ITEMS.map((it) => "<tr><td>" + esc(it.name) + "</td><td>" + PLAN_TAG[it.plan][1] + (it.buy === "New only" ? " (new only)" : "") + "</td><td>" + esc(it.note) + "</td></tr>").join("") + "</table>";
   html += "<h2>SL ski length (cm) – chart size, no extra length (first race year)</h2><table><tr><th>Brand</th><th>Her length</th><th>Binding that fits</th></tr>" +

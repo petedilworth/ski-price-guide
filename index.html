@@ -441,6 +441,30 @@ details.group[open] > summary { margin-bottom: 4px; }
   </div>
 </section>
 
+<!-- HELMETS -->
+<section class="page" id="helmets" aria-labelledby="h-helmets">
+  <h2 id="h-helmets">Helmets</h2>
+  <p class="small muted" id="helmAsOf"></p>
+  <div class="card alert">
+    <h3 style="margin-top:0">What M's helmet must have</h3>
+    <ul class="plain">
+      <li>✓ <b>Hard ears</b> – required for GS (Alpine Ontario 2026-27).</li>
+      <li>✓ <b>FIS sticker (RH2013)</b> inside – the club requires FIS approved.</li>
+      <li>✓ <b>Slalom chin guard that comes off</b> – required in slalom, not allowed in GS.</li>
+      <li>✓ <b>Fits her head with her goggles on.</b></li>
+      <li>✗ <b>Never used</b> – unknown crash history. Hailey can inherit it if it's never crashed.</li>
+    </ul>
+  </div>
+  <div class="card" id="helmSize"></div>
+  <div class="card">
+    <h3 style="margin-top:0">Best value: helmet + chin guard</h3>
+    <div id="helmBest"></div>
+  </div>
+  <div class="chips" id="helmJump" aria-label="Jump to helmet"></div>
+  <div id="helmCards"></div>
+  <div class="card" id="helmAvoid"></div>
+</section>
+
 <!-- SKI CHECK -->
 <section class="page" id="ski" aria-labelledby="h-ski">
   <h2 id="h-ski">Used ski check</h2>
@@ -513,6 +537,7 @@ details.group[open] > summary { margin-bottom: 4px; }
 
 <!-- RULES -->
 <section class="page" id="rules" aria-labelledby="h-rules">
+  <p class="small" style="margin:0 0 6px"><a href="#info">← Info</a></p>
   <h2 id="h-rules">Rules for M (U12)</h2>
   <p class="small muted">When the club and Alpine Ontario differ, the club rule wins.</p>
   <div class="tablewrap"><table id="rulesTable"></table></div>
@@ -529,6 +554,7 @@ details.group[open] > summary { margin-bottom: 4px; }
 <!-- INFO -->
 <section class="page" id="info" aria-labelledby="h-info">
   <h2 id="h-info">To do and dates</h2>
+  <a href="#rules" class="card" style="display:block;text-decoration:none;color:inherit"><b>Rules for M (U12)</b> – what's required in slalom and GS. <span style="color:var(--brand)">Open →</span></a>
   <div class="card">
     <div id="todo"></div>
   </div>
@@ -571,9 +597,9 @@ details.group[open] > summary { margin-bottom: 4px; }
   <a href="#show"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 9h18v11H3zM3 9l3-5h12l3 5M8 13h8"/></svg>Show</a>
   <a href="#price"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 12l-8 8-9-9V3h8z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg>Prices</a>
   <a href="#skis"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 20h16M7 20V10M12 20V4M17 20v-7"/></svg>Skis</a>
+  <a href="#helmets"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 15a8 8 0 0 1 16 0v2H4zM12 7v8M4 17h9l2 3h5"/></svg>Helmets</a>
   <a href="#ski"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 21L18 3M10 21L22 3"/></svg>Check</a>
   <a href="#list"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 6h12M9 12h12M9 18h12M4 6l1 1 2-2M4 12l1 1 2-2M4 18l1 1 2-2"/></svg>List</a>
-  <a href="#rules"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/></svg>Rules</a>
   <a href="#info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg>Info</a>
 </nav>
 
@@ -758,7 +784,7 @@ const SOURCES = [
   ["R", "Toronto Ski & Snowboard Show", "https://torontoskishow.ca/"]
 ];
 
-const APP_VERSION = "2026-10-23g"; // keep equal to VERSION in sw.js
+const APP_VERSION = "2026-10-24b"; // keep equal to VERSION in sw.js
 
 /* ---------- Store prices (filled from research) ---------- */
 
@@ -788,7 +814,14 @@ const RETAILERS = {
   sv: { name: "Ski Vélo Magog", url: "https://skivelo.com" },
   ab: { name: "Atomic Canada (list price)", url: "https://www.atomic.com/en-ca/" },
   rc: { name: "Rossignol Canada (list price)", url: "https://www.rossignol.com/ca-en/" },
-  vk: { name: "Völkl Canada (brand site)", url: "https://volkl.com" }
+  vk: { name: "Völkl Canada (brand site)", url: "https://volkl.com" },
+  poc: { name: "POC Canada (list price)", url: "https://www.poc.com/en-ca" },
+  bk: { name: "Briko Canada", url: "https://briko.ca" },
+  hd: { name: "HEAD Canada", url: "https://www.head.com/en_CA" },
+  bm: { name: "Brimacombe Slopeside", url: "https://slopeside.brimacombe.ca" },
+  gh: { name: "The Guides Hut", url: "https://theguideshut.ca" },
+  a3: { name: "Adventure365", url: "https://adventure365.ca" },
+  sw: { name: "Ski West", url: "https://skiwest.ca" }
 };
 
 // Items the AOA 20% covers at Skiis & Biikes (protection, bags, accessories, clothing).
@@ -1176,6 +1209,124 @@ function drawTips() {
   $("#tipCount").textContent = shown + " tips" + (q ? " match" : "") + ".";
 }
 
+/* ---------- Helmets (filled from research) ---------- */
+
+// Junior helmets that meet M's rules: hard ears, FIS RH2013, removable SL chin guard.
+// Specs and prices from search results (2026-10-23) – confirm in store.
+const HELMETS = [
+  { id: "pocdura", brand: "POC", model: "Skull Dura Jr (incl. Odermatt edition)", fis: true, hardEar: true, sizes: "XS-S 51–54 cm, M-L 55–58 cm", forM: "XS-S",
+    mips: "No (EPP liner, takes small knocks)", fit: "Race Lock adjuster", chin: "maxilla", weight: "680 g (XS-S)",
+    note: "The usual race helmet. One shop lists the 2027 XS-S as 48–52 cm – try it on. The POCito Skull looks similar but is NOT FIS.", src: "https://www.poc.com/en-ca/product/skull-dura-jr-hydrogen-white" },
+  { id: "redsterjr", brand: "Atomic", model: "Redster Jr", fis: true, hardEar: true, sizes: "51–55 cm, 55–59 cm", forM: "51–55",
+    mips: false, fit: "360° Fit dial, height adjustable", chin: "redster", weight: "650 g",
+    note: "Not the Redster Jr CTD (sensor model) or the Revent Jr (not FIS) – check the label.", src: "https://www.atomic.com/en-ca/shop/product/redster-jr-an5006142.html" },
+  { id: "redster", brand: "Atomic", model: "Redster (adult line, size S)", fis: true, hardEar: true, sizes: "S 51–55, M, L", forM: "S (51–55)",
+    mips: false, fit: "360° Fit dial", chin: "redster", note: "Adult model whose S size fits a junior head. Pricier than the Redster Jr." },
+  { id: "briko", brand: "Briko", model: "Vulcano FIS 6.8 Jr", fis: true, hardEar: true, sizes: "XS 48–52 cm, S-M 53–56 cm", forM: "XS if 52 cm, S-M if 53–54 cm",
+    mips: false, fit: "Roll-Fit dial – rare on a FIS junior helmet", chin: "briko", weight: "570 g (lightest here)", src: "https://briko.ca/products/vulcano-fis-6-8-junior-2-0" },
+  { id: "headdf", brand: "HEAD", model: "Downforce Jr", fis: true, hardEar: true, sizes: "XS 52–53 cm, S 54–55 cm", forM: "XS (52–53) or S (54–55)",
+    mips: false, fit: "Pads (Downforce fitting kit)", chin: "head", note: "US list price US$199." },
+  { id: "salomon", brand: "Salomon", model: "Equipe Jr FIS + chin guard", fis: true, hardEar: true, sizes: "JXS 49–53 cm, JS 53–56 cm", forM: "JXS or JS – try both",
+    mips: false, fit: "–", chin: "included", note: "Sold with the slalom chin guard – the cheapest complete set found." },
+  { id: "rossi", brand: "Rossignol", model: "Hero Giant Impacts FIS", fis: true, hardEar: true, sizes: "Smallest size 54", forM: "54 – only if her head is 53–54 cm",
+    mips: false, fit: "–", chin: "rossi", weight: "580–620 g", note: "Sold with or without the Hero chin guard. Too big if her head is under 53 cm.", src: "https://www.rossignol.com/ca-en/unisex-helmet-hero-giant-impacts-fis-RKLH101000.html" },
+  { id: "volata", brand: "Sweet Protection", model: "Volata 2Vi MIPS", fis: true, hardEar: true, sizes: "XS/S 48–53 cm, S/M 53–56 cm", forM: "XS/S or S/M",
+    mips: "✓ MIPS", fit: "–", chin: "sweet", weight: "~720 g",
+    note: "Conflict: Squire John's says this version does not take a chin guard (the Carbon version definitely doesn't). Confirm before buying." },
+  { id: "giro", brand: "Giro", model: "Strive MIPS", fis: true, hardEar: true, sizes: "XS 52–53.5 cm, S 53.5–55.5 cm", forM: "XS or S",
+    mips: "✓ MIPS", fit: "3 shells + 6 pad sets", chin: "giro", weight: "770 g (M)", note: "No Canadian store price found. US$270–300; chin bar included on most versions." },
+  { id: "uvex", brand: "Uvex", model: "Race+", fis: true, hardEar: true, sizes: "XXS 51–52 cm, XS 53–54 cm", forM: "XXS or XS",
+    mips: false, fit: "–", chin: "uvex", note: "No Canadian store price found. US$190–206; chin guard US$60. Shops say FIS 2013/14 – check the sticker." },
+  { id: "shred", brand: "Shred", model: "Basher Mini FIS", fis: true, hardEar: true, sizes: "S 51–54 cm", forM: "S (51–54)",
+    mips: "✓ Shred rotational system", fit: "Custom fit pads", chin: "shred", weight: "670 g", note: "No Canadian store price found. US$179.95 at shredoptics." }
+];
+const CHIN_NAMES = {
+  maxilla: "POC Maxilla Breakaway (fits every Skull Dura)", redster: "Atomic Redster Chin Guard System (fits Redster Jr)",
+  briko: "Briko Vulcano 6.8 chin guard", head: "HEAD Chinguard (adapter plates)", included: "Included with the helmet",
+  rossi: "Rossignol Hero SL Chin (included on the 'with chinguard' version)", sweet: "Sweet Volata Chin Guard",
+  giro: "Giro chin bar (usually included)", uvex: "Uvex Race+ chin guard", shred: "Shred Hard-Ear Chin Guard"
+};
+const h = (hh, r, product, y, reg, sale, url, note, extra) => Object.assign({ h: hh, r, product, y, reg, sale, url, src: "snippet", note }, extra || {});
+const HELMET_PRICES = [
+  h("pocdura", "sb", "Skull Dura Jr – XS-S, M-L", "2025", 279.99, null, SB + "/products/poc-skull-dura-junior-helmet-2025", "Code PODIUM27 = 20% off"),
+  h("pocdura", "co", "Skull Dura Jr – XS-S, M-L", "2026", 299.99, null, "https://www.corbetts.com/poc-skull-dura-jr-helmet-2026/"),
+  h("pocdura", "co", "Odermatt Ed. – XS-S and up", "2026", 319.99, null, "https://www.corbetts.com/helmets/?page=2", "Sold out"),
+  h("pocdura", "sj", "Skull Dura Jr – XS-S, M-L", "2026", 299.99, null, "https://www.squirejohns.com/products/poc-26w-skull-dura-jr", "Uranium Black in stock"),
+  h("pocdura", "sj", "Odermatt Ed.", "2026", 319.99, null, "https://www.squirejohns.com/products/poc-26w-skull-dura-jr-marco-odermatt-ed", "Out of stock"),
+  h("pocdura", "ku", "Skull Dura Jr – XS-S 51–54", "2025", 279.99, null, "https://www.kunstadt.com/products/pocskulldurajuniorhelmet2025", "Unavailable"),
+  h("pocdura", "st", "Skull Dura Jr – XS/S", "25/26", 300.00, null, "https://www.skitown.ca/en/skull-dura-jr-helmet-25-26.html", "XS/S in stock"),
+  h("pocdura", "ob", "Skull Dura Kids", "FW27", 299.95, null, "https://www.oberson.com/en/products/poc-skull-dura-kids-ski-helmet-166197", "In store only. M/L listed"),
+  h("pocdura", "ob", "Odermatt Ed.", "FW26", 319.95, 223.97, "https://www.oberson.com/en/collections/ski-helmets/products/poc-skull-dura-marco-odermatted-kids-ski-helmet-166200", "M/L only – too big for her"),
+  h("pocdura", "gs", "Skull Dura Jr, Hydrogen White", "", 239.95, 179.96, "https://genetiksport.com/products/helmet-poc-skull-dura-jr-hydrogen-white-fluo-yellow-green", "Sizes not stated"),
+  h("pocdura", "bg", "Skull Dura Junior – XS-S, M-L", "2027", 299.99, null, "https://www.boutiquegarceau.com/en/products/casque-de-ski-skull-dura-junior-uranium-black-matt", "XS-S backordered"),
+  h("pocdura", "bm", "Skull Dura Jr", "", 240.00, null, "https://slopeside.brimacombe.ca/products/poc-skull-dura-jr", "Sizes not stated"),
+  h("pocdura", "gh", "Skull Dura Jr", "", 240.00, null, "https://theguideshut.ca/skull-dura-jr.html", "Price includes tax"),
+  h("pocdura", "a3", "Skull Dura Jr", "", 300.00, null, "https://adventure365.ca/poc-skull-dura-jr.html", "M/L out of stock"),
+  h("pocdura", "poc", "Skull Dura Jr (Odermatt Ed. $320)", "", 300.00, null, "https://www.poc.com/en-ca/product/skull-dura-jr-hydrogen-white", "Brand list price"),
+  h("redsterjr", "ab", "Redster JR", "", 249.99, null, "https://www.atomic.com/en-ca/shop/product/redster-jr-an5006142.html", "Brand list price"),
+  h("redsterjr", "co", "Redster JR", "2025", 249.99, 149.99, "https://www.corbetts.com/helmets/", "Seen Oct 21, not found again Oct 23 – ask"),
+  h("redsterjr", "ob", "Redster Kids – M 55–59", "FW25", 249.95, 149.97, "https://www.oberson.com/products/atomic-casque-de-ski-redster-enfant-164670", "Size M only – too big for her"),
+  h("redster", "sb", "Redster – S 51–55", "2026", 349.99, null, SB + "/products/atomic-redster-helmet-2026", "Another snippet shows $299.99"),
+  h("redster", "co", "Redster – S 51–55", "2026", 349.99, null, "https://www.corbetts.com/atomic-redster-helmet-2026/"),
+  h("redster", "co", "Redster", "2027", 299.99, 239.99, "https://www.corbetts.com/helmets/", "Sizes not shown"),
+  h("briko", "bk", "Vulcano FIS 6.8 Junior 2.0", "", 200.00, 130.00, "https://briko.ca/products/vulcano-fis-6-8-junior-2-0", "Sold out"),
+  h("briko", "ob", "Vulcano FIS 6.8 Jr", "", 199.95, 119.95, "https://www.oberson.com/en/products/briko-vulcano-fis-6-8-junior-ski-helmet", '"As low as" – not re-confirmed Oct 23'),
+  h("briko", "bm", "Vulcano FIS 6.8 Junior", "", 250.00, null, "https://slopeside.brimacombe.ca/products/vulcano-fis-6-8-junior-race-helmet"),
+  h("headdf", "sp", "Downforce Junior", "", 209.95, null, "https://www.skatepro.ca/en/316-48815.htm", "Currency not stated – check"),
+  h("salomon", "sj", "Equipe Jr FIS + Chin", "26/27", 299.99, null, "https://www.squirejohns.com/collections/adult-junior-helmets", "Chin guard included", { inclChin: true }),
+  h("rossi", "rc", "Hero Giant Impacts FIS – no chin guard", "", 249.95, null, "https://www.rossignol.com/ca-en/unisex-helmet-hero-giant-impacts-fis-RKLH101000.html", "Smallest size 54"),
+  h("rossi", "rc", "Hero Giant Imp FIS with chin guard", "", 299.95, 209.96, "https://www.rossignol.com/ca-en/unisex-helmet-hero-giant-imp-fis-with-chinguard-RKLH102000.html", "Chin guard included. Sale seen on one page", { inclChin: true }),
+  h("rossi", "sl", "Hero Jr FIS Impacts (older model)", "2020", 199.99, null, "https://www.sportinglife.ca/en-CA/juniors-hero-jr-fis-impacts-racing-helmet-2020-25334681_000_054.html", "2020 stock – check size and age"),
+  h("volata", "sj", "Volata 2Vi MIPS – XS/S and up", "25W", 349.99, null, "https://www.squirejohns.com/products/sweet-protection-25w-volata-2vi%C2%AE-mips-race-helmet", "Store says no chin guard on this version"),
+  h("volata", "st", "Volata 2Vi MIPS", "26/27", 350.00, null, "https://www.skitown.ca/en/volata-2vi-mips-helmet-26-27.html", "Only M/L seen"),
+  h("volata", "st", "Volata 2Vi MIPS Special Ed.", "25/26", 349.99, 244.99, "https://www.skitown.ca/en/volata-2vi-mips-helmet-edition-speciale.html", "M/L only – too big for her")
+];
+const c = (cc, r, product, reg, sale, url, note) => ({ c: cc, r, product, reg, sale, url, src: "snippet", note });
+const CHIN_PRICES = [
+  c("maxilla", "sb", "Maxilla Breakaway", 89.99, 62.99, SB + "/products/poc-maxilla-breakaway-system-chin-guard-1", "In stock: Mississauga, Collingwood, Toronto"),
+  c("maxilla", "co", "Maxilla Breakaway 2026", 89.99, 62.99, "https://www.corbetts.com/poc-maxilla-breakaway-system-2026/"),
+  c("maxilla", "sj", "Maxilla Breakaway", 89.99, null, "https://www.squirejohns.com/products/poc-25w-maxilla-breakaway-system"),
+  c("maxilla", "sl", "Maxilla Breakaway", 90.00, null, "https://www.sportinglife.ca"),
+  c("maxilla", "ku", "Maxilla Breakaway", 89.99, null, "https://www.kunstadt.com/products/pocmaxillabreakawaysystemchinguard", "Unavailable"),
+  c("maxilla", "st", "Maxilla Breakaway 26/27", 90.00, null, "https://www.skitown.ca/en/protection-maxilla-breakaway-system.html", "In stock"),
+  c("maxilla", "ob", "Maxilla Breakaway", 89.95, null, "https://www.oberson.com/en/products/poc-maxilla-breakaway-system-chin-guard-253839"),
+  c("maxilla", "gb", "Maxilla Breakaway 26/27", 90.00, null, "https://www.gatesandboards.com"),
+  c("maxilla", "bg", "Chin guard (older aluminum bar)", 69.99, null, "https://www.boutiquegarceau.com/en/products/chin-guard", "Backordered"),
+  c("redster", "ab", "Redster Chin Guard System", 49.99, null, "https://www.atomic.com/en-ca/shop/product/redster-chin-guard-system-an5006228.html", "Out of stock"),
+  c("redster", "ku", "Redster Chin Guard", 49.99, null, "https://www.kunstadt.com", "Unavailable"),
+  c("redster", "co", "Redster Chin Guard", 49.99, null, "https://www.corbetts.com/atomic-redster-chin-guard-system/", "Add-on on Redster page – not re-confirmed"),
+  c("redster", "ob", "Redster Chin Guard Jr", 49.95, null, "https://www.oberson.com/en/products/atomic-redster-chin-guard-system-junior-ski-helmet-164672", "Sold out"),
+  c("briko", "bk", "Chinguard Vulcano 6.8", 49.99, null, "https://briko.ca/products/chinguard-vulcano-6-8"),
+  c("briko", "bm", "Vulcano FIS 6.8 chinguard", 50.00, null, "https://slopeside.brimacombe.ca/products/briko-vulcano-fis-6-8-chinguard"),
+  c("head", "hd", "HEAD Chinguard", 50.00, null, "https://www.head.com/en_CA/product/chinguard-373035", "Out of stock"),
+  c("head", "sw", "HEAD Downforce Chin Guard", 39.99, null, "https://skiwest.ca/head-downforce-chin-guard.html", "In stock"),
+  c("rossi", "rc", "Hero SL Chin", 54.95, null, "https://www.rossignol.com/ca-en/unisex-racing-helmet-protection-hero-sl-chin-RKCCI00000.html"),
+  c("sweet", "st", "Volata Chin Guard 26/27", 60.00, 48.00, "https://www.skitown.ca/race-helmets-1/sweet-protection-volata-chin-guard-810079-os-bla"),
+  c("sweet", "sj", "Volata Chin Guard", 59.99, 44.99, "https://www.squirejohns.com")
+];
+const HELMET_AVOID = [
+  ["POC POCito Skull", "EN 1077 only, no FIS sticker. One Skiis & Biikes page wrongly says FIS."],
+  ["Atomic Revent Jr", "Not FIS. Its $149.99 price can look like the Redster Jr deal."],
+  ["Atomic Redster SL", "EN 1077 B only – no FIS."],
+  ["Atomic Redster Jr CTD / Redster CTD", "Different (sensor) models – check the label."],
+  ["Rossignol Hero Kids Impacts", "EN 1077 + ASTM only, no FIS."],
+  ["Uvex Jakk+ IAS", "Soft ears; FIS not confirmed."],
+  ["Sweet Volata 2Vi Carbon", "FIS, but takes no chin guard."],
+  ["Slalom-only helmets", "Head Team SL, Rossignol Hero Slalom, Giro Ledge SL, Sweet Trooper SL – soft ears, not allowed in GS."]
+];
+const HELMET_NOTES = {
+  fisRule: 'FIS still uses the RH2013 standard for 2026-27 – no new helmet rule found. M\'s club requires FIS approved. <a href="https://assets.fis-ski.com/f/252177/x/f4c2a79dc8/specifications_for_alpine_competition_equipment_06-07-2026.pdf" rel="noopener">FIS specs</a>',
+  sizing: [
+    "<b>Measure:</b> soft tape about 2.5 cm (1 in) above her eyebrows, around the widest part of the back of her head, kept level.",
+    "<b>Most 10-year-olds are 52–54 cm.</b> Brands' charts differ – use each brand's own.",
+    "<b>One size covers 52–54 cm:</b> POC Skull Dura Jr XS-S (51–54), Atomic Redster Jr (51–55), Shred Basher Mini S (51–54). Briko, HEAD and Giro split her range across two sizes.",
+    "<b>Don't size up for growth</b> – a loose helmet protects less. Swap pads to fine-tune.",
+    "<b>Fit check:</b> sits level, no more than 2 fingers between brows and rim, doesn't move when she shakes her head, one finger under the strap.",
+    "<b>Try it with her goggles</b> – no gap between the goggle top and the helmet."
+  ],
+  replace: "Replace after any hard crash, even if it looks fine, and about every 3–5 years. Hailey can inherit it only if it was never in a crash."
+};
+
 /* ---------- Storage (per phone, optional) ---------- */
 
 const store = {
@@ -1466,6 +1617,96 @@ function drawSkis() {
   }));
 }
 
+/* ---------- Helmets page ---------- */
+
+const isDead = (x) => /sold out|out of stock|unavailable|not fis|too big/i.test((x.note || "") + " " + (x.product || ""));
+
+function cheapestOf(list) {
+  const live = list.filter((x) => best(x) != null && !isDead(x));
+  return live.length ? live.reduce((a, c) => (best(c) < best(a) ? c : a)) : null;
+}
+
+function renderHelmets() {
+  $("#helmAsOf").textContent = "New helmets, CAD before tax, as seen 2026-10-23. Search results – confirm before buying. Skiis & Biikes racer code PODIUM27 = 20% off helmets and chin guards (AOA athletes). App version " + APP_VERSION + ".";
+  $("#helmSize").innerHTML = '<h3 style="margin-top:0">Her size</h3><ul class="plain small">' +
+    (HELMET_NOTES.sizing.length ? HELMET_NOTES.sizing : ["Measure her head with a soft tape just above the eyebrows and ears."]).map((t) => "<li>" + t + "</li>").join("") + "</ul>" +
+    (HELMET_NOTES.fisRule ? '<p class="small muted" style="margin:6px 0 0">' + HELMET_NOTES.fisRule + "</p>" : "");
+
+  const goodMax = ITEMS.find((i) => i.id === "helmet").conds[0].p[0];
+  // Cheapest complete set per helmet: try every helmet price with the cheapest chin guard
+  // (or none if included). AOA = Skiis & Biikes 20% for registered athletes.
+  const live = (x) => best(x) != null && !isDead(x);
+  const aoaPrice = (x) => best(x) * (RETAILERS[x.r].aoa ? 1 - AOA_PCT : 1);
+  const totals = HELMETS.map((hm) => {
+    const chins = CHIN_PRICES.filter((x) => x.c === hm.chin && live(x));
+    let pick = null;
+    HELMET_PRICES.filter((x) => x.h === hm.id && live(x)).forEach((hp) => {
+      const incl = hm.chin === "included" || hp.inclChin;
+      const cp = incl ? null : chins.reduce((m, x) => (!m || aoaPrice(x) < aoaPrice(m) ? x : m), null);
+      const plain = best(hp) + (cp ? best(cp) : 0), withAoa = aoaPrice(hp) + (cp ? aoaPrice(cp) : 0);
+      if (!pick || withAoa < pick.withAoa) pick = { hm, hp, cp, incl, plain, withAoa, noChin: !incl && !cp };
+    });
+    return pick;
+  }).filter(Boolean).sort((x, y) => x.withAoa - y.withAoa);
+  $("#helmBest").innerHTML = totals.length ? '<p class="small muted" style="margin:0 0 4px">Helmet + chin guard, cheapest store for each. AOA = after the 20% Skiis &amp; Biikes discount.</p>' +
+    totals.slice(0, 6).map((t, i) => {
+      const aoaTxt = t.withAoa < t.plain ? " (with AOA; " + money(t.plain) + " without)" : "";
+      return '<div class="deal' + (i === 0 ? " best" : "") + '"><span class="amt">' + money(t.withAoa) + '</span><span class="what">' + esc(t.hm.brand + " " + t.hm.model) + esc(aoaTxt) + "</span>" +
+        '<span class="where">Helmet ' + money(best(t.hp)) + " at " + esc(RETAILERS[t.hp.r].name) +
+        (t.incl ? " – chin guard included" : t.cp ? " + chin guard " + money(best(t.cp)) + " at " + esc(RETAILERS[t.cp.r].name) : " + chin guard price not found") +
+        (t.hp.note ? " · " + esc(t.hp.note) : "") + "<br>Size for M: " + esc(t.hm.forM) + srcPill(t.hp.src) + "</span></div>";
+    }).join("") : '<p class="muted">No prices yet.</p>';
+
+  $("#helmJump").innerHTML = HELMETS.map((h) => '<button type="button" data-h="' + h.id + '">' + esc(h.brand + " " + h.model) + "</button>").join("");
+  $("#helmJump").querySelectorAll("button").forEach((btn) => btn.addEventListener("click", () => {
+    const el = document.getElementById("helm-" + btn.dataset.h); if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+  }));
+
+  const all = HELMET_PRICES.filter((x) => best(x) != null).map(best);
+  const top = Math.ceil(Math.max(...all, goodMax, 100) / 100) * 100;
+  const pct = (v) => (v / top) * 100;
+  const axis = '<div class="cmp-axis" aria-hidden="true"><span></span><span class="ticks">' +
+    [0, top / 2, top].map((t) => '<span style="left:' + pct(t) + '%">' + money(t) + "</span>").join("") + "</span><span></span></div>";
+  const yes = (v) => (v === true ? "✓ Yes" : v === false ? "✗ No" : v ? esc(v) : "–");
+
+  $("#helmCards").innerHTML = HELMETS.map((h) => {
+    const rows = HELMET_PRICES.filter((x) => x.h === h.id && best(x) != null).sort((a, b) => (isDead(a) - isDead(b)) || (best(a) - best(b)));
+    const low = cheapestOf(rows);
+    const chins = CHIN_PRICES.filter((x) => x.c === h.chin && best(x) != null).sort((a, b) => (isDead(a) - isDead(b)) || (best(a) - best(b)));
+    const cLow = cheapestOf(chins);
+    return '<div class="card" id="helm-' + h.id + '" style="scroll-margin-top:70px"><h3 style="margin:0">' + esc(h.brand) + "</h3>" +
+      '<div style="font-weight:600">' + esc(h.model) + "</div>" +
+      '<div class="tablewrap" style="margin:8px 0"><table>' +
+      "<tr><td>FIS RH2013</td><td>" + yes(h.fis) + "</td></tr><tr><td>Hard ears</td><td>" + yes(h.hardEar) + "</td></tr>" +
+      "<tr><td>Sizes</td><td>" + esc(h.sizes || "–") + "</td></tr><tr><td><b>Size for M</b></td><td><b>" + esc(h.forM || "Measure first") + "</b></td></tr>" +
+      "<tr><td>Rotational protection (MIPS etc.)</td><td>" + yes(h.mips) + "</td></tr><tr><td>Fit adjustment</td><td>" + esc(h.fit || "–") + "</td></tr>" +
+      "<tr><td>Chin guard</td><td>" + esc(CHIN_NAMES[h.chin] || h.chin || "–") + (cLow ? " – from " + money(best(cLow)) : "") + "</td></tr>" +
+      (h.weight ? "<tr><td>Weight</td><td>" + esc(h.weight) + "</td></tr>" : "") + "</table></div>" +
+      (h.note ? '<p class="small muted" style="margin:0 0 6px">' + esc(h.note) + (h.src ? ' <a href="' + h.src + '" rel="noopener">Source</a>' : "") + "</p>" : "") +
+      "<b>Helmet prices</b>" + (rows.length ? "" : '<p class="small muted">No store price found yet.</p>') +
+      rows.map((x) => {
+        const rt = RETAILERS[x.r], v = best(x);
+        const tip = rt.name + " · " + money(v) + (x.note ? " · " + x.note : "");
+        return '<div class="cmp-row' + (x === low && rows.length > 1 ? " low" : "") + (isDead(x) ? " dead" : "") + '" title="' + esc(tip) + '">' +
+          '<span class="st">' + (x.url ? '<a href="' + x.url + '" rel="noopener">' + esc(rt.name) + "</a>" : esc(rt.name)) + "</span>" +
+          '<span class="track" role="img" aria-label="' + esc(tip) + '"><span class="cbar" style="width:' + pct(v) + '%"></span><span class="goodline" style="left:' + pct(goodMax) + '%"></span></span>' +
+          '<span class="val">' + money(v) + "</span>" +
+          '<span class="sub">' + esc((x.y ? x.y + " · " : "") + (x.product || "")) + (x.sale != null && x.reg != null && x.sale < x.reg ? " · was " + money(x.reg) : "") +
+          (rt.aoa ? " · AOA " + money(v * (1 - AOA_PCT)) : "") + (x.note ? " · " + esc(x.note) : "") + srcPill(x.src) + "</span></div>";
+      }).join("") + (rows.length ? axis : "") +
+      (chins.length ? '<p style="margin:10px 0 2px"><b>Chin guard prices</b></p>' + chins.map((x) => {
+        const rt = RETAILERS[x.r];
+        return '<div class="small" style="padding:3px 0' + (isDead(x) ? ";opacity:.6" : "") + '">' + money(best(x)) + " – " +
+          (x.url ? '<a href="' + x.url + '" rel="noopener">' + esc(rt.name) + "</a>" : esc(rt.name)) + (x.product ? " · " + esc(x.product) : "") +
+          (rt.aoa ? " · AOA " + money(best(x) * (1 - AOA_PCT)) : "") + (x.note ? " · " + esc(x.note) : "") + srcPill(x.src) + "</div>";
+      }).join("") : "") + "</div>";
+  }).join("");
+
+  $("#helmAvoid").innerHTML = '<h3 style="margin-top:0">Not FIS – skip these</h3>' + (HELMET_AVOID.length ?
+    '<ul class="plain small">' + HELMET_AVOID.map(([n, w]) => "<li><b>" + esc(n) + "</b> – " + esc(w) + "</li>").join("") + "</ul>" : '<p class="small muted">None listed.</p>') +
+    (HELMET_NOTES.replace ? '<p class="small muted" style="margin-top:8px">' + HELMET_NOTES.replace + "</p>" : "");
+}
+
 /* ---------- Ski check ---------- */
 
 function renderSki() {
@@ -1639,7 +1880,8 @@ function route() {
   const page = document.getElementById(id) && document.getElementById(id).classList.contains("page") ? id : "start";
   document.querySelectorAll("section.page").forEach((s) => s.classList.toggle("active", s.id === page));
   document.querySelectorAll("nav.tabs a").forEach((a) => {
-    if (a.getAttribute("href") === "#" + page) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current");
+    const tab = page === "rules" ? "info" : page;
+    if (a.getAttribute("href") === "#" + tab) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current");
   });
   window.scrollTo(0, 0);
 }
@@ -1669,7 +1911,7 @@ function shell() {
   route();
 }
 
-renderStart(); renderShow(); renderPrice(); renderSkis(); renderSki(); renderList(); renderRules(); renderInfo(); renderPrint(); shell();
+renderStart(); renderShow(); renderPrice(); renderSkis(); renderHelmets(); renderSki(); renderList(); renderRules(); renderInfo(); renderPrint(); shell();
 
 $("#appVersion").textContent = APP_VERSION;
 

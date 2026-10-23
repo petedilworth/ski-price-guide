@@ -331,7 +331,7 @@ details.group[open] > summary { margin-bottom: 4px; }
 
   <div class="card">
     <h3 style="margin-top:0">Ski lengths for M</h3>
-    <p class="small muted">Slalom (SL) race ski. Left number = chart size. Right number = chart + 5 cm (the club's advice for one pair).</p>
+    <p class="small muted">Slalom (SL) race ski. Her length = the U12 chart size for 81 lbs. No extra length – it's her first race year, and a shorter ski is easier to turn.</p>
     <div class="tablewrap"><table id="lenTable"></table></div>
   </div>
 </section>
@@ -652,27 +652,28 @@ const PLAN_TAG = {
   optional: ["skip", "Optional"]
 };
 
-// SL ski lengths for an 81 lb U12. lo = chart size, hi = chart + 5 cm (club advice).
+// SL ski length for an 81 lb first-year U12: t = chart size at her weight (no extra length).
+// lo/hi = t ± 3 cm, so a brand's nearest length (e.g. 131 vs 132) still counts as her size.
 const BRANDS = [
-  { id: "atomic", name: "Atomic", model: "Redster S9 FIS J-RP", lo: 131, hi: 138,
+  { id: "atomic", name: "Atomic", model: "Redster S9 FIS J-RP", t: 131, lo: 128, hi: 134,
     bind: "Atomic Colt 7 (boot sole ≤ 266 mm) or Icon 10" },
-  { id: "rossignol", name: "Rossignol", model: "Hero (Athlete) SL Pro, R21 Pro plate", lo: 135, hi: 142,
+  { id: "rossignol", name: "Rossignol", model: "Hero (Athlete) SL Pro, R21 Pro plate", t: 135, lo: 132, hi: 138,
     bind: "Look NX 7, NX 10, SPX 10, SPX 11" },
-  { id: "dynastar", name: "Dynastar", model: "Speed Omeglass (OMG) Team SL, R21 Pro", lo: 135, hi: 142,
+  { id: "dynastar", name: "Dynastar", model: "Speed Omeglass (OMG) Team SL, R21 Pro", t: 135, lo: 132, hi: 138,
     bind: "Look NX 7, NX 10, SPX 10" },
-  { id: "head", name: "Head", model: "WC / WCR e.SL Rebel Team", lo: 132, hi: 139,
+  { id: "head", name: "Head", model: "WC / WCR e.SL Rebel Team", t: 132, lo: 129, hi: 135,
     bind: "Head / Tyrolia Evo 9 or Freeflex 11 only" },
-  { id: "volkl", name: "Völkl", model: "Racetiger SL Jr", lo: 129, hi: 136,
+  { id: "volkl", name: "Völkl", model: "Racetiger SL Jr", t: 129, lo: 126, hi: 132,
     bind: "Marker Comp 10 / Race 10 TCX / Comp JR 8" },
-  { id: "fischer", name: "Fischer", model: "RC4 Worldcup SL Jr", lo: 130, hi: 135,
+  { id: "fischer", name: "Fischer", model: "RC4 Worldcup SL Jr", t: 130, lo: 127, hi: 133,
     bind: "Fischer RC4 Z9 or Z11" },
-  { id: "nordica", name: "Nordica", model: "Dobermann SLJ", lo: 128, hi: 135,
+  { id: "nordica", name: "Nordica", model: "Dobermann SLJ", t: 128, lo: 125, hi: 131,
     bind: "Marker junior race bindings" },
-  { id: "blizzard", name: "Blizzard", model: "Firebird SL JR-Racing", lo: 128, hi: 135,
+  { id: "blizzard", name: "Blizzard", model: "Firebird SL JR-Racing", t: 128, lo: 125, hi: 131,
     bind: "Marker junior race bindings" },
-  { id: "salomon", name: "Salomon", model: "Junior SL race", lo: 131, hi: 138,
+  { id: "salomon", name: "Salomon", model: "Junior SL race", t: 131, lo: 128, hi: 134,
     bind: "Salomon / Atomic family" },
-  { id: "other", name: "Other brand", model: "Junior SL race", lo: 130, hi: 140,
+  { id: "other", name: "Other brand", model: "Junior SL race", t: 132, lo: 129, hi: 135,
     bind: "Ask the tech" }
 ];
 
@@ -696,7 +697,7 @@ const RULES = [
   ["Back protector", "Recommended", "Recommended", "Not required"],
   ["Race suit", "Permitted*", "Permitted*", "*Not at local hill races for 10-year-olds"],
   ["Soft-ear SL helmet", "Permitted", "Not allowed", "Not needed if you buy a hard-ear helmet"],
-  ["Skis", "1 SL pair, +5 cm", "Same pair", "AOA suggests SL + GS; club says 1 pair at age 10"],
+  ["Skis", "1 SL pair, chart length", "Same pair", "AOA suggests SL + GS; club says 1 pair at age 10. No extra length in her first race year"],
   ["Poles", "Recommended", "Recommended", "Her $30 poles are OK; guards needed for slalom"]
 ];
 
@@ -725,7 +726,7 @@ const SOURCES = [
   ["R", "Toronto Ski & Snowboard Show", "https://torontoskishow.ca/"]
 ];
 
-const APP_VERSION = "2026-10-23c"; // keep equal to VERSION in sw.js
+const APP_VERSION = "2026-10-23d"; // keep equal to VERSION in sw.js
 
 /* ---------- Store prices (filled from research) ---------- */
 
@@ -1016,7 +1017,7 @@ const SHOW_TIPS = [
   ["Prices and haggling", "No rush on regular kids' gear: Sporting Life's in-store sale (up to 50% off) runs to Nov 12.", "https://www.redflagdeals.com/deal/sports-fitness/sporting-life-ultimate-ski-snowboard-event-up-to-50-off-top-brands-gear-and-outerwear/"],
   ["Prices and haggling", "Sunday's last hour may bring markdowns on items booths don't want to pack. Ask – but don't count on it.", null],
 
-  ["Buying M's skis", "Target lengths: Atomic 131–138, Rossignol/Dynastar 135–142, Head 132–139, Völkl 129–136. Use the Check tab.", null],
+  ["Buying M's skis", "Her lengths: Atomic 131, Rossignol/Dynastar 135, Head 132, Völkl 129, Fischer 130, Nordica/Blizzard 128, Salomon 131. No extra length in her first race year.", null],
   ["Buying M's skis", "Brand booths (Atomic, Head, Dynastar, Blizzard) show skis but may not sell. Retailers (Skiis & Biikes, Corbetts) sell.", "https://torontoskishow.ca/exhibitors-list/"],
   ["Buying M's skis", "Ask where and when the binding gets mounted, and get a pick-up date before her first training day.", "https://aussieskier.com/pages/binding-mounting"],
   ["Buying M's skis", "Mounted skis are usually final sale. Confirm the length before they drill.", "https://aussieskier.com/pages/binding-mounting"],
@@ -1185,10 +1186,10 @@ function renderStart() {
   }).join("");
   $("#buyList").innerHTML = rows;
 
-  const h = '<tr><th>Brand and binding that fits</th><th class="num">Chart</th><th class="num">+5 cm</th></tr>';
+  const h = '<tr><th>Brand and binding that fits</th><th class="num">Her length</th></tr>';
   $("#lenTable").innerHTML = h + BRANDS.map((b) =>
     "<tr><td><b>" + esc(b.name) + "</b> <span class=\"small muted\">" + esc(b.model) + '</span><br><span class="small">Binding: ' + esc(b.bind) +
-    '</span></td><td class="num">' + b.lo + '</td><td class="num"><b>' + b.hi + "</b></td></tr>").join("");
+    '</span></td><td class="num"><b>' + b.t + " cm</b></td></tr>").join("");
 }
 
 /* ---------- Price check ---------- */
@@ -1283,7 +1284,7 @@ let skiView = "bmy";
 
 function renderSkis() {
   $("#skiAsOf").textContent = "New skis, CAD before tax, as seen " + PRICES_AS_OF + ". Prices change often – check the link before you buy. " +
-    "M's lengths = chart size to chart + 5 cm. App version " + APP_VERSION + ".";
+    "M's length = U12 chart size for 81 lbs (first race year, no extra length). App version " + APP_VERSION + ".";
   // Always open on the brand view with all years – saved filters confused people.
   $("#skiYear").addEventListener("change", drawSkis);
   $("#skiInRange").addEventListener("change", drawSkis);
@@ -1366,7 +1367,7 @@ function brandModelYearHTML(rows) {
       const cheapest = live.length ? live.reduce((a, c) => (best(c) < best(a) ? c : a)) : null;
       return '<div class="card" id="brand-' + b.id + '" style="scroll-margin-top:70px"><h3 style="margin:0">' + esc(b.name) + "</h3>" +
         '<div style="font-weight:600">' + esc(SKI_MODELS[b.id] || b.model) + "</div>" +
-        '<p class="brand-sub">M\'s length: ' + b.lo + "–" + b.hi + " cm · Binding: " + esc(b.bind) +
+        '<p class="brand-sub">M\'s length: ' + b.t + " cm · Binding: " + esc(b.bind) +
         (cheapest ? " · Lowest any year: " + money(best(cheapest)) + " (" + (cheapest.y === "?" ? "year not shown" : cheapest.y) + ", " + esc(RETAILERS[cheapest.r].name) + ")" : "") + "</p>" +
         years.map((y) => {
           const list = mine.filter((r) => r.y === y).sort((a, c) => (dead(a) - dead(c)) || (best(a) - best(c)));
@@ -1454,16 +1455,15 @@ function updateSki() {
 
   if (raw === "" || isNaN(+raw)) {
     out.className = "verdict none";
-    out.innerHTML = '<div class="big">Enter a length</div><p>' + esc(b.name) + ": " + b.lo + "–" + b.hi + " cm is right for M.</p>";
+    out.innerHTML = '<div class="big">Enter a length</div><p>' + esc(b.name) + ": " + b.t + " cm is right for M.</p>";
     return;
   }
   const L = +raw;
-  if (L < b.lo - 4) notes.unshift(["bad", L + " cm is too short. Look for " + b.lo + "–" + b.hi + " cm."]);
-  else if (L < b.lo) notes.unshift(["warn", L + " cm is a bit short. OK only if cheap – she is new to racing."]);
-  else if (L >= b.hi - 1 && L <= b.hi) notes.unshift(["good", L + " cm matches the club's +5 cm advice."]);
-  else if (L <= b.hi) notes.unshift(["good", L + " cm is chart size – good for a first-year racer."]);
-  else if (L <= b.hi + 4) notes.unshift(["warn", L + " cm is long. Harder to turn – ask the coach."]);
-  else notes.unshift(["bad", L + " cm is too long. Look for " + b.lo + "–" + b.hi + " cm."]);
+  if (L < b.lo - 5) notes.unshift(["bad", L + " cm is too short. Look for " + b.t + " cm."]);
+  else if (L < b.lo) notes.unshift(["warn", L + " cm is a bit short. OK if cheap – she is new to racing."]);
+  else if (L <= b.hi) notes.unshift(["good", L + " cm is her size (" + b.name + " " + b.t + " cm)."]);
+  else if (L <= b.hi + 5) notes.unshift(["warn", L + " cm is one size long – harder to turn in her first race year. Skip unless the coach says yes."]);
+  else notes.unshift(["bad", L + " cm is too long. Look for " + b.t + " cm."]);
 
   const worst = notes.reduce((m, n) => (RANK[n[0]] > RANK[m] ? n[0] : m), "good");
   const word = { good: "Good ski for M", ok: "OK ski", warn: "Maybe – check first", bad: "Walk away" }[worst];
@@ -1552,8 +1552,8 @@ function renderPrint() {
     "Tech must confirm the binding is indemnified. Over $200? Text Pete a photo first.</div>";
   html += "<h2>What to buy</h2><table><tr><th>Item</th><th>Plan</th><th>Note</th></tr>" +
     ITEMS.map((it) => "<tr><td>" + esc(it.name) + "</td><td>" + PLAN_TAG[it.plan][1] + (it.buy === "New only" ? " (new only)" : "") + "</td><td>" + esc(it.note) + "</td></tr>").join("") + "</table>";
-  html += "<h2>SL ski length (cm)</h2><table><tr><th>Brand</th><th>Chart</th><th>+5 cm</th><th>Binding that fits</th></tr>" +
-    BRANDS.map((b) => "<tr><td>" + esc(b.name) + "</td><td>" + b.lo + "</td><td>" + b.hi + "</td><td>" + esc(b.bind) + "</td></tr>").join("") + "</table>";
+  html += "<h2>SL ski length (cm) – chart size, no extra length (first race year)</h2><table><tr><th>Brand</th><th>Her length</th><th>Binding that fits</th></tr>" +
+    BRANDS.map((b) => "<tr><td>" + esc(b.name) + "</td><td>" + b.t + "</td><td>" + esc(b.bind) + "</td></tr>").join("") + "</table>";
   html += '<h2 class="pb">Prices (CAD)</h2><table><tr><th>Item</th><th>Condition</th><th>Good ≤</th><th>Fair ≤</th><th>Walk away &gt;</th></tr>';
   ITEMS.filter((it) => it.conds.length).forEach((it) => it.conds.forEach((c) => {
     html += "<tr><td>" + esc(it.name) + "</td><td>" + esc(c.label) + "</td>" +
